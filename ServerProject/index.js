@@ -181,7 +181,7 @@ for (var i = 0; i<clients.length; i++)
 
 
 
-
+  
 	socket.broadcast.emit('OnPlayerConnected', playerConnected);
 	debug('Data: Clients Added= '+clients.length);
 	info('Method Post: OnPlayerConnected:');
@@ -277,8 +277,17 @@ socket.broadcast.emit('OnPlayerConnected', currentPlayer);
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //START PLAYER MOVE
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
+//var ideltime = 0;
  socket.on('OnPlayerMove', function(data){
+//ideltime++;
+
+//for(var i =0; i<clients.length; i++)
+//{
+	//debug(clients[i].UserId);
+
+//}
+
+
 command(currentPlayer.UserId+'recv: move:'+JSON.stringify(data));
 currentPlayer.position = data.position;
 socket.broadcast.emit('OnPlayerMove',currentPlayer);
@@ -379,20 +388,36 @@ socket.broadcast.emit('health',response);
 
 socket.on('OnPlayerDisconnect',function(data)
 {
-	command(currentPlayer.UserId+'OnPlayerDisconnect:'+JSON.stringify(data));
-if(currentPlayer.UserId !='null')
-{
-command(currentPlayer.UserId+' recv: disconnect: '+currentPlayer.UserId);
-socket.broadcast.emit('OnPlayerDisconnect',currentPlayer);
-clear(currentPlayer.UserId+' bcst: other player disconnected: '+JSON.stringify(currentPlayer));
+info('Method Get: OnPlayerDisconnect:');
+info('Server Recieved From Client: ');
+command('Data_Manager: '+JSON.stringify(data));
+socket.emit('OnPlayerDisconnect',data);
+
+
 for(var i =0; i<clients.length; i++)
 {
-if(clients[i].UserId === currentPlayer.UserId)
+
+	debug(clients[i].UserId);
+if(clients[i].UserId === data.UserId)
 {
+	
+	debug('Data: Clients Removed= '+clients.length);
+	
 	clients.splice(i,1);
+	clear('Method Finished: OnPlayerDisconnect:');
 }
+
+    info('Method Post: OnPlayerDisconnect:');
+    info('Server Submit To Clients: ');
+    command('Send To Data_Manager: '+data.UserId);
+   
+    socket.broadcast.emit('OnPlayerDisconnect',data);
+   
+
 }
-}
+
+
+
 });
 
 
@@ -441,3 +466,5 @@ info("www.projectclickthrough.com");
 info("Copyrights @ What Copyrights 2017");
 info("Trademark @ What Trademark 2017");
 }
+
+

@@ -1,0 +1,21 @@
+fileFormatVersion: 2
+guid: 81ad3015c64ecf2468c610c20b61151f
+timeCreated: 1489296995
+licenseType: Free
+TrueTypeFontImporter:
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: R-2014
+  fontNames:
+  - R-2014
+  fallbackFontReferences: []
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

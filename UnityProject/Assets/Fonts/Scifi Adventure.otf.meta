@@ -1,0 +1,21 @@
+fileFormatVersion: 2
+guid: e3c444e882b13364cb82542aae20fd2d
+timeCreated: 1489298921
+licenseType: Free
+TrueTypeFontImporter:
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: Scifi Adventure
+  fontNames:
+  - Scifi Adventure
+  fallbackFontReferences: []
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

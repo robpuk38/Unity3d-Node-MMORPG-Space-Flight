@@ -1,0 +1,21 @@
+fileFormatVersion: 2
+guid: ef9affab0a5d1dd47a5fa356d84d9bb2
+timeCreated: 1489296995
+licenseType: Free
+TrueTypeFontImporter:
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: R-2014 Eroded
+  fontNames:
+  - R-2014 Eroded
+  fallbackFontReferences: []
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

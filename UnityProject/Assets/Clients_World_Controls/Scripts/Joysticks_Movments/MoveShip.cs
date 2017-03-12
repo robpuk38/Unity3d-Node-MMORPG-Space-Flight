@@ -23,70 +23,56 @@ public class MoveShip : MonoBehaviour {
 
 	public float movementSpeed = 50f;
 	public float turnSpeed = 50f;
-
-//	private float speed =0.0f;
-//	private bool isThrottle = false;
-//	private bool isThrottle_Boost = false;
 	public Vector3 Camoffset;
 	public float DistanceDamp = 0.1f;
 	public float rotationalDamp = 0.1f;
 	private float warpTime = 0.0f;
 	private float cooldownTime = 0.0f;
 
-	Vector3 oldPosition;
-	Vector3 currentPosition;
-	Quaternion oldRotation;
-	Quaternion currentRotation;
+	
 
 	private void Start()
 	{
-		
 
-		ourdrone = GetComponent<Rigidbody> ();
+        
+        ourdrone = GetComponent<Rigidbody> ();
 
-		oldPosition = transform.position;
-		currentPosition = oldPosition;
-		oldRotation = transform.rotation;
-		currentRotation = oldRotation;
+       
+
+	
 
 
 	}
 	private void LateUpdate()
 	{
 
-		if(PlayerController.Instance !=null && !PlayerController.Instance.isLocalPlayer)
-		{
-			return;
-		}
-
-		currentPosition = transform.position;
-		currentRotation = transform.rotation;
-
-		if(currentPosition != oldPosition)
-		{
-			NetworkManager.Instance.CommandMove (transform.position);
-			Data_Manager.Instance.SetUserPosX (transform.position.x.ToString());
-			Data_Manager.Instance.SetUserPosY (transform.position.y.ToString());
-			Data_Manager.Instance.SetUserPosZ (transform.position.z.ToString());
-			oldPosition = currentPosition;
-		}
-
-		if(currentRotation != oldRotation)
-		{
-			NetworkManager.Instance.CommandTurn (transform.rotation);
-			oldRotation = currentRotation;
-		}
 
 
-		warpTime++;
+
+        if (Data_Manager.Instance != null)
+        {
+            Data_Manager.Instance.SetUserPosX(transform.position.x.ToString());
+            Data_Manager.Instance.SetUserPosY(transform.position.y.ToString());
+            Data_Manager.Instance.SetUserPosZ(transform.position.z.ToString());
+        }
+               
+                
+           
+
+
+        if (isBoost == true)
+        {
+            warpTime++;
+            warp();
+        }
 		cooldownTime++;
-		warp ();
+       
 
-		//Camflow ();
 
-		SmoothFollow ();
+
+        SmoothFollow ();
 		JoyStick_Controls ();
-		//InGameRange ();
+		
 		SwitchThusters ();
 
 	}
@@ -127,7 +113,7 @@ public class MoveShip : MonoBehaviour {
 		isMoving = true;
 
 		transform.position += transform.forward * movementSpeed * liftup;
-
+       // Debug.Log("DID WE MAKE IT IN FOR MOVMENT?");
 
 
 
@@ -149,28 +135,19 @@ public class MoveShip : MonoBehaviour {
 
 
 
-	/*public void Camflow()
-	{
-		Vector3 toPos = transform.position + (transform.rotation * Camoffset);
-		Vector3 curPos = Vector3.Lerp (Camera.transform.position, toPos, DistanceDamp);
-		Camera.transform.position = curPos;
-		Quaternion toRot = Quaternion.LookRotation (transform.position - Camera.transform.position, transform.up);
-		Quaternion curRot = Quaternion.Slerp (Camera.transform.rotation,toRot, rotationalDamp);
-		Camera.transform.rotation = curRot;
-	}*/
-	//public Vector3 velocity = Vector3.zero;
+	
 
 	private void SmoothFollow()
 	{
-		//Vector3 toPos = transform.position + (transform.rotation * Camoffset);
-		//Vector3 curPos = Vector3.SmoothDamp (Camera.transform.position, toPos, ref velocity,DistanceDamp);
-		//Vector3 curPos_F = Vector3.SmoothDamp (Camera.transform.position, curPos, ref velocity,DistanceDamp);
-		Vector3 toPos = transform.position + (transform.rotation * Camoffset);
-		Vector3 curPos = Vector3.Lerp (Camera.transform.position, toPos, DistanceDamp);
-		Camera.transform.position = curPos;
-		Quaternion toRot = Quaternion.LookRotation (transform.position - Camera.transform.position, transform.up);
-		Quaternion curRot = Quaternion.Slerp (Camera.transform.rotation,toRot, rotationalDamp);
-		Camera.transform.rotation = curRot;
+       
+           
+            Vector3 toPos = transform.position + (transform.rotation * Camoffset);
+            Vector3 curPos = Vector3.Lerp(Camera.transform.position, toPos, DistanceDamp);
+            Camera.transform.position = curPos;
+            Quaternion toRot = Quaternion.LookRotation(transform.position - Camera.transform.position, transform.up);
+            Quaternion curRot = Quaternion.Slerp(Camera.transform.rotation, toRot, rotationalDamp);
+            Camera.transform.rotation = curRot;
+        
 
 	}
 	float liftup =0;
@@ -181,37 +158,39 @@ public class MoveShip : MonoBehaviour {
 
 
 		if (joyStick != null && joyStick.InputDicection == Vector3.zero && camjoyStick !=null && camjoyStick.InputDicection == Vector3.zero) {
-			//isThrottle = false;
-			if (isBoost == false) {
+			
+			if (isBoost == false)
+            {
 				
 				isMoving = false;
 				ourdrone.isKinematic = false;
-				//velocity = Vector3.zero;
-				//ourdrone.velocity = Vector3.zero;
-				//ourdrone.drag = 0.0f;
-				//ourdrone.mass = 0.0f;
-			//Thrust ();
+				
 			}
 
 		}
 		if (joyStick !=null && joyStick.InputDicection != Vector3.zero)
 		{
-			if (isBoost == false) {
+
+            NetworkManager.Instance.CommandTurn(transform.rotation);
+            NetworkManager.Instance.CommandMove(transform.position);
+
+            if (isBoost == false)
+            {
 				liftup = +SpeedForce * 1;
 				Thrust ();
 			}
 
-			Debug.Log ("X: "+joyStick.InputDicection.normalized.x);
-			Debug.Log ("Z: "+joyStick.InputDicection.normalized.z);
+			//Debug.Log ("X: "+joyStick.InputDicection.normalized.x);
+			//Debug.Log ("Z: "+joyStick.InputDicection.normalized.z);
 			if (joyStick.InputDicection.normalized.x < 0.8f && joyStick.InputDicection.normalized.z > 0.5f) {
 
+                liftup = +SpeedForce * 2;
+
+               
 
 
-				//transform.Rotate(0,TiltSpeed,0); 
 
-
-
-			}
+            }
 
 			if (joyStick.InputDicection.normalized.x > 0.8f && joyStick.InputDicection.normalized.z < 0.5f) {
 
@@ -232,7 +211,7 @@ public class MoveShip : MonoBehaviour {
 			if (joyStick.InputDicection.normalized.x > -0.8f && joyStick.InputDicection.normalized.z < -0.5f) {
 
 
-				//transform.Rotate(0,-TiltSpeed,0);
+				
 				transform.Rotate(-TiltSpeed,0,0); 
 
 			}
@@ -244,8 +223,10 @@ public class MoveShip : MonoBehaviour {
 
 		if (camjoyStick !=null && camjoyStick.InputDicection != Vector3.zero)
 		{
-			
-			if (isBoost == false) {
+            NetworkManager.Instance.CommandTurn(transform.rotation);
+            NetworkManager.Instance.CommandMove(transform.position);
+
+            if (isBoost == false) {
 				liftup = +SpeedForce * 1;
 				Thrust ();
 			}
@@ -311,27 +292,5 @@ public class MoveShip : MonoBehaviour {
 
 
 	}
-	/*
-	private void InGameRange()
-	{
-		if (transform.position.x >= GameArea) {
-			transform.position = new Vector3 (0, transform.position.y, transform.position.z);
-			//Debug.Log ("36");
-		} else if (transform.position.x <= -GameArea) {
-			transform.position = new Vector3 (GameArea, transform.position.y, transform.position.z);
-			//Debug.Log ("37");
-		} else if (transform.position.z >= GameArea) {
-			transform.position = new Vector3 (transform.position.x, transform.position.y, 0);
-			//Debug.Log ("38");
-		} else if (transform.position.z <= -GameArea) {
-			transform.position = new Vector3 (transform.position.x, transform.position.y, GameArea);
-			//Debug.Log ("39");
-		}
-
-
-		if (transform.position.y > GameArea) {
-			transform.position = new Vector3 (transform.position.x, GameArea, transform.position.z);
-			//Debug.Log ("40");
-		}
-	}*/
+	
 }

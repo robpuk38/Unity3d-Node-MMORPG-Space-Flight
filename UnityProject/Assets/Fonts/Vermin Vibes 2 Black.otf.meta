@@ -1,0 +1,21 @@
+fileFormatVersion: 2
+guid: ba6ec178774257b418e632df0ad287ca
+timeCreated: 1489299183
+licenseType: Free
+TrueTypeFontImporter:
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: Vermin Vibes 2 Black
+  fontNames:
+  - Vermin Vibes 2 Black
+  fallbackFontReferences: []
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
