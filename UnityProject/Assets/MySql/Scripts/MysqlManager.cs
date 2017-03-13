@@ -152,18 +152,7 @@ public class MysqlManager : MonoBehaviour {
 			
 
 
-
-	
-
-
-
-
-
-
-
-		FacebookManager.Instance.Facebook_Canvas.SetActive (true);
-		FacebookManager.Instance.Collected_Data_Canvas.SetActive (true);
-		FacebookManager.Instance.Join_Game_Canvas.SetActive (false);
+        
 		NetworkManager.Instance.JoinGame ();
 
 		}

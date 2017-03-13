@@ -14,6 +14,10 @@ public class NetworkManager : MonoBehaviour {
 	public SocketIOComponent socket;
 	public GameObject player;
 
+    public GameObject cam;
+
+    public string _UserId = "";
+
 	void Awake()
 	{
 		if(instance == null)
@@ -34,7 +38,7 @@ public class NetworkManager : MonoBehaviour {
 		socket.On("OnPlayerConnected",_OnPlayerConnected);
 		//socket.On("OnPlay",_OnPlay);
 		socket.On("OnPlayerMove",_OnPlayerMove);
-		socket.On("OnPlayerTurn",_OnPlayerTurn);
+		
 		//socket.On("OnPlayerShoot",_OnPlayerShoot);
 		//socket.On("OnHealth",_OnHealth);
 		socket.On("OnPlayerDisconnect",_OnPlayerDisconnect);
@@ -43,6 +47,17 @@ public class NetworkManager : MonoBehaviour {
 
     }
 
+
+    public string SetUserId(string UserId)
+    {
+        _UserId = UserId;
+        return _UserId;
+    }
+
+    public string GetUserId()
+    {
+        return _UserId;
+    }
 
     private void Update()
     {
@@ -121,18 +136,30 @@ public class NetworkManager : MonoBehaviour {
 		Joincanvas.gameObject.SetActive (false);
 	}
 
-	public void CommandMove(Vector3 vec3)
+	public void CommandMove()
 	{
-		string data = JsonUtility.ToJson (new PositionJSON (vec3));
-		socket.Emit ("OnPlayerMove", new JSONObject (data));
+        float posx;
+        float posy;
+        float posz;
+        float.TryParse(Data_Manager.Instance.GetUserPosX(), out posx);
+        float.TryParse(Data_Manager.Instance.GetUserPosY(), out posy);
+        float.TryParse(Data_Manager.Instance.GetUserPosZ(), out posz);
+
+        float rotx;
+        float roty;
+        float rotz;
+        float.TryParse(Data_Manager.Instance.GetUserRotX(), out rotx);
+        float.TryParse(Data_Manager.Instance.GetUserRotY(), out roty);
+        float.TryParse(Data_Manager.Instance.GetUserRotZ(), out rotz);
+
+        POSPlayerJSON posplayerJSON = new POSPlayerJSON(
+            Data_Manager.Instance.GetUserId(), 
+            posx,posy,posz,rotx,roty,rotz);
+        string data = JsonUtility.ToJson(posplayerJSON);
+        socket.Emit ("OnPlayerMove", new JSONObject (data));
 
 	}
-	public void CommandTurn(Quaternion quat)
-	{
-		string data = JsonUtility.ToJson (new RotationJSON (quat));
-		socket.Emit ("OnPlayerTurn", new JSONObject (data));
-
-	}
+	
 
 	public void CommandShoot()
 	{
@@ -180,8 +207,7 @@ public class NetworkManager : MonoBehaviour {
 
 		UserJSON userJSON = UserJSON.CreateFromJSON (data);
 		//Debug.Log ("Data: Id: "+ userJSON.Id);
-		//Vector3 position = new Vector3 (userJSON.position [0], userJSON.position [1], userJSON.position [2]);
-		//Quaternion rotation = Quaternion.Euler (userJSON.rotation [0], userJSON.rotation [1], userJSON.rotation [2]);
+		
 		GameObject o = GameObject.Find (userJSON.UserId) as GameObject;
 			if(o != null)
 			{
@@ -207,106 +233,81 @@ public class NetworkManager : MonoBehaviour {
                  _Player_Camera.gameObject.SetActive(true);
                  Transform _UI_Controls = p.transform.Find("UI_Controls");
                  _UI_Controls.gameObject.SetActive(true);
+
+                cam.SetActive(false);
+                SetUserId(userJSON.UserId.ToString());
+                FacebookManager.Instance.Facebook_Canvas.SetActive(true);
+                FacebookManager.Instance.Collected_Data_Canvas.SetActive(true);
+                FacebookManager.Instance.Join_Game_Canvas.SetActive(false);
+
             }
-            Debug.Log("WHO AM I" + Data_Manager.Instance.GetUserId());
+           // Debug.Log("WHO AM I" + Data_Manager.Instance.GetUserId());
         }
         
-        //Debug.Log ("Data: Instantiate: "+ p.name);
-        //here we are setting up their other fields name and is they are local 
-        //PlayerController pc = p.GetComponent<PlayerController>();
-        //pc.isLocalPlayer = false;
+      
 
 
 
         Get_Data_Container_Info(p, userJSON);
 
 
-
-		//we also need to set the health
-		//PlayersHealth h = p.GetComponent<PlayersHealth>();
-
-		//h.currentHealth = int.Parse(userJSON.UserHealth);
-		//h.OnChangeHealth ();
+		
 	}
 
 
 
-	/*void _OnPlay(SocketIOEvent socketIOEvent)
-	{
-		Debug.Log ("Method: _OnPlay");
-		Debug.Log ("Client Recieved:");
-		string data = socketIOEvent.data.ToString();
-		Debug.Log ("Data_Manager:"+ data);
 
-		UserJSON userJSON = UserJSON.CreateFromJSON (data);
-		Debug.Log ("Data: Id: "+ userJSON.Id);
-		Vector3 position = new Vector3 (userJSON.position [0], userJSON.position [1], userJSON.position [2]);
-		Quaternion rotation = Quaternion.Euler (userJSON.rotation [0], userJSON.rotation [1], userJSON.rotation [2]);
-		GameObject p = Instantiate (player, position, rotation) as GameObject;
-		PlayerController pc = p.GetComponent<PlayerController>();
-		Transform t = p.transform.Find("Healthbar Canvas");
-		Transform t1 = t.transform.Find ("Player Name");
-		Text playerName = t1.GetComponent<Text> ();
-		playerName.text = userJSON.UserName;
-		pc.isLocalPlayer = true;
-		p.name = userJSON.Id;
-
-	}*/
 
 	void _OnPlayerMove(SocketIOEvent socketIOEvent)
 	{
-		Debug.Log ("Method: _OnPlayerMove");
-		Debug.Log ("Client Recieved:");
+		//Debug.Log ("Method: _OnPlayerMove");
+		//Debug.Log ("Client Recieved:");
 		string data = socketIOEvent.data.ToString ();
-		Debug.Log ("Data_Manager:"+ data);
+		//Debug.Log ("Data_Manager:"+ data);
 
-		UserJSON userJSON = UserJSON.CreateFromJSON (data);
-		Debug.Log ("Data: Id: "+ userJSON.Id);
-		Vector3 position = new Vector3 (userJSON.position [0], userJSON.position [1], userJSON.position [2]);
+        POSUserJSON posuserJSON = POSUserJSON.CreateFromJSON (data);
+       // Debug.Log("Data: UserId: " + posuserJSON.UserId);
+      //  Debug.Log("Data: PosX: " + posuserJSON.posx);
+       // Debug.Log("Data: PosY: " + posuserJSON.posy);
+       // Debug.Log("Data: PosZ: " + posuserJSON.posz);
+      //  Debug.Log("Data: RotX: " + posuserJSON.rotx);
+      //  Debug.Log("Data: RotY: " + posuserJSON.roty);
+      //  Debug.Log("Data: RotZ: " + posuserJSON.rotz);
 
-		//if(userJSON.Id == Data_Manager.Instance.GetId())
-		//{
-		//	return;
-		//}
-		GameObject p = GameObject.Find (userJSON.UserId) as GameObject;
-		if(p != null)
-		{
-			p.transform.position = position;
-		}
+        
 
 
-	}
+        Vector3 position = new Vector3(posuserJSON.posx, posuserJSON.posy, posuserJSON.posz);
+           Quaternion rotation = Quaternion.Euler(posuserJSON.rotx, posuserJSON.roty, posuserJSON.rotz);
 
-	void _OnPlayerTurn(SocketIOEvent socketIOEvent)
-	{
-		string data = socketIOEvent.data.ToString ();
-		UserJSON userJSON = UserJSON.CreateFromJSON (data);
+        GameObject p = GameObject.Find(posuserJSON.UserId) as GameObject;
+        
+            if (p != null)
+            {
+           // Debug.Log("WE ARE SEEING SOMEONE ELSE DO SOMETHING: " + posuserJSON.UserId.ToString());
+            Transform ZeroDrone = p.transform.Find("ZeroDrone");
+           // Debug.Log("WHAT " + ZeroDrone.name);
+            ZeroDrone.GetComponent<Transform>().position = position;
+            ZeroDrone.GetComponent<Transform>().rotation = rotation;
+        }
+      
 
 
+                
+
+
+
+            }
+    /*
 	
-		Quaternion rotation = Quaternion.Euler (userJSON.rotation [0], userJSON.rotation [1], userJSON.rotation [2]);
-		Debug.Log ("OnPlayerTurn:" + rotation);
-		//if(userJSON.Id == Data_Manager.Instance.GetId())
-		//{
-		//	return;
-		//}
-
-		GameObject p = GameObject.Find (userJSON.UserId) as GameObject;
-		if(p != null)
-		{
-			p.transform.rotation = rotation;
-		}
-
-
-	}
 
 	void _OnPlayerShoot(SocketIOEvent socketIOEvent)
 	{
-		/*string data = socketIOEvent.data.ToString ();
+		string data = socketIOEvent.data.ToString ();
 		ShootJSON shootJSON = ShootJSON.CreateFromJSON (data);
 		GameObject p = GameObject.Find (userJSON.UserId);
 		PlayerController pc = p.GetComponent<PlayerController>();
-		pc.CmdFire ();*/
+		pc.CmdFire ();
 	}
 
 	void _OnHealth(SocketIOEvent socketIOEvent)
@@ -321,22 +322,31 @@ public class NetworkManager : MonoBehaviour {
 		h.OnChangeHealth ();
 
 
-	}
+	}*/
 
 	void _OnPlayerDisconnect(SocketIOEvent socketIOEvent)
 	{
 		
 		string data = socketIOEvent.data.ToString ();
         Debug.Log("OnPlayerDisconnect " + data);
-        UserJSON userJSON = UserJSON.CreateFromJSON (data);
+        DCUserJSON dcuserJSON = DCUserJSON.CreateFromJSON (data);
+        
 
-        GameObject p = GameObject.Find(userJSON.UserId) as GameObject;
-        if (p != null)
-        {
-            Destroy(GameObject.Find(userJSON.UserId));
-            Joincanvas.gameObject.SetActive(true);
-            FBcanvas.gameObject.SetActive(false);
-        }
+            
+                GameObject p = GameObject.Find(dcuserJSON.UserId) as GameObject;
+                if (p != null)
+                {
+                    Destroy(GameObject.Find(dcuserJSON.UserId));
+                  if (Data_Manager.Instance != null)
+                  {
+                    if (Data_Manager.Instance.GetUserId() == dcuserJSON.UserId.ToString())
+                    {
+                    this.Joincanvas.gameObject.SetActive(true);
+                    this.FBcanvas.gameObject.SetActive(false);
+                    this.cam.SetActive(true);
+                    }
+                  }
+                }
 
 	}
 
@@ -446,6 +456,57 @@ public class NetworkManager : MonoBehaviour {
        public DCPlayerJSON(string _UserId)
         {
            UserId = _UserId;
+        }
+    }
+
+    [Serializable]
+    public class DCUserJSON
+    {
+        public string UserId;
+        public static DCUserJSON CreateFromJSON(string data)
+        {
+            return JsonUtility.FromJson<DCUserJSON>(data);
+        }
+    }
+
+
+    [Serializable]
+    public class POSPlayerJSON
+    {
+        public string UserId;
+        public float posx;
+        public float posy;
+        public float posz;
+        public float rotx;
+        public float roty;
+        public float rotz;
+        public POSPlayerJSON(string _UserId,float _posx, float _posy, float _posz, float _rotx, float _roty, float _rotz)
+        {
+            UserId = _UserId;
+            posx = _posx;
+            posy = _posy;
+            posz = _posz;
+            rotx = _rotx;
+            roty = _roty;
+            rotz = _rotz;
+        }
+    }
+
+
+    [Serializable]
+    public class POSUserJSON
+    {
+        public string UserId;
+        public float posx;
+        public float posy;
+        public float posz;
+        public float rotx;
+        public float roty;
+        public float rotz;
+        //public int health;
+        public static POSUserJSON CreateFromJSON(string data)
+        {
+            return JsonUtility.FromJson<POSUserJSON>(data);
         }
     }
 

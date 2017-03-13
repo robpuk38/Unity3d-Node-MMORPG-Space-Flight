@@ -25,9 +25,12 @@ public class Data_Manager : MonoBehaviour {
 	public Text UserVungleApi;
 	public Text UserAdcolonyApi;
 	public Text UserAdcolonyZone;
+    public Text UserRotX;
+    public Text UserRotY;
+    public Text UserRotZ;
 
 
-	private void Awake()
+    private void Awake()
 	{
 		instance = this;
 	}
@@ -228,6 +231,34 @@ public class Data_Manager : MonoBehaviour {
 		return UserAdcolonyZone.text;
 	}
 
+    public void SetUserRotX(string set)
+    {
+        UserRotX.text = set;
+    }
 
+    public string GetUserRotX()
+    {
+        return UserRotX.text;
+    }
+
+    public void SetUserRotY(string set)
+    {
+        UserRotY.text = set;
+    }
+
+    public string GetUserRotY()
+    {
+        return UserRotY.text;
+    }
+
+    public void SetUserRotZ(string set)
+    {
+        UserRotZ.text = set;
+    }
+
+    public string GetUserRotZ()
+    {
+        return UserRotZ.text;
+    }
 
 }

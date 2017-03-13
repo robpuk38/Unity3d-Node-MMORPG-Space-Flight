@@ -33,49 +33,45 @@ public class MoveShip : MonoBehaviour {
 
 	private void Start()
 	{
+     ourdrone = GetComponent<Rigidbody> ();
+    }
 
-        
-        ourdrone = GetComponent<Rigidbody> ();
-
-       
-
-	
-
-
-	}
 	private void LateUpdate()
 	{
-
-
-
-
         if (Data_Manager.Instance != null)
         {
-            Data_Manager.Instance.SetUserPosX(transform.position.x.ToString());
-            Data_Manager.Instance.SetUserPosY(transform.position.y.ToString());
-            Data_Manager.Instance.SetUserPosZ(transform.position.z.ToString());
+            if (NetworkManager.Instance != null)
+            {
+                if (Data_Manager.Instance.GetUserId() == NetworkManager.Instance.GetUserId())
+                {
+
+                    if (isMoving == true)
+                    {
+                        Data_Manager.Instance.SetUserPosX(transform.position.x.ToString());
+                        Data_Manager.Instance.SetUserPosY(transform.position.y.ToString());
+                        Data_Manager.Instance.SetUserPosZ(transform.position.z.ToString());
+                        Data_Manager.Instance.SetUserRotX(transform.rotation.x.ToString());
+                        Data_Manager.Instance.SetUserRotY(transform.rotation.y.ToString());
+                        Data_Manager.Instance.SetUserRotZ(transform.rotation.z.ToString());
+                        NetworkManager.Instance.CommandMove();
+                    }
+
+                    if (isBoost == true)
+                    {
+                        warpTime++;
+                        warp();
+                    }
+                    cooldownTime++;
+                    SmoothFollow();
+                    JoyStick_Controls();
+
+                    SwitchThusters();
+
+                }
+            }
         }
-               
-                
-           
 
-
-        if (isBoost == true)
-        {
-            warpTime++;
-            warp();
-        }
-		cooldownTime++;
-       
-
-
-
-        SmoothFollow ();
-		JoyStick_Controls ();
-		
-		SwitchThusters ();
-
-	}
+    }
 
 
 
@@ -113,12 +109,12 @@ public class MoveShip : MonoBehaviour {
 		isMoving = true;
 
 		transform.position += transform.forward * movementSpeed * liftup;
-       // Debug.Log("DID WE MAKE IT IN FOR MOVMENT?");
+        // Debug.Log("DID WE MAKE IT IN FOR MOVMENT?");
+       
 
 
 
-
-	}
+    }
 	bool isMoving = false;
 	private void SwitchThusters()
 	{
@@ -139,136 +135,144 @@ public class MoveShip : MonoBehaviour {
 
 	private void SmoothFollow()
 	{
-       
-           
-            Vector3 toPos = transform.position + (transform.rotation * Camoffset);
-            Vector3 curPos = Vector3.Lerp(Camera.transform.position, toPos, DistanceDamp);
-            Camera.transform.position = curPos;
-            Quaternion toRot = Quaternion.LookRotation(transform.position - Camera.transform.position, transform.up);
-            Quaternion curRot = Quaternion.Slerp(Camera.transform.rotation, toRot, rotationalDamp);
-            Camera.transform.rotation = curRot;
-        
 
-	}
+        Vector3 toPos = transform.position + (transform.rotation * Camoffset);
+        Vector3 curPos = Vector3.Lerp(Camera.transform.position, toPos, DistanceDamp);
+        Camera.transform.position = curPos;
+        Quaternion toRot = Quaternion.LookRotation(transform.position - Camera.transform.position, transform.up);
+        Quaternion curRot = Quaternion.Slerp(Camera.transform.rotation, toRot, rotationalDamp);
+        Camera.transform.rotation = curRot;
+    }
+
+
 	float liftup =0;
 	float pullleft =0;
 	private void JoyStick_Controls()
 	{
 
+      
 
+                    if (joyStick != null && joyStick.InputDicection == Vector3.zero && camjoyStick != null && camjoyStick.InputDicection == Vector3.zero)
+                    {
 
-		if (joyStick != null && joyStick.InputDicection == Vector3.zero && camjoyStick !=null && camjoyStick.InputDicection == Vector3.zero) {
-			
-			if (isBoost == false)
-            {
-				
-				isMoving = false;
-				ourdrone.isKinematic = false;
-				
-			}
+                        if (isBoost == false)
+                        {
 
-		}
-		if (joyStick !=null && joyStick.InputDicection != Vector3.zero)
-		{
+                            isMoving = false;
+                            ourdrone.isKinematic = false;
 
-            NetworkManager.Instance.CommandTurn(transform.rotation);
-            NetworkManager.Instance.CommandMove(transform.position);
+                        }
 
-            if (isBoost == false)
-            {
-				liftup = +SpeedForce * 1;
-				Thrust ();
-			}
+                    }
+                    if (joyStick != null && joyStick.InputDicection != Vector3.zero)
+                    {
 
-			//Debug.Log ("X: "+joyStick.InputDicection.normalized.x);
-			//Debug.Log ("Z: "+joyStick.InputDicection.normalized.z);
-			if (joyStick.InputDicection.normalized.x < 0.8f && joyStick.InputDicection.normalized.z > 0.5f) {
+                        
+                        
 
-                liftup = +SpeedForce * 2;
+                        if (isBoost == false)
+                        {
+                            liftup = +SpeedForce * 1;
+                            Thrust();
+                        }
 
-               
+                        //Debug.Log ("X: "+joyStick.InputDicection.normalized.x);
+                        //Debug.Log ("Z: "+joyStick.InputDicection.normalized.z);
+                        if (joyStick.InputDicection.normalized.x < 0.8f && joyStick.InputDicection.normalized.z > 0.5f)
+                        {
 
-
-
-            }
-
-			if (joyStick.InputDicection.normalized.x > 0.8f && joyStick.InputDicection.normalized.z < 0.5f) {
-
-				pullleft=RollSpeed;
-				transform.Rotate(0,pullleft,-pullleft);
+                            liftup = +SpeedForce * 2;
 
 
 
-			}
-
-			if (joyStick.InputDicection.normalized.x < -0.8f && joyStick.InputDicection.normalized.z > -0.5f) {
-
-				pullleft =-RollSpeed;
-				transform.Rotate(0,pullleft,-pullleft);
-
-			}
-
-			if (joyStick.InputDicection.normalized.x > -0.8f && joyStick.InputDicection.normalized.z < -0.5f) {
 
 
-				
-				transform.Rotate(-TiltSpeed,0,0); 
+                        }
 
-			}
+                        if (joyStick.InputDicection.normalized.x > 0.8f && joyStick.InputDicection.normalized.z < 0.5f)
+                        {
+
+                            pullleft = RollSpeed;
+                            transform.Rotate(0, pullleft, -pullleft);
 
 
 
-		}
+                        }
 
+                        if (joyStick.InputDicection.normalized.x < -0.8f && joyStick.InputDicection.normalized.z > -0.5f)
+                        {
 
-		if (camjoyStick !=null && camjoyStick.InputDicection != Vector3.zero)
-		{
-            NetworkManager.Instance.CommandTurn(transform.rotation);
-            NetworkManager.Instance.CommandMove(transform.position);
+                            pullleft = -RollSpeed;
+                            transform.Rotate(0, pullleft, -pullleft);
 
-            if (isBoost == false) {
-				liftup = +SpeedForce * 1;
-				Thrust ();
-			}
-		//	Debug.Log ("X: "+camjoyStick.InputDicection.normalized.x);
-			//Debug.Log ("Z: "+camjoyStick.InputDicection.normalized.z);
+                        }
 
-			if (camjoyStick.InputDicection.normalized.x < 0.8f && camjoyStick.InputDicection.normalized.z > 0.5f) {
-				//Debug.Log ("OK GOT IT NEW TOP");
-
-
-				transform.Rotate(TiltSpeed,0,0); 
-
-
-			}
-
-			if (camjoyStick.InputDicection.normalized.x > 0.8f && camjoyStick.InputDicection.normalized.z < 0.5f) {
-				//Debug.Log ("OK GOT IT NEW RIGHT");
-				pullleft=RollSpeed;
-				transform.Rotate(0,0,-pullleft);
-
-
-			}
-
-			if (camjoyStick.InputDicection.normalized.x < -0.8f && camjoyStick.InputDicection.normalized.z > -0.5f) {
-			//	Debug.Log ("OK GOT IT NEW LEFT");
-
-				//transform.Rotate(0,-PitchSpeed,0);
-				pullleft=-RollSpeed;
-				transform.Rotate(0,0,-pullleft);
-
-			}
-
-			if (camjoyStick.InputDicection.normalized.x > -0.8f && camjoyStick.InputDicection.normalized.z < -0.5f) {
-				//Debug.Log ("OK GOT IT NEW BOTTOM");
-
-                transform.Rotate(-TiltSpeed,0,0); 
-
-			}
+                        if (joyStick.InputDicection.normalized.x > -0.8f && joyStick.InputDicection.normalized.z < -0.5f)
+                        {
 
 
 
-		}
+                            transform.Rotate(-TiltSpeed, 0, 0);
+
+                        }
+
+
+
+                    }
+
+
+                    if (camjoyStick != null && camjoyStick.InputDicection != Vector3.zero)
+                    {
+                        
+                    
+
+                        if (isBoost == false)
+                        {
+                            liftup = +SpeedForce * 1;
+                            Thrust();
+                        }
+                        //	Debug.Log ("X: "+camjoyStick.InputDicection.normalized.x);
+                        //Debug.Log ("Z: "+camjoyStick.InputDicection.normalized.z);
+
+                        if (camjoyStick.InputDicection.normalized.x < 0.8f && camjoyStick.InputDicection.normalized.z > 0.5f)
+                        {
+                            //Debug.Log ("OK GOT IT NEW TOP");
+
+
+                            transform.Rotate(TiltSpeed, 0, 0);
+
+
+                        }
+
+                        if (camjoyStick.InputDicection.normalized.x > 0.8f && camjoyStick.InputDicection.normalized.z < 0.5f)
+                        {
+                            //Debug.Log ("OK GOT IT NEW RIGHT");
+                            pullleft = RollSpeed;
+                            transform.Rotate(0, 0, -pullleft);
+
+
+                        }
+
+                        if (camjoyStick.InputDicection.normalized.x < -0.8f && camjoyStick.InputDicection.normalized.z > -0.5f)
+                        {
+                            //	Debug.Log ("OK GOT IT NEW LEFT");
+
+                            //transform.Rotate(0,-PitchSpeed,0);
+                            pullleft = -RollSpeed;
+                            transform.Rotate(0, 0, -pullleft);
+
+                        }
+
+                        if (camjoyStick.InputDicection.normalized.x > -0.8f && camjoyStick.InputDicection.normalized.z < -0.5f)
+                        {
+                            //Debug.Log ("OK GOT IT NEW BOTTOM");
+
+                            transform.Rotate(-TiltSpeed, 0, 0);
+
+                        }
+
+
+                    }
 
 	}
 

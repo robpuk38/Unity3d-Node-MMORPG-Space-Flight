@@ -115,17 +115,17 @@
     <Reference Include="SyntaxTree.VisualStudio.Unity.Bridge">
       <HintPath>Library\UnityAssemblies\SyntaxTree.VisualStudio.Unity.Bridge.dll</HintPath>
     </Reference>
-    <Reference Include="Facebook.Unity">
-      <HintPath>Assets\Login\FacebookSDK\Plugins\Facebook.Unity.dll</HintPath>
-    </Reference>
-    <Reference Include="Facebook.Unity.Editor">
-      <HintPath>Assets\Login\FacebookSDK\Plugins\Editor\Facebook.Unity.Editor.dll</HintPath>
-    </Reference>
     <Reference Include="Facebook.Unity.PlatformEditor">
-      <HintPath>Assets\Login\FacebookSDK\Plugins\Editor\Facebook.Unity.PlatformEditor.dll</HintPath>
+      <HintPath>Assets\FacebookSDK\Plugins\Editor\Facebook.Unity.PlatformEditor.dll</HintPath>
     </Reference>
     <Reference Include="Facebook.Unity.Settings">
-      <HintPath>Assets\Login\FacebookSDK\Plugins\Settings\Facebook.Unity.Settings.dll</HintPath>
+      <HintPath>Assets\FacebookSDK\Plugins\Settings\Facebook.Unity.Settings.dll</HintPath>
+    </Reference>
+    <Reference Include="Facebook.Unity.Editor">
+      <HintPath>Assets\FacebookSDK\Plugins\Editor\Facebook.Unity.Editor.dll</HintPath>
+    </Reference>
+    <Reference Include="Facebook.Unity">
+      <HintPath>Assets\FacebookSDK\Plugins\Facebook.Unity.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -138,7 +138,7 @@
     <Compile Include="Assets\Server\SocketIO\JSONObject\Editor\JSONChecker.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Assets\Login\FacebookSDK\link.xml" />
+    <None Include="Assets\FacebookSDK\link.xml" />
     <None Include="Assets\Plugins\Android\AndroidManifest.xml" />
     <None Include="Assets\Server\SocketIO\JSONObject\readme.txt" />
     <None Include="Assets\Server\SocketIO\Readme.txt" />

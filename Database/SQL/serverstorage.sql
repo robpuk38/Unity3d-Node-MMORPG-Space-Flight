@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50505
 File Encoding         : 65001
 
-Date: 2017-03-12 17:24:40
+Date: 2017-03-13 04:40:36
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -39,5 +39,8 @@ CREATE TABLE `basic_players_info` (
   `UserVungleApi` varchar(255) COLLATE utf32_unicode_ci NOT NULL DEFAULT '0',
   `UserAdcolonyApi` varchar(255) COLLATE utf32_unicode_ci NOT NULL DEFAULT '0',
   `UserAdcolonyZone` varchar(255) COLLATE utf32_unicode_ci NOT NULL DEFAULT '0',
+  `UserRotX` varchar(255) COLLATE utf32_unicode_ci NOT NULL DEFAULT '0',
+  `UserRotY` varchar(255) COLLATE utf32_unicode_ci NOT NULL DEFAULT '0',
+  `UserRotZ` varchar(255) COLLATE utf32_unicode_ci NOT NULL DEFAULT '0',
   PRIMARY KEY (`Id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf32 COLLATE=utf32_unicode_ci;

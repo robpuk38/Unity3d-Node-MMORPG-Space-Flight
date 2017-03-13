@@ -15,7 +15,8 @@ public class FacebookManager : MonoBehaviour
 	public Text UserName;
 	public Text UserLast;
 	public Text UserToken;
-	public Image ProfilePic;
+    public Text ConnectionMessage;
+    public Image ProfilePic;
 
 	private void Awake()
 	{
@@ -65,7 +66,7 @@ public class FacebookManager : MonoBehaviour
 		}
 		else
 		{
-			Debug.Log ("Error:"+ result.Error);
+            ConnectionMessage.text = "Error:"+ result.Error;
 		}
 
 	}
@@ -93,7 +94,7 @@ public class FacebookManager : MonoBehaviour
 		}
 		else
 		{
-			Debug.Log ("Error:"+ result.Error);
+            ConnectionMessage.text = "Error:" + result.Error;
 		}
 
 	}
@@ -112,7 +113,7 @@ public class FacebookManager : MonoBehaviour
 		}
 		else
 		{
-			Debug.Log ("Error:"+ result.Error);
+            ConnectionMessage.text = "Error:" + result.Error;
 		}
 
 	}
@@ -134,7 +135,7 @@ public class FacebookManager : MonoBehaviour
 		}
 		else
 		{
-			Debug.Log ("Error:"+ result.Error);
+            ConnectionMessage.text = "Error:" + result.Error;
 		}
 
 	}
@@ -155,7 +156,7 @@ public class FacebookManager : MonoBehaviour
 		}
 		else
 		{
-			Debug.Log ("Login Failed");	
+            ConnectionMessage.text = "Login Failed";	
 		}
 
 	}
