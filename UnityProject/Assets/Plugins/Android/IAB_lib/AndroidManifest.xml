@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.prime31.IAB">
+    <uses-sdk android:minSdkVersion="9"/>
+
+    <application>
+		<activity android:name="com.prime31.GoogleIABProxyActivity" android:configChanges="orientation|keyboard|keyboardHidden|screenLayout|uiMode|screenSize" android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen"></activity>
+    </application>
+
+	<uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="com.android.vending.BILLING" />
+</manifest>

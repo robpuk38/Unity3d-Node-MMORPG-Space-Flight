@@ -205,5 +205,10 @@ public class MysqlManager : MonoBehaviour {
 
 
 
+    public void SaveUsersData()
+    {
+        Debug.Log("SAVEING PLAYERS DETALS TO THE DATABASE NOW");
+    }
+
 
 }

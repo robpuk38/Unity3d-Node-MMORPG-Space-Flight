@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.adcolony.unityplugin">
+
+    <uses-sdk
+        android:minSdkVersion="14"
+        android:targetSdkVersion="23" />
+
+    <supports-screens android:smallScreens="true" android:normalScreens="true" android:largeScreens="true" android:xlargeScreens="true" android:anyDensity="true" />
+
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
+    ${pushNotificationSupport}
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    ${/pushNotificationSupport}
+
+    ${pushNotificationSupport}
+    <permission android:name="${applicationId}.permission.C2D_MESSAGE" android:protectionLevel="signature"/>
+    <uses-permission android:name="${applicationId}.permission.C2D_MESSAGE"/>
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE"/>
+    ${/pushNotificationSupport}
+
+    <application>
+        <activity android:name="com.adcolony.sdk.AdColonyPubServicesOverlayActivity" android:configChanges="keyboardHidden|orientation|screenSize" android:hardwareAccelerated="true" android:theme="@android:style/Theme.Dialog" />
+        <activity android:name="com.adcolony.sdk.AdColonyPubServicesModalActivity" android:configChanges="keyboardHidden|orientation|screenSize" android:hardwareAccelerated="true" android:theme="@android:style/Theme.Dialog"/>
+
+        <activity android:name="com.adcolony.sdk.AdColonyInterstitialActivity" android:configChanges="keyboardHidden|orientation|screenSize" android:hardwareAccelerated="true"/>
+
+        ${messagingLaunchActivity}
+        <activity android:name="com.adcolony.sdk.MessagingLaunchActivity">
+            ${pushNotificationSupport}
+            <intent-filter>
+                <action android:name="com.adcolony.sdk.MessagingLaunchActivity.PUSH_ACTION" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+            ${/pushNotificationSupport}
+            ${deepLinkSupport}
+            <intent-filter>
+                <data android:scheme="${scheme}" />
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+            </intent-filter>
+            ${/deepLinkSupport}
+        </activity>
+        ${/messagingLaunchActivity}
+
+        ${pushNotificationSupport}
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version"/>
+
+        <receiver
+            android:name="com.google.android.gms.gcm.GcmReceiver"
+            android:exported="true"
+            android:permission="com.google.android.c2dm.permission.SEND" >
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                <category android:name="${applicationId}" />
+            </intent-filter>
+        </receiver>
+
+        <service
+            android:name="com.adcolony.sdk.AdColonyPubServicesPushGcmListenerService"
+            android:exported="false" >
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+            </intent-filter>
+        </service>
+
+        <service
+            android:name="com.adcolony.sdk.AdColonyPubServicesPushRegIdListenerService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.android.gms.iid.InstanceID" />
+            </intent-filter>
+        </service>
+
+        <service
+            android:name="com.adcolony.sdk.AdColonyPubServicesPushRegIdIntentService"
+            android:exported="false">
+        </service>
+        ${/pushNotificationSupport}
+
+    </application>
+
+</manifest>

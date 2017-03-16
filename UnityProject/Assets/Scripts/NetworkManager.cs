@@ -4,6 +4,7 @@ using UnityEngine;
 using System;
 using UnityEngine.UI;
 using SocketIO;
+using System.Net.Sockets;
 
 public class NetworkManager : MonoBehaviour {
 
@@ -11,8 +12,16 @@ public class NetworkManager : MonoBehaviour {
 	public static NetworkManager Instance{get{return instance; }}
     public Canvas FBcanvas;
     public Canvas Joincanvas;
-	public SocketIOComponent socket;
+    public Canvas ServerStatuscanvas;
+    public SocketIOComponent socket;
 	public GameObject player;
+    public string GetIPAddress = "73.146.71.203";
+    public int GetPort = 3000;
+    private bool hasjoined = false;
+    private bool hasbeenDC = false;
+    private bool userIsConnected = false;
+
+
 
     public GameObject cam;
 
@@ -28,9 +37,10 @@ public class NetworkManager : MonoBehaviour {
 		{
 			Destroy (gameObject);
 		}
-		//DontDestroyOnLoad (gameObject);
-		
-	}
+        CheckServerStatus();
+
+
+    }
     private bool Load_Once = false;
 	void Load_Core () {
 		//subscribe to all the websocket events
@@ -46,6 +56,36 @@ public class NetworkManager : MonoBehaviour {
 
 
     }
+    int check = 0;
+    private void CheckServerStatus()
+    {
+
+        TcpClient tcpClient = new TcpClient();
+        try
+        {
+            tcpClient.Connect(GetIPAddress, GetPort);
+            Debug.Log("Port open");
+            if(hasbeenDC == true && hasjoined == false && userIsConnected == false)
+            {
+                JoinGame();
+            }
+            ServerStatuscanvas.gameObject.SetActive(false);
+        }
+        catch (Exception)
+        {
+            Debug.Log("Port closed");
+            if(hasjoined == true)
+            {
+                hasbeenDC = true;
+                ServerStatuscanvas.gameObject.SetActive(true);
+            }
+            hasjoined = false;
+            userIsConnected = false;
+    
+        }
+        Debug.Log("Check Server: "+ check);
+
+    }
 
 
     public string SetUserId(string UserId)
@@ -58,10 +98,23 @@ public class NetworkManager : MonoBehaviour {
     {
         return _UserId;
     }
-
+    
     private void Update()
     {
+        check++;
 
+        Debug.Log("hasbeenDC ?: " + hasbeenDC);
+        Debug.Log("hasjoined ?: " + hasjoined);
+        Debug.Log("userIsConnected ?: " + userIsConnected);
+      
+
+            if (check > 500)
+        {
+            //Ok We now know if the server is online or offline this would also be a good place to auto save the players 
+            CheckServerStatus();
+            AutoSavePlayer();
+            check = 0;
+        }
        
         if (Data_Manager.Instance != null && Data_Manager.Instance.UserId.text == "UserId")
         {
@@ -79,7 +132,22 @@ public class NetworkManager : MonoBehaviour {
         }
     }
 
-
+    private void AutoSavePlayer()
+    {
+        if (Data_Manager.Instance != null && Data_Manager.Instance.UserId.text != "UserId" && hasjoined == true)
+        {
+            Debug.Log("Lets Save The Players Details");
+            if (MysqlManager.Instance != null)
+            {
+                MysqlManager.Instance.SaveUsersData();
+            }
+            else
+            {
+                Debug.Log("MySql Manager Is Null AutoSavePlayer");
+            }
+            return;
+        }
+    }
 
 
     private bool IsDisconnecteding = false;
@@ -93,10 +161,14 @@ public class NetworkManager : MonoBehaviour {
         }
 
     }
-
+   
 	public void JoinGame()
 	{
-		StartCoroutine (_ConnectToServer());
+
+        if (hasjoined == false)
+        {
+            StartCoroutine(_ConnectToServer());
+        }
 
 	}
 	#region Commands
@@ -133,7 +205,7 @@ public class NetworkManager : MonoBehaviour {
 			enemySpawnPoints);
 		string data = JsonUtility.ToJson (playerJSON);
 		socket.Emit ("OnConnection", new JSONObject (data));
-		Joincanvas.gameObject.SetActive (false);
+		
 	}
 
 	public void CommandMove()
@@ -211,7 +283,10 @@ public class NetworkManager : MonoBehaviour {
 		GameObject o = GameObject.Find (userJSON.UserId) as GameObject;
 			if(o != null)
 			{
-			Debug.Log ("Debug: _OnPlayerConnected Player Is Already Online:"+ o.name);
+            hasjoined = true;
+            userIsConnected = true;
+            hasbeenDC = false;
+            Debug.Log ("Debug: _OnPlayerConnected Player Is Already Online:"+ o.name);
 				return;
 			}
         float x;
@@ -233,9 +308,12 @@ public class NetworkManager : MonoBehaviour {
                  _Player_Camera.gameObject.SetActive(true);
                  Transform _UI_Controls = p.transform.Find("UI_Controls");
                  _UI_Controls.gameObject.SetActive(true);
-
+                hasjoined = true;
+                userIsConnected = true;
+                hasbeenDC = false;
                 cam.SetActive(false);
                 SetUserId(userJSON.UserId.ToString());
+                Joincanvas.gameObject.SetActive(false);
                 FacebookManager.Instance.Facebook_Canvas.SetActive(true);
                 FacebookManager.Instance.Collected_Data_Canvas.SetActive(true);
                 FacebookManager.Instance.Join_Game_Canvas.SetActive(false);
