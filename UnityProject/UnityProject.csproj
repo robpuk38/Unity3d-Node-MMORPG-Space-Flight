@@ -85,6 +85,15 @@
     <Reference Include="Facebook.Unity.Settings">
       <HintPath>Assets\FacebookSDK\Plugins\Settings\Facebook.Unity.Settings.dll</HintPath>
     </Reference>
+    <Reference Include="VungleSDKProxy">
+      <HintPath>Assets\Plugins\VungleSDKProxy.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="UnityProject.Plugins.csproj">
+      <Project>{141FA5A1-0270-7FCD-373F-7689DB9914D3}</Project>
+      <Name>UnityProject.Plugins</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\AdColony\Scripts\AdColony.cs" />
@@ -102,8 +111,6 @@
     <Compile Include="Assets\AdColony\Scripts\Common\AdColonyUserMetadata.cs" />
     <Compile Include="Assets\AdColony\Scripts\Common\AdColonyUtils.cs" />
     <Compile Include="Assets\AdColony\Scripts\Common\AdColonyZone.cs" />
-    <Compile Include="Assets\AdColony\Scripts\iOS\AdColonyIOS.cs" />
-    <Compile Include="Assets\AdColony\Scripts\iOS\AdColonyPubServicesIOS.cs" />
     <Compile Include="Assets\Clients_World_Controls\Game_Objects\Particle Ribbon\Scripts\ReverseNormals.cs" />
     <Compile Include="Assets\Clients_World_Controls\Scripts\Astroid_Objects\astriods.cs" />
     <Compile Include="Assets\Clients_World_Controls\Scripts\Astroid_Objects\astroid_Manager.cs" />
@@ -217,22 +224,11 @@
     <Compile Include="Assets\Server\SocketIO\WebsocketSharp\WebSocketStream.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Assets\AdColony\Editor\AndroidManifestTemplate.xml" />
     <None Include="Assets\FacebookSDK\Plugins\AndroidManifest.xml" />
     <None Include="Assets\FacebookSDK\link.xml" />
     <None Include="Assets\Plugins\Android\AdColony\AndroidManifest.xml" />
     <None Include="Assets\Plugins\Android\AndroidManifest.xml" />
-    <None Include="Assets\Plugins\Android\IAB_lib\AndroidManifest.xml" />
-    <None Include="Assets\Plugins\Android\answers\AndroidManifest.xml" />
-    <None Include="Assets\Plugins\Android\beta\AndroidManifest.xml" />
-    <None Include="Assets\Plugins\Android\crashlytics-wrapper\AndroidManifest.xml" />
-    <None Include="Assets\Plugins\Android\crashlytics\AndroidManifest.xml" />
-    <None Include="Assets\Plugins\Android\fabric-init\AndroidManifest.xml" />
-    <None Include="Assets\Plugins\Android\fabric\AndroidManifest.xml" />
-    <None Include="Assets\Plugins\Android\fabric\Template-AndroidManifest.xml" />
-    <None Include="Assets\Plugins\Android\fabric\res\values\strings.xml" />
-    <None Include="Assets\Plugins\Android\firebase-common-9.0.1\AndroidManifest.xml" />
-    <None Include="Assets\Plugins\Android\firebase-common-9.0.1\proguard.txt" />
+    <None Include="Assets\Plugins\Android\Vungle_lib\AndroidManifest.xml" />
     <None Include="Assets\Server\SocketIO\JSONObject\readme.txt" />
     <None Include="Assets\Server\SocketIO\Readme.txt" />
   </ItemGroup>

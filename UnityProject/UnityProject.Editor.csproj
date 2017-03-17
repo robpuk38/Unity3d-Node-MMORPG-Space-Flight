@@ -136,51 +136,30 @@
     <Reference Include="Facebook.Unity.Settings">
       <HintPath>Assets\FacebookSDK\Plugins\Settings\Facebook.Unity.Settings.dll</HintPath>
     </Reference>
-    <Reference Include="JarResolverLib">
-      <HintPath>Assets\PlayServicesResolver\Editor\JarResolverLib.dll</HintPath>
+    <Reference Include="VungleSDKProxy">
+      <HintPath>Assets\Plugins\VungleSDKProxy.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="UnityProject.Plugins.csproj">
+      <Project>{141FA5A1-0270-7FCD-373F-7689DB9914D3}</Project>
+      <Name>UnityProject.Plugins</Name>
+    </ProjectReference>
     <ProjectReference Include="UnityProject.csproj">
       <Project>{3926CF29-3B43-7E6B-CD6E-78688E6772C2}</Project>
       <Name>UnityProject</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\AdColony\Editor\ADCConfig.cs" />
-    <Compile Include="Assets\AdColony\Editor\ADCDependencies.cs" />
-    <Compile Include="Assets\AdColony\Editor\ADCManifestProcessor.cs" />
-    <Compile Include="Assets\AdColony\Editor\ADCMenu.cs" />
-    <Compile Include="Assets\AdColony\Editor\ADCPluginInfo.cs" />
-    <Compile Include="Assets\AdColony\Editor\ADCPostBuildProcessor.cs" />
-    <Compile Include="Assets\AdColony\Editor\ADCSettingsWindow.cs" />
-    <Compile Include="Assets\PlayServicesResolver\Editor\DefaultResolver.cs" />
-    <Compile Include="Assets\PlayServicesResolver\Editor\IResolver.cs" />
-    <Compile Include="Assets\PlayServicesResolver\Editor\PlayServicesResolver.cs" />
-    <Compile Include="Assets\PlayServicesResolver\Editor\ResolverVer1_1.cs" />
-    <Compile Include="Assets\PlayServicesResolver\Editor\ResolverVer1_2.cs" />
-    <Compile Include="Assets\PlayServicesResolver\Editor\SampleDependencies.cs" />
-    <Compile Include="Assets\PlayServicesResolver\Editor\SettingsDialog.cs" />
     <Compile Include="Assets\Scripts\Editor\PostBuildProcessor.cs" />
     <Compile Include="Assets\Server\SocketIO\JSONObject\Editor\JSONChecker.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Assets\AdColony\Editor\AndroidManifestTemplate.xml" />
     <None Include="Assets\FacebookSDK\Plugins\AndroidManifest.xml" />
     <None Include="Assets\FacebookSDK\link.xml" />
     <None Include="Assets\Plugins\Android\AdColony\AndroidManifest.xml" />
     <None Include="Assets\Plugins\Android\AndroidManifest.xml" />
-    <None Include="Assets\Plugins\Android\IAB_lib\AndroidManifest.xml" />
-    <None Include="Assets\Plugins\Android\answers\AndroidManifest.xml" />
-    <None Include="Assets\Plugins\Android\beta\AndroidManifest.xml" />
-    <None Include="Assets\Plugins\Android\crashlytics-wrapper\AndroidManifest.xml" />
-    <None Include="Assets\Plugins\Android\crashlytics\AndroidManifest.xml" />
-    <None Include="Assets\Plugins\Android\fabric-init\AndroidManifest.xml" />
-    <None Include="Assets\Plugins\Android\fabric\AndroidManifest.xml" />
-    <None Include="Assets\Plugins\Android\fabric\Template-AndroidManifest.xml" />
-    <None Include="Assets\Plugins\Android\fabric\res\values\strings.xml" />
-    <None Include="Assets\Plugins\Android\firebase-common-9.0.1\AndroidManifest.xml" />
-    <None Include="Assets\Plugins\Android\firebase-common-9.0.1\proguard.txt" />
+    <None Include="Assets\Plugins\Android\Vungle_lib\AndroidManifest.xml" />
     <None Include="Assets\Server\SocketIO\JSONObject\readme.txt" />
     <None Include="Assets\Server\SocketIO\Readme.txt" />
   </ItemGroup>

@@ -21,85 +21,14 @@ public class PlayAdcolonyAds : MonoBehaviour {
         private int requestTime = 0;
 
 
-    private void Start()
-    {
+        private void Awake()
+        {
         instance = this;
-
-    
-   
-        
-
-            // ----- AdColony Ads -----
-
-            AdColony.Ads.OnConfigurationCompleted += (List<AdColony.Zone> zones_) => 
-            {
-                Debugtext.text = "AdColony.Ads.OnConfigurationCompleted called";
-
-                if (zones_ == null || zones_.Count <= 0) {
-                    // Show the configure asteroid again.
-                   
-                }
-                else
-                {
-                 
-
-                    // Successfully configured... show the request ad asteroid.
-                 
-                }
-            };
-
-            AdColony.Ads.OnRequestInterstitial += (AdColony.InterstitialAd ad_) => 
-            {
-                Debugtext.text = "AdColony.Ads.OnRequestInterstitial called";
-                Ad = ad_;
-            };
-
-            AdColony.Ads.OnRequestInterstitialFailed += () => 
-            {
-                Debugtext.text = "AdColony.Ads.OnRequestInterstitialFailed called";
-            };
-
-            AdColony.Ads.OnOpened += (AdColony.InterstitialAd ad_) => 
-            {
-                Debugtext.text = "AdColony.Ads.OnOpened called";
-                RequestAd();
-            };
-
-            AdColony.Ads.OnClosed += (AdColony.InterstitialAd ad_) => 
-            {
-                Debugtext.text = "AdColony.Ads.OnClosed called, expired: " + ad_.Expired;
-                
-            };
-
-            AdColony.Ads.OnExpiring += (AdColony.InterstitialAd ad_) => 
-            {
-                Debugtext.text = "AdColony.Ads.OnExpiring called";
-                Ad = null;
-            };
-
-            AdColony.Ads.OnIAPOpportunity += (AdColony.InterstitialAd ad_, string iapProductId_, AdColony.AdsIAPEngagementType engagement_) => 
-            {
-                Debugtext.text = "AdColony.Ads.OnIAPOpportunity called";
-            };
-
-            AdColony.Ads.OnRewardGranted += (string zoneId, bool success, string name, int amount) => 
-            {
-                Debugtext.text = string.Format("AdColony.Ads.OnRewardGranted called\n\tzoneId: {0}\n\tsuccess: {1}\n\tname: {2}\n\tamount: {3}", zoneId, success, name, amount);
-            };
-
-            AdColony.Ads.OnCustomMessageReceived += (string type, string message) => 
-            {
-                Debugtext.text = string.Format("AdColony.Ads.OnCustomMessageReceived called\n\ttype: {0}\n\tmessage: {1}", type, message);
-            };
-
         ConfigureAds();
-
-        RequestAd ();
-
         }
 
 
-        void Update() 
+        private void Update() 
         {
 
             requestTime++;
@@ -113,17 +42,88 @@ public class PlayAdcolonyAds : MonoBehaviour {
           
         }
 
-        void ConfigureAds()
+        private void ConfigureAds()
         {
         // Configure the AdColony SDK
         Debugtext.text = "**** Configure ADC SDK ****";
 
             // Set some test app options with metadata.
             AdColony.AppOptions appOptions = new AdColony.AppOptions();
-            AdColony.Ads.Configure(appId, appOptions, zoneId);
+         
+        AdColony.Ads.Configure(appId, appOptions, zoneId);
+        
+        RequestAd();
+        initializeEventHandlers();
         }
 
-        void RequestAd() {
+
+    private void initializeEventHandlers()
+    {
+        // ----- AdColony Ads -----
+
+        AdColony.Ads.OnConfigurationCompleted += (List<AdColony.Zone> zones_) =>
+        {
+            Debugtext.text = "AdColony.Ads.OnConfigurationCompleted called";
+
+            if (zones_ == null || zones_.Count <= 0)
+            {
+                // Show the configure asteroid again.
+
+            }
+            else
+            {
+
+
+                // Successfully configured... show the request ad asteroid.
+
+            }
+        };
+
+        AdColony.Ads.OnRequestInterstitial += (AdColony.InterstitialAd ad_) =>
+        {
+            Debugtext.text = "AdColony.Ads.OnRequestInterstitial called";
+            Ad = ad_;
+        };
+
+        AdColony.Ads.OnRequestInterstitialFailed += () =>
+        {
+            Debugtext.text = "AdColony.Ads.OnRequestInterstitialFailed called";
+        };
+
+        AdColony.Ads.OnOpened += (AdColony.InterstitialAd ad_) =>
+        {
+            Debugtext.text = "AdColony.Ads.OnOpened called";
+            RequestAd();
+        };
+
+        AdColony.Ads.OnClosed += (AdColony.InterstitialAd ad_) =>
+        {
+            Debugtext.text = "AdColony.Ads.OnClosed called, expired: " + ad_.Expired;
+
+        };
+
+        AdColony.Ads.OnExpiring += (AdColony.InterstitialAd ad_) =>
+        {
+            Debugtext.text = "AdColony.Ads.OnExpiring called";
+            Ad = null;
+        };
+
+        AdColony.Ads.OnIAPOpportunity += (AdColony.InterstitialAd ad_, string iapProductId_, AdColony.AdsIAPEngagementType engagement_) =>
+        {
+            Debugtext.text = "AdColony.Ads.OnIAPOpportunity called";
+        };
+
+        AdColony.Ads.OnRewardGranted += (string zoneId, bool success, string name, int amount) =>
+        {
+            Debugtext.text = string.Format("AdColony.Ads.OnRewardGranted called\n\tzoneId: {0}\n\tsuccess: {1}\n\tname: {2}\n\tamount: {3}", zoneId, success, name, amount);
+        };
+
+        AdColony.Ads.OnCustomMessageReceived += (string type, string message) =>
+        {
+            Debugtext.text = string.Format("AdColony.Ads.OnCustomMessageReceived called\n\ttype: {0}\n\tmessage: {1}", type, message);
+        };
+    }
+    private void RequestAd() {
         
         // Request an ad.
         Debugtext.text = "**** Request Ad ****";

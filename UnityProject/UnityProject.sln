@@ -1,6 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2017
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnityProject.Plugins", "UnityProject.Plugins.csproj", "{141FA5A1-0270-7FCD-373F-7689DB9914D3}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnityProject", "UnityProject.csproj", "{3926CF29-3B43-7E6B-CD6E-78688E6772C2}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnityProject.Editor", "UnityProject.Editor.csproj", "{DCEF5D7E-307E-A219-AF0B-EED34B158316}"
@@ -11,6 +13,10 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{141FA5A1-0270-7FCD-373F-7689DB9914D3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{141FA5A1-0270-7FCD-373F-7689DB9914D3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{141FA5A1-0270-7FCD-373F-7689DB9914D3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{141FA5A1-0270-7FCD-373F-7689DB9914D3}.Release|Any CPU.Build.0 = Release|Any CPU
 		{3926CF29-3B43-7E6B-CD6E-78688E6772C2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{3926CF29-3B43-7E6B-CD6E-78688E6772C2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3926CF29-3B43-7E6B-CD6E-78688E6772C2}.Release|Any CPU.ActiveCfg = Release|Any CPU

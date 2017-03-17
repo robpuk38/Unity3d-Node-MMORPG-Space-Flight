@@ -20,7 +20,7 @@ MonoBehaviour:
   m_ShowMode: 4
   m_Title: 
   m_RootView: {fileID: 2}
-  m_MinSize: {x: 950, y: 542}
+  m_MinSize: {x: 950, y: 521}
   m_MaxSize: {x: 10000, y: 10000}
 --- !u!114 &2
 MonoBehaviour:
@@ -107,10 +107,10 @@ MonoBehaviour:
     y: 30
     width: 1680
     height: 917
-  m_MinSize: {x: 713, y: 492}
-  m_MaxSize: {x: 18008, y: 14042}
+  m_MinSize: {x: 711, y: 471}
+  m_MaxSize: {x: 18006, y: 14021}
   vertical: 0
-  controlID: 68
+  controlID: 9
 --- !u!114 &6
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -131,10 +131,10 @@ MonoBehaviour:
     y: 0
     width: 308
     height: 917
-  m_MinSize: {x: 232, y: 492}
-  m_MaxSize: {x: 10002, y: 14042}
+  m_MinSize: {x: 232, y: 471}
+  m_MaxSize: {x: 10002, y: 14021}
   vertical: 1
-  controlID: 105
+  controlID: 112
 --- !u!114 &7
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -208,7 +208,7 @@ MonoBehaviour:
   m_MinSize: {x: 204, y: 342}
   m_MaxSize: {x: 4004, y: 8042}
   vertical: 1
-  controlID: 69
+  controlID: 10
 --- !u!114 &10
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -253,8 +253,8 @@ MonoBehaviour:
     y: 647
     width: 1007
     height: 270
-  m_MinSize: {x: 104, y: 121}
-  m_MaxSize: {x: 4004, y: 4021}
+  m_MinSize: {x: 100, y: 100}
+  m_MaxSize: {x: 4000, y: 4000}
   m_ActualView: {fileID: 18}
   m_Panes:
   - {fileID: 18}
@@ -423,9 +423,9 @@ MonoBehaviour:
     height: 460
   m_TreeViewState:
     scrollPos: {x: 0, y: 0}
-    m_SelectedIDs: 
+    m_SelectedIDs: 1c070000
     m_LastClickedID: 0
-    m_ExpandedIDs: 9c2ffeff4030feff3031feffdc3bfeffb63cfeffa63dfeff6841fefffa41feffea42feff5446feff3047feff2048fefff04bfeff8e4cfeff7e4dfeffd854feffa055feff9256feff665afeff0c5bfefffe5bfeff0261feffaa61feff9c62fefff088feffcc89feffc68afeff4e93feff2e94feff2695feff1e55ffff2455ffff4087ffff9098ffff5499ffff489affffac9dffff809effff749fffff9ca2ffff60a3ffff58a4ffff7aa8ffff4aa9ffff42aafffffab1ffffceb2ffffc2b3ffffb4b6ffff88b7ffff7eb8ffff3ed0ffff02d1fffff8d1ffff54e0ffffe4e0ffffd8e1ffff6ae5fffffae5fffff0e6ffff58ecffff1aedffff10eeffffe0fbffff0000000080f30000b6f40000e0f800001e350100103701000465010008a30100
+    m_ExpandedIDs: 149dffffb09dffffa49effff50abffffe0abffffd4acffff1abeffffa6beffff9ebffffff6c7ffffb2c8ffffa2c9ffff66ccffffe0ccffffd0cdffff96ebffff5aecffff4cedffff84f5ffff0000000066760000be760000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -485,7 +485,7 @@ MonoBehaviour:
     m_ShowAllHits: 0
     m_SearchArea: 0
     m_Folders:
-    - Assets/Plugins/Android/AdColony
+    - Assets/Scripts/Ads_System
   m_ViewMode: 0
   m_StartGridSize: 64
   m_LastFolders: []
@@ -496,7 +496,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 54240000
     m_LastClickedID: 9300
-    m_ExpandedIDs: 00000000d0270000282800004c28000066280000d4290000da290000fc290000862a0000882a00009e2a0000d62a0000d82a0000ee2a0000f22a0000f82a00000a2b00008a2b0000b62b0000d22b0000d82b0000e42b0000282c00008e2c0000a22c0000222d0000362d00007e2d0000982d0000b42d0000e22d0000042e0000402e00009e2e0000a42e0000b4350000b6350000b8350000ba350000bc350000be350000c0350000c2350000c4350000c6350000
+    m_ExpandedIDs: 00000000662b0000902d0000dc2d0000fa2d0000202f0000222f0000282f0000382f0000b22f0000b42f0000f02f0000f22f00000030000002300000063000001630000082300000a2300000b6300000bc300000c6300000fe3000004c31000058310000c8310000da3100000c3200002032000036320000543200007432000092320000ae320000dc320000de3200001e39000020390000223900002439000026390000283900002a3900002c3900002e3900003039000032390000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -524,18 +524,18 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 00000000d0270000282800004c280000d2290000d4290000da290000fc290000862a0000882a0000d62a0000d82a0000ee2a0000f22a0000f82a00000a2b00008a2b0000b62b0000d22b0000d82b0000e42b0000002c0000282c0000622c00008e2c0000a22c0000222d0000362d00007e2d0000982d0000b42d0000e22d0000042e0000402e00005e2e00009e2e0000a42e0000b4350000b6350000b8350000ba350000bc350000be350000c0350000c2350000c4350000c6350000
+    m_ExpandedIDs: 00000000902d0000dc2d0000fa2d0000202f0000222f0000282f0000382f0000b22f0000b42f0000f02f0000f22f000002300000063000001630000082300000a2300000b6300000bc300000c6300000fe3000004c31000058310000c8310000da310000e8310000043200000c3200002032000036320000543200007432000092320000a2320000ae320000dc320000de3200001e39000020390000223900002439000026390000283900002a3900002c3900002e3900003039000032390000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
-      m_Name: AndroidManifest
-      m_OriginalName: AndroidManifest
+      m_Name: PlayAdcolonyAds
+      m_OriginalName: PlayAdcolonyAds
       m_EditFieldRect:
         serializedVersion: 2
         x: 0
         y: 0
         width: 0
         height: 0
-      m_UserData: 11866
+      m_UserData: 1820
       m_IsWaitingForDelay: 0
       m_IsRenaming: 0
       m_OriginalEventType: 0
