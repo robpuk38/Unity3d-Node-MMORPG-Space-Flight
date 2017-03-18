@@ -25,8 +25,13 @@ public class playerinput : MonoBehaviour {
 	{
 		
 			Debug.Log ("FIRE TRUE");
-			Fire = true;
-       
+        lazor.Instance.FireLazor();
+        Fire = true;
+        if (AuidoManager.Instance != null)
+        {
+            AuidoManager.Instance.FireButton();
+        }
 
-	}
+
+    }
 }

@@ -8,6 +8,7 @@ public class AdsManager : MonoBehaviour
 	private static AdsManager instance;
 	public static AdsManager Instance{get{return instance; }}
     public Text Debugtext;
+    
     private void Start()
 	{
 		instance = this;
@@ -16,16 +17,24 @@ public class AdsManager : MonoBehaviour
 	{
         Debugtext.text = "clicked adcolony";
         PlayAdcolonyAds.Instance.PlayAd();
-	}
+        AuidoManager.Instance.ButtonClicked();
+
+    }
 
 	public void vunglebtn()
 	{
 		Debug.Log ("clicked vungle");
 		PlayVungleAds.Instance.PlayAd();
-	}
+        AuidoManager.Instance.ButtonClicked();
+
+    }
 	public void unitybtn()
 	{
 		Debug.Log ("clicked unity");
 		PlayUnityAds.Instance.PlayAd();
-	}
+        AuidoManager.Instance.ButtonClicked();
+
+    }
+
+    
 }
