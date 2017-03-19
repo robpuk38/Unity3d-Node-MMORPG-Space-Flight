@@ -112,6 +112,29 @@
     <Compile Include="Assets\AdColony\Scripts\Common\AdColonyUtils.cs" />
     <Compile Include="Assets\AdColony\Scripts\Common\AdColonyZone.cs" />
     <Compile Include="Assets\Clients_World_Controls\Game_Objects\Particle Ribbon\Scripts\ReverseNormals.cs" />
+    <Compile Include="Assets\Clients_World_Controls\Game_System\BasicBeamShot\Script\AutoDestroy.cs" />
+    <Compile Include="Assets\Clients_World_Controls\Game_System\BasicBeamShot\Script\BM_WaveEffect.cs" />
+    <Compile Include="Assets\Clients_World_Controls\Game_System\BasicBeamShot\Script\BasicBullet.cs" />
+    <Compile Include="Assets\Clients_World_Controls\Game_System\BasicBeamShot\Script\BeamCollision.cs" />
+    <Compile Include="Assets\Clients_World_Controls\Game_System\BasicBeamShot\Script\BeamLine.cs" />
+    <Compile Include="Assets\Clients_World_Controls\Game_System\BasicBeamShot\Script\BeamParam.cs" />
+    <Compile Include="Assets\Clients_World_Controls\Game_System\BasicBeamShot\Script\BeamWave.cs" />
+    <Compile Include="Assets\Clients_World_Controls\Game_System\BasicBeamShot\Script\BillBoard.cs" />
+    <Compile Include="Assets\Clients_World_Controls\Game_System\BasicBeamShot\Script\Create_MyLineMesh.cs" />
+    <Compile Include="Assets\Clients_World_Controls\Game_System\BasicBeamShot\Script\Flash.cs" />
+    <Compile Include="Assets\Clients_World_Controls\Game_System\BasicBeamShot\Script\GeroBeam.cs" />
+    <Compile Include="Assets\Clients_World_Controls\Game_System\BasicBeamShot\Script\GeroBeamHit.cs" />
+    <Compile Include="Assets\Clients_World_Controls\Game_System\BasicBeamShot\Script\GetColor_BeamLine.cs" />
+    <Compile Include="Assets\Clients_World_Controls\Game_System\BasicBeamShot\Script\JumpScene.cs" />
+    <Compile Include="Assets\Clients_World_Controls\Game_System\BasicBeamShot\Script\MouseTgt.cs" />
+    <Compile Include="Assets\Clients_World_Controls\Game_System\BasicBeamShot\Script\MultiShooter.cs" />
+    <Compile Include="Assets\Clients_World_Controls\Game_System\BasicBeamShot\Script\RandomRotate.cs" />
+    <Compile Include="Assets\Clients_World_Controls\Game_System\BasicBeamShot\Script\ScaleWiggle.cs" />
+    <Compile Include="Assets\Clients_World_Controls\Game_System\BasicBeamShot\Script\SceneMaster.cs" />
+    <Compile Include="Assets\Clients_World_Controls\Game_System\BasicBeamShot\Script\ShooterRotate.cs" />
+    <Compile Include="Assets\Clients_World_Controls\Game_System\BasicBeamShot\Script\ShotBase.cs" />
+    <Compile Include="Assets\Clients_World_Controls\Game_System\BasicBeamShot\Script\ShotParticleEmitter.cs" />
+    <Compile Include="Assets\Clients_World_Controls\Game_System\BasicBeamShot\Script\ShotParticle_Scale.cs" />
     <Compile Include="Assets\Clients_World_Controls\Scripts\Astroid_Objects\astriods.cs" />
     <Compile Include="Assets\Clients_World_Controls\Scripts\Astroid_Objects\astroid_Manager.cs" />
     <Compile Include="Assets\Clients_World_Controls\Scripts\Joysticks_Movments\MoveShip.cs" />
@@ -226,6 +249,11 @@
     <Compile Include="Assets\Server\SocketIO\WebsocketSharp\WebSocketStream.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Assets\Clients_World_Controls\Game_System\BasicBeamShot\sh\AddColor_sh.shader" />
+    <None Include="Assets\Clients_World_Controls\Game_System\BasicBeamShot\sh\Add_UVScroll_sh.shader" />
+    <None Include="Assets\Clients_World_Controls\Game_System\BasicBeamShot\sh\BeamLine_sh.shader" />
+    <None Include="Assets\Clients_World_Controls\Game_System\BasicBeamShot\sh\GeroBeam_sh.shader" />
+    <None Include="Assets\Clients_World_Controls\Game_System\BasicBeamShot\sh\Sprite_Add_sh.shader" />
     <None Include="Assets\FacebookSDK\Plugins\AndroidManifest.xml" />
     <None Include="Assets\FacebookSDK\link.xml" />
     <None Include="Assets\Plugins\Android\AdColony\AndroidManifest.xml" />

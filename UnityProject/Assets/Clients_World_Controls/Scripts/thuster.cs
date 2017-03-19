@@ -12,7 +12,8 @@ public class thuster : MonoBehaviour {
 		thursterLight = GetComponent<Light> ();
 	}
 	void Start () {
-		tr.enabled = false;
+        this.gameObject.SetActive(false);
+        tr.enabled = false;
 		thursterLight.enabled = false;
 		thursterLight.intensity = 0f;
 	}
@@ -22,15 +23,21 @@ public class thuster : MonoBehaviour {
 
 	public void Activate(bool activate = true)
 	{
-		if (activate) {
-			tr.enabled = true;
-			thursterLight.enabled = true;
-		} 
-		else 
-		{
-			tr.enabled = false;
-			thursterLight.enabled = false;
-		}
+        if (tr != null && thursterLight != null)
+        {
+            if (activate)
+            {
+                this.gameObject.SetActive(true);
+                tr.enabled = true;
+                thursterLight.enabled = true;
+            }
+            else
+            {
+                this.gameObject.SetActive(false);
+                tr.enabled = false;
+                thursterLight.enabled = false;
+            }
+        }
 	}
 
 	public void Intensity(float intent)

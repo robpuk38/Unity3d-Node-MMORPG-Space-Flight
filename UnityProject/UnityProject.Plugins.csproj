@@ -98,6 +98,11 @@
     <Compile Include="Assets\Plugins\Vungle\VungleSceneLoom.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Assets\Clients_World_Controls\Game_System\BasicBeamShot\sh\AddColor_sh.shader" />
+    <None Include="Assets\Clients_World_Controls\Game_System\BasicBeamShot\sh\Add_UVScroll_sh.shader" />
+    <None Include="Assets\Clients_World_Controls\Game_System\BasicBeamShot\sh\BeamLine_sh.shader" />
+    <None Include="Assets\Clients_World_Controls\Game_System\BasicBeamShot\sh\GeroBeam_sh.shader" />
+    <None Include="Assets\Clients_World_Controls\Game_System\BasicBeamShot\sh\Sprite_Add_sh.shader" />
     <None Include="Assets\FacebookSDK\Plugins\AndroidManifest.xml" />
     <None Include="Assets\FacebookSDK\link.xml" />
     <None Include="Assets\Plugins\Android\AdColony\AndroidManifest.xml" />

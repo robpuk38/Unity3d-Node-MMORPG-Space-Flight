@@ -210,7 +210,13 @@ public class NetworkManager : MonoBehaviour {
 
 	public void CommandMove()
 	{
-        float posx;
+        if (Data_Manager.Instance != null)
+        {
+            if (NetworkManager.Instance != null)
+            {
+                if (Data_Manager.Instance.GetUserId() == NetworkManager.Instance.GetUserId())
+                {
+                    float posx;
         float posy;
         float posz;
         float.TryParse(Data_Manager.Instance.GetUserPosX(), out posx);
@@ -223,12 +229,15 @@ public class NetworkManager : MonoBehaviour {
         float.TryParse(Data_Manager.Instance.GetUserRotX(), out rotx);
         float.TryParse(Data_Manager.Instance.GetUserRotY(), out roty);
         float.TryParse(Data_Manager.Instance.GetUserRotZ(), out rotz);
-
-        POSPlayerJSON posplayerJSON = new POSPlayerJSON(
-            Data_Manager.Instance.GetUserId(), 
-            posx,posy,posz,rotx,roty,rotz);
-        string data = JsonUtility.ToJson(posplayerJSON);
-        socket.Emit ("OnPlayerMove", new JSONObject (data));
+        
+                    POSPlayerJSON posplayerJSON = new POSPlayerJSON(
+            Data_Manager.Instance.GetUserId(),
+            posx, posy, posz, rotx, roty, rotz);
+                    string data = JsonUtility.ToJson(posplayerJSON);
+                    socket.Emit("OnPlayerMove", new JSONObject(data));
+                }
+            }
+        }
 
 	}
 	
@@ -367,7 +376,7 @@ public class NetworkManager : MonoBehaviour {
            // Debug.Log("WHAT " + ZeroDrone.name);
             ZeroDrone.GetComponent<Transform>().position = position;
             ZeroDrone.GetComponent<Transform>().rotation = rotation;
-        }
+            }
       
 
 

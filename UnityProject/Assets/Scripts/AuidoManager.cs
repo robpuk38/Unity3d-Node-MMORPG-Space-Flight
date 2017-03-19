@@ -22,6 +22,7 @@ public class AuidoManager : MonoBehaviour {
         if (!Fire.isPlaying)
         {
             Fire.Play();
+            ButtonClicked();
         }
         else
         {
@@ -43,13 +44,15 @@ public class AuidoManager : MonoBehaviour {
 
     public void SpeedEffect(bool t,bool w)
     {
-        if(w == true)
+        
+        if (w == true)
         {
-            Speed.pitch = 0.03f;
+            Speed.pitch = 0.05f;
+            
         }
         else
         {
-            Speed.pitch = 0.01f;
+            Speed.pitch = 0.03f;
         }
         if (t == true)
         {
@@ -57,6 +60,7 @@ public class AuidoManager : MonoBehaviour {
             if (!Speed.isPlaying)
             {
                 Speed.Play();
+                
             }
         }
         else
@@ -64,6 +68,7 @@ public class AuidoManager : MonoBehaviour {
             vol = true;
             
         }
+        
 
     }
 

@@ -22,7 +22,7 @@ public class LoadingManger : MonoBehaviour
 
     public CanvasGroup fade;
     private float loadTime;
-    private float minTime = 30.0f;
+    private float minTime = 10.0f;
     private string UserName = "";
     private string ServerStatus = "";
 

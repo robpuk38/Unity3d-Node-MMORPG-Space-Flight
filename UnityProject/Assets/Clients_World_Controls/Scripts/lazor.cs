@@ -9,10 +9,12 @@ public class lazor : MonoBehaviour {
     public static lazor Instance { get { return instance; } }
     LineRenderer lr;
 	Light lasorLight;
+    public GameObject Shot1;
+    public GameObject Wave;
 
 
-	public float MaxDistance = 300f;
-	//unity3d bool canFire = false;
+    public float MaxDistance = 300f;
+	bool canFire = false;
 	public float lazorOffTime = 0.5f;
 	public float fireDelay = 2.0f;
 
@@ -25,7 +27,7 @@ public class lazor : MonoBehaviour {
 	void Start () {
 		lr.enabled = false;
 		lasorLight.enabled = false;
-		//canFire = true;
+		canFire = true;
 	}
 	
 	Vector3 castRay()
@@ -64,7 +66,7 @@ public class lazor : MonoBehaviour {
 
 	public void FireLazor(Vector3 TargetPos,  Transform target = null)
 	{
-		//if (canFire) {
+		if (canFire) {
 			if (target != null) 
 			{
 				SpawnExplosion (TargetPos, target);
@@ -72,14 +74,25 @@ public class lazor : MonoBehaviour {
 			lr.SetPosition (0, transform.position);
 			lr.SetPosition (1, castRay());
 			lr.enabled = true;
-			//canFire = false;
+			canFire = false;
 			lasorLight.enabled = true;
 
-        //Invoke ("TurnoffLazor", lazorOffTime);
-        //Invoke ("CamFire", fireDelay);
-        //}
+        //GameObject Bullet;
+       // Bullet = Shot1;
+        //Fire
+        GameObject s1 = (GameObject)Instantiate(Shot1, this.transform.position, this.transform.rotation);
+        s1.GetComponent<BeamParam>().SetBeamParam(this.GetComponent<BeamParam>());
 
-        TurnoffLazor();
+        GameObject wav = (GameObject)Instantiate(Wave, this.transform.position, this.transform.rotation);
+        wav.transform.localScale *= 0.25f;
+        wav.transform.Rotate(Vector3.left, 90.0f);
+        wav.GetComponent<BeamWave>().col = this.GetComponent<BeamParam>().BeamColor;
+
+        Invoke ("TurnoffLazor", lazorOffTime);
+        Invoke ("CamFire", fireDelay);
+        }
+
+      
     }
 
 	void TurnoffLazor()
@@ -94,9 +107,9 @@ public class lazor : MonoBehaviour {
 		get{return MaxDistance; }
 	}
 
-	//void CamFire()
-	//{
-		//canFire = true;
-	//}
+	void CamFire()
+	{
+		canFire = true;
+	}
 
 }

@@ -174,8 +174,10 @@ public class MysqlManager : MonoBehaviour
 
 
 
-
-        NetworkManager.Instance.JoinGame();
+        if (NetworkManager.Instance != null)
+        {
+            NetworkManager.Instance.JoinGame();
+        }
 
     }
 

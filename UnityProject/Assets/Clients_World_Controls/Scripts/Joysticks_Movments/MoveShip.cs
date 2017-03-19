@@ -46,16 +46,32 @@ public class MoveShip : MonoBehaviour
                 if (Data_Manager.Instance.GetUserId() == NetworkManager.Instance.GetUserId())
                 {
 
-                    if (isMoving == true)
+                    Debug.Log("WHO AM ID" + Data_Manager.Instance.GetUserId());
+
+                    GameObject p = GameObject.Find(Data_Manager.Instance.GetUserId()) as GameObject;
+
+                    if (p != null)
                     {
-                        Data_Manager.Instance.SetUserPosX(transform.position.x.ToString());
-                        Data_Manager.Instance.SetUserPosY(transform.position.y.ToString());
-                        Data_Manager.Instance.SetUserPosZ(transform.position.z.ToString());
-                        Data_Manager.Instance.SetUserRotX(transform.rotation.x.ToString());
-                        Data_Manager.Instance.SetUserRotY(transform.rotation.y.ToString());
-                        Data_Manager.Instance.SetUserRotZ(transform.rotation.z.ToString());
-                        NetworkManager.Instance.CommandMove();
+
+                        Transform ZeroDrone = p.transform.Find("ZeroDrone");
+                        // Debug.Log("WHAT " + ZeroDrone.name);
+                       
+
+                        Data_Manager.Instance.SetUserPosX(ZeroDrone.GetComponent<Transform>().position.x.ToString());
+                        Data_Manager.Instance.SetUserPosY(ZeroDrone.GetComponent<Transform>().position.y.ToString());
+                        Data_Manager.Instance.SetUserPosZ(ZeroDrone.GetComponent<Transform>().position.z.ToString());
+                        Data_Manager.Instance.SetUserRotX(ZeroDrone.GetComponent<Transform>().rotation.x.ToString());
+                        Data_Manager.Instance.SetUserRotY(ZeroDrone.GetComponent<Transform>().rotation.y.ToString());
+                        Data_Manager.Instance.SetUserRotZ(ZeroDrone.GetComponent<Transform>().rotation.z.ToString());
+
                     }
+
+                        
+                   // if (isMoving == true)
+                  //  {
+                        
+                        NetworkManager.Instance.CommandMove();
+                 //   }
 
                     if (isBoost == true)
                     {
@@ -84,6 +100,12 @@ public class MoveShip : MonoBehaviour
         {
             //Debug.Log ("OK WARPTIME IS OVER: = " + warpTime);
             isBoost = false;
+
+            foreach (thuster t in Thusters)
+            {
+                t.Activate(false);
+            }
+
             warpTime = 0;
         }
         else if (warpTime < 1000)
@@ -92,7 +114,10 @@ public class MoveShip : MonoBehaviour
             {
                 liftup = +SpeedForce * 10;
                 Thrust();
-                //Debug.Log ("WARPTIME: = "+warpTime);
+                foreach (thuster t in Thusters)
+                {
+                    t.Activate(true);
+                }
             }
 
         }
@@ -177,6 +202,7 @@ public class MoveShip : MonoBehaviour
 
                 isMoving = false;
                 ourdrone.isKinematic = false;
+               
                 if (AuidoManager.Instance != null)
                 {
                     AuidoManager.Instance.SpeedEffect(false,false);
@@ -300,11 +326,12 @@ public class MoveShip : MonoBehaviour
     public bool isBoost = false;
     public void Throttle_Boost()
     {
-
+        InMovement();
         if (isBoost == false)
         {
 
             isBoost = true;
+          
 
 
         }
@@ -319,6 +346,14 @@ public class MoveShip : MonoBehaviour
 
 
 
+    }
+
+    private void InMovement()
+    {
+        if (AuidoManager.Instance != null)
+        {
+            AuidoManager.Instance.ButtonClicked();
+        }
     }
 
 }
