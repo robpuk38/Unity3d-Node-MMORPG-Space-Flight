@@ -66,6 +66,9 @@ public class MysqlManager : MonoBehaviour
                 {
                     //Debug.Log ("UserPic: " + aData [i + 1]);
                     Data_Manager.Instance.SetUserPic(aData[i + 1]);
+
+                    FacebookManager.Instance.new2dpicture(FacebookManager.Instance.profilePic, aData[i + 1]);
+
                 }
 
                 if (aData[i] == "UserToken")

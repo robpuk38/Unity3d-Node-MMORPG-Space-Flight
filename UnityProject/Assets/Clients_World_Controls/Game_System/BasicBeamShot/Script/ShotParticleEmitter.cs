@@ -31,8 +31,9 @@ public class ShotParticleEmitter : MonoBehaviour {
 				q_rnd *= Quaternion.AngleAxis((Random.value*Disturbance)-Disturbance*0.5f,this.transform.up);
 
 				GameObject pat = (GameObject)GameObject.Instantiate(ShotParticle,Vector3.zero,q_rnd);
-                pat.GetComponent<LineRenderer>().SetColors(col, col);
-				pat.transform.parent = this.transform.parent;
+                pat.GetComponent<LineRenderer>().startColor= col;
+                pat.GetComponent<LineRenderer>().endColor = col;
+                pat.transform.parent = this.transform.parent;
 				ShotPowerBuf -= 1.0f;
 			}
 		}

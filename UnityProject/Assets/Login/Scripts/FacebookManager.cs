@@ -17,6 +17,8 @@ public class FacebookManager : MonoBehaviour
     public Text UserToken;
     public Text ConnectionMessage;
     public Image ProfilePic;
+    public GameObject profilePic;
+    private IEnumerator getthepic;
 
     private void Awake()
     {
@@ -43,6 +45,35 @@ public class FacebookManager : MonoBehaviour
         perm.Add("public_profile");
         FB.LogInWithReadPermissions(permissions: perm, callback: OnLogin);
         AuidoManager.Instance.ButtonClicked();
+        ConnectionMessage.text = "Connecting";
+    }
+
+    IEnumerator loadUserPic(GameObject go, string url)
+    {
+       /*Texture2D tex;
+        tex = new Texture2D(4, 4, TextureFormat.DXT1, false);
+        WWW www = new WWW(url);
+        yield return www;
+
+        www.LoadImageIntoTexture(tex);
+        go.GetComponent<Renderer>().material.mainTexture = tex;*/
+
+
+
+        Texture2D temp = new Texture2D(0, 0);
+        WWW www = new WWW(url);
+        yield return www;
+
+        temp = www.texture;
+        Sprite sprite = Sprite.Create(temp, new Rect(0, 0, temp.width, temp.height), new Vector2(0.5f, 0.5f));
+        Transform thumb = go.transform;
+        thumb.GetComponent<Image>().sprite = sprite;
+    }
+
+    public void new2dpicture(GameObject go, string url)
+    {
+        getthepic = loadUserPic(go, url);
+        StartCoroutine(getthepic);
     }
 
     public void GetUsersData(AccessToken token)
@@ -153,6 +184,7 @@ public class FacebookManager : MonoBehaviour
             AccessToken token = AccessToken.CurrentAccessToken;
 
             //Debug.Log ("Login Success "+token.TokenString);	
+            ConnectionMessage.text = "Getting Users Data";
             GetUsersData(token);
         }
         else

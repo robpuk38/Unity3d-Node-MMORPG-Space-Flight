@@ -148,7 +148,6 @@
     <Compile Include="Assets\Clients_World_Controls\Scripts\lazor.cs" />
     <Compile Include="Assets\Clients_World_Controls\Scripts\playerinput.cs" />
     <Compile Include="Assets\Clients_World_Controls\Scripts\rotate_around.cs" />
-    <Compile Include="Assets\Clients_World_Controls\Scripts\thuster.cs" />
     <Compile Include="Assets\Clients_World_Controls\Scripts\waypoints.cs" />
     <Compile Include="Assets\Gps\Scripts\GPS.cs" />
     <Compile Include="Assets\Login\Scripts\FacebookManager.cs" />

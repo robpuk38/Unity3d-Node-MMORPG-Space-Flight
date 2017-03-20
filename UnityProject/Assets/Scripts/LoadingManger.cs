@@ -14,6 +14,7 @@ public class LoadingManger : MonoBehaviour
     public Text Percentage;
     public Text Loading;
     public GameObject NetworkManager;
+    private NetworkManager _NetworkManager;
     public GameObject FacebookMaster;
     public Canvas JoinGameCanvas;
     public string GetIPAddress = "73.146.71.203";
@@ -257,8 +258,24 @@ public class LoadingManger : MonoBehaviour
                 {
                     NetworkManager.SetActive(true);
                 }
-                FacebookMaster.SetActive(true);
-                JoinGameCanvas.gameObject.SetActive(true);
+                if (PlayerPrefs.GetString("Id") != null
+        && PlayerPrefs.GetString("UserId") != null
+        && PlayerPrefs.GetString("UserName") != null
+        && PlayerPrefs.GetString("UserPic") != null
+        && PlayerPrefs.GetString("VungleApi") != null
+        && PlayerPrefs.GetString("AdcolonyApi") != null
+        && PlayerPrefs.GetString("AdcolonyZone") != null)
+                {
+                    FacebookMaster.SetActive(true);
+                    JoinGameCanvas.gameObject.SetActive(false);
+                    MysqlManager.Instance.GetUsersData(PlayerPrefs.GetString("UserId"));
+                   
+                }
+                else
+                {
+                    FacebookMaster.SetActive(true);
+                    JoinGameCanvas.gameObject.SetActive(true);
+                }
                 
 
             }

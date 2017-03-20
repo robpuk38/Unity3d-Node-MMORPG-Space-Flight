@@ -36,7 +36,7 @@ public class Data_Manager : MonoBehaviour
         instance = this;
     }
 
-
+   
     public void SetId(string set)
     {
         PlayerPrefs.SetString("Id", set);

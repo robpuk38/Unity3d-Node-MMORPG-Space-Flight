@@ -17,17 +17,18 @@ About();
 
 
 server.listen(3000);
-
+var DISCONNECT_TIME = 3000;
 var enemies =[];
 var playerSpawnPoints=[];
 var clients = [];
 var setGameLoop=[];
 
-//app.get('/', function(req,res)
-//{
-	//res.send('Hey you got back a get "/"');
-	
-//});
+var tickLengthMs = 1000 / 20;
+var previousTick = Date.now();
+var actualTicks = 0;
+var playeractualTicks = 0;
+
+
 
 
 var currentPlayer = {};
@@ -51,6 +52,7 @@ currentPlayer.UserVungleApi='null';
 currentPlayer.UserAdcolonyApi='null';
 currentPlayer.UserAdcolonyZone='null';
 currentPlayer.IdleTime=0;
+currentPlayer.Action=0;
 
 
 
@@ -61,9 +63,7 @@ io.on('connection',function(socket)
 
 
 
-var tickLengthMs = 1000 / 20;
-var previousTick = Date.now();
-var actualTicks = 0;
+
 
 var gameLoop = function () 
 {
@@ -96,11 +96,13 @@ var Update = function(delta)
 
   for (var i = 0; i<clients.length; i++) 
       {
+      	
       
-      	CheckIdleStatus(clients[i].UserId ,clients[i].IdleTime++);
+      	CheckIdleStatus(i,clients[i].UserId ,clients[i].IdleTime++,socket,clients[i].UserId,clients[i].Action);
       }
-  
 }
+  
+
 
 
 
@@ -164,6 +166,9 @@ debug('Data: UserAdcolonyZone= '+data.UserAdcolonyZone);
 currentPlayer.IdleTime=0;
 debug('Data: IdleTime= '+currentPlayer.IdleTime);
 
+currentPlayer.Action=0;
+debug('Data: Action= '+currentPlayer.Action);
+
  
 
 playerSpawnPoints =[];
@@ -192,7 +197,8 @@ playerSpawnPoints =[];
 		UserAdcolonyZone:currentPlayer.UserAdcolonyZone,
 	    position:currentPlayer.position,
 	    rotation:currentPlayer.rotation,
-	    IdleTime:currentPlayer.IdleTime=0
+	    IdleTime:currentPlayer.IdleTime=0,
+	    Action:currentPlayer.Action=0
        };
 
 
@@ -207,8 +213,28 @@ playerSpawnPoints.push(playerSpawnPoint);
 
 });
  
+var isConnected = false;
+ for(var i =0; i<clients.length; i++)
+{
 
+if(clients[i].UserId === playerConnected.UserId )
+{
+	//we are already connected
+	debug("we are already connected");
+	isConnected = true;
+	
+}
+else
+{
+	//new connection
+	isConnected = false;
+	debug("we are now connected");
+}
+}
+if(isConnected == false)
+{
     clients.push(playerConnected);
+}
 	
 
 
@@ -239,7 +265,8 @@ for (var i = 0; i<clients.length; i++)
 		UserAdcolonyZone:clients[i].UserAdcolonyZone,
 	    position:clients[i].position,
 	    rotation:clients[i].rotation,
-	    IdleTime:clients[i].IdleTime=0
+	    IdleTime:clients[i].IdleTime=0,
+	    Action:clients[i].Action=0
 	    
 	};
 
@@ -346,19 +373,34 @@ socket.broadcast.emit('OnPlayerConnected', currentPlayer);
 
  socket.on('OnPlayerMove', function(data)
  {
-info('Method Get: OnPlayerMove:');
-info('Server Recieved From Client: ');
+
+//info('Method Get: OnPlayerMove:');
+//info('Server Recieved From Client: ');
 command('Data_Manager: '+JSON.stringify(data));
 
-socket.broadcast.emit('OnPlayerMove',data);
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//check idle status if it worked should set that user who ever that user is ideltime back to 0 so it has to restart 
-//the idel count down for that player but it dont work! boo todo try to solve it.
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-CheckIdleStatus(data.UserId ,0);
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//currentPlayer.position = data.position;
+for (var i = 0; i<clients.length; i++) 
+      {
+      	
+      if(data.UserId == clients[i].UserId)
+      {
+        debug("I AM AS ME");
+        clients[i].Action = data.isMoving;
+        if(data.isMoving == true)
+          {
+	//info('Broadcast : ');
+	       clients[i].IdleTime =0;
+          }
+      }
+      	
+      }
+
+
+
+socket.broadcast.emit('OnPlayerMove',data);
+
+
+
 
  });
 
@@ -369,40 +411,15 @@ CheckIdleStatus(data.UserId ,0);
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//START PLAYER TURN
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
- socket.on('OnPlayerTurn',function(data)
- {
- 	
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//check idle status if it worked should set that user who ever that user is ideltime back to 0 so it has to restart 
-//the idel count down for that player but it dont work! boo todo try to solve it.
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-CheckIdleStatus(currentPlayer.UserId ,0);
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-command(currentPlayer.UserId+'recv: turn:'+JSON.stringify(data));
-currentPlayer.rotation = data.rotation;
-socket.broadcast.emit('OnPlayerTurn',currentPlayer);
- });
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//END PLAYER TURN
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //START PLAYER SHOOT
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 socket.on('OnPlayerShoot', function(data){
-command(currentPlayer.UserId+'OnPlayerShoot:'+JSON.stringify(data));
+info('Method Get: OnPlayerShoot:');
+info('Server Recieved From Client: ');
+command('Data_Manager: '+JSON.stringify(data));
 
-var data = {
-UserId:currentPlayer.UserId
-};
-clear(currentPlayer.UserId+' bcst: shoot: '+JSON.stringify(data));
+
 socket.emit('OnPlayerShoot',data);
 socket.broadcast.emit('OnPlayerShoot',data);
 
@@ -550,33 +567,36 @@ info("Trademark @ What Trademark 2017");
 //Todo how Can I get the current player information and submit to the server when they move to keep them connected
 //else if the user is still login to the server and they have been inactive for xamount of time disconnect them..
 //I havent solved it 
-function CheckIdleStatus(UserId,tick)
+function CheckIdleStatus(i,UserId,tick,socket,who,action)
 {
 	
-	currentPlayer.IdleTime = tick;
-
-  //debug("CheckIdleStatus UserId: "+UserId); 
- // debug("CheckIdleStatus Tick: "+currentPlayer.IdleTime ); 
-
-//each client needs there own ticktime and to do a check if tick time is grater then idle time then lets disconnect them
-/*
-clients[i].IdleTime = IdleTime;
-
-
-debug(clients[i].IdleTime);
-var playerDisConnected = {
+	if(tick > DISCONNECT_TIME && action == false)
+	{
+		debug("CheckIdleStatus Tick: "+tick ); 
+		 var playerDisConnected = {
 		
 		UserId:clients[i].UserId
 	};
 
-	if(clients[i].IdleTime > 2000)
-	{
-		debug("IdleTime Disconnect: "+clients[i].IdleTime); 
-
+	
+	
+    // if(playerDisConnected == who)
+      // {
 		socket.emit('OnPlayerDisconnect',playerDisConnected);
 		socket.broadcast.emit('OnPlayerDisconnect',playerDisConnected);
+
 		clients.splice(i,1);
-	}*/
+	 //  }
+	
+	}
+
+  debug("CheckIdleStatus UserId: "+UserId); 
+  debug("IdleTime Disconnect: "+tick); 
+  debug("CheckIdleStatus who: "+who );
+  debug("CheckIdleStatus who: "+action );
+  debug("WHO IS I: "+i); 
+
+ debug('Data: Total Online Clients= '+clients.length);
 	
 
 }

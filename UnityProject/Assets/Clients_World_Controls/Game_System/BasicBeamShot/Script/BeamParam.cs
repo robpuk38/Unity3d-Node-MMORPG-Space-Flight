@@ -12,10 +12,13 @@ public class BeamParam : MonoBehaviour {
 
 	public void SetBeamParam(BeamParam param)
 	{
-		this.BeamColor = param.BeamColor;
-		this.AnimationSpd = param.AnimationSpd;
-		this.Scale = param.Scale;
-		this.MaxLength = param.MaxLength;
+        if (param != null)
+        {
+            this.BeamColor = param.BeamColor;
+            this.AnimationSpd = param.AnimationSpd;
+            this.Scale = param.Scale;
+            this.MaxLength = param.MaxLength;
+        }
 	}
 
 	void Start () {

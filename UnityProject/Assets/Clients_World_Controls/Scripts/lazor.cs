@@ -37,7 +37,7 @@ public class lazor : MonoBehaviour {
 		if (Physics.Raycast (transform.position, fwd, out hit)) {
 			Debug.Log ("We Hit " + hit.transform.name);
 
-			SpawnExplosion(hit.point, hit.transform);
+			//SpawnExplosion(hit.point, hit.transform);
 			return hit.point;
 		} 
 
@@ -45,6 +45,7 @@ public class lazor : MonoBehaviour {
 		return transform.position + (transform.forward *  MaxDistance);
 
 	}
+    /*
 	void SpawnExplosion(Vector3 hitTargetPos, Transform target)
 	{
 		explosions temp = target.GetComponent<explosions> ();
@@ -54,7 +55,7 @@ public class lazor : MonoBehaviour {
 			temp.Addforce(hitTargetPos,transform);
 		}
 
-	}
+	}*/
 
 
 	public void FireLazor()
@@ -66,7 +67,35 @@ public class lazor : MonoBehaviour {
 
 	public void FireLazor(Vector3 TargetPos,  Transform target = null)
 	{
-		if (canFire) {
+
+
+        if (Data_Manager.Instance != null)
+        {
+            if (NetworkManager.Instance != null)
+            {
+                if (Data_Manager.Instance.GetUserId() == NetworkManager.Instance.GetUserId())
+                {
+
+
+
+                    GameObject p = GameObject.Find(Data_Manager.Instance.GetUserId()) as GameObject;
+
+                    if (p != null)
+                    {
+
+                        Transform ZeroDrone = p.transform.Find("ZeroDrone");
+
+                       
+
+                        NetworkManager.Instance.CommandShoot(true);
+                    }
+
+                }
+            }
+        }
+
+
+         /*               if (canFire) {
 			if (target != null) 
 			{
 				SpawnExplosion (TargetPos, target);
@@ -76,11 +105,15 @@ public class lazor : MonoBehaviour {
 			lr.enabled = true;
 			canFire = false;
 			lasorLight.enabled = true;
+            if (NetworkManager.Instance != null)
+            {
+                NetworkManager.Instance.CommandShoot(true);
+            }
 
         //GameObject Bullet;
-       // Bullet = Shot1;
+        // Bullet = Shot1;
         //Fire
-        GameObject s1 = (GameObject)Instantiate(Shot1, this.transform.position, this.transform.rotation);
+            GameObject s1 = (GameObject)Instantiate(Shot1, this.transform.position, this.transform.rotation);
         s1.GetComponent<BeamParam>().SetBeamParam(this.GetComponent<BeamParam>());
 
         GameObject wav = (GameObject)Instantiate(Wave, this.transform.position, this.transform.rotation);
@@ -91,7 +124,7 @@ public class lazor : MonoBehaviour {
         Invoke ("TurnoffLazor", lazorOffTime);
         Invoke ("CamFire", fireDelay);
         }
-
+*/
       
     }
 

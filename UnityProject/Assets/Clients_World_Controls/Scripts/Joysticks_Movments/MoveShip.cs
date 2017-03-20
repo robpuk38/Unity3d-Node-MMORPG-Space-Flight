@@ -10,7 +10,8 @@ public class MoveShip : MonoBehaviour
     public VirturalJoyStick camjoyStick;
     public Rigidbody ourdrone;
     public Transform lookAtPoint;
-    public thuster[] Thusters;
+    public GameObject Thusterlight1;
+    public GameObject Thusterlight2;
     public Transform Camera;
     public float SmoothCamera = 0.5f;
     public float CameraOffsetX = 0.0f;
@@ -25,9 +26,10 @@ public class MoveShip : MonoBehaviour
     public float movementSpeed = 50f;
     public float turnSpeed = 50f;
     public Vector3 Camoffset;
+    bool isMoving = false;
     public float DistanceDamp = 0.1f;
     public float rotationalDamp = 0.1f;
-    private float warpTime = 0.0f;
+  
     private float cooldownTime = 0.0f;
 
 
@@ -35,6 +37,18 @@ public class MoveShip : MonoBehaviour
     private void Start()
     {
         ourdrone = GetComponent<Rigidbody>();
+
+
+    }
+    private void Update()
+    {
+        if (NetworkManager.Instance != null)
+        {
+            NetworkManager.Instance.CommandMove(isMoving, isBoost);
+        }
+
+       
+       
     }
 
     private void LateUpdate()
@@ -46,7 +60,7 @@ public class MoveShip : MonoBehaviour
                 if (Data_Manager.Instance.GetUserId() == NetworkManager.Instance.GetUserId())
                 {
 
-                    Debug.Log("WHO AM ID" + Data_Manager.Instance.GetUserId());
+
 
                     GameObject p = GameObject.Find(Data_Manager.Instance.GetUserId()) as GameObject;
 
@@ -54,35 +68,30 @@ public class MoveShip : MonoBehaviour
                     {
 
                         Transform ZeroDrone = p.transform.Find("ZeroDrone");
-                        // Debug.Log("WHAT " + ZeroDrone.name);
-                       
-
                         Data_Manager.Instance.SetUserPosX(ZeroDrone.GetComponent<Transform>().position.x.ToString());
                         Data_Manager.Instance.SetUserPosY(ZeroDrone.GetComponent<Transform>().position.y.ToString());
                         Data_Manager.Instance.SetUserPosZ(ZeroDrone.GetComponent<Transform>().position.z.ToString());
-                        Data_Manager.Instance.SetUserRotX(ZeroDrone.GetComponent<Transform>().rotation.x.ToString());
-                        Data_Manager.Instance.SetUserRotY(ZeroDrone.GetComponent<Transform>().rotation.y.ToString());
-                        Data_Manager.Instance.SetUserRotZ(ZeroDrone.GetComponent<Transform>().rotation.z.ToString());
+
+                        Data_Manager.Instance.SetUserRotX(ZeroDrone.GetComponent<Transform>().rotation.eulerAngles.x.ToString());
+                        Data_Manager.Instance.SetUserRotY(ZeroDrone.GetComponent<Transform>().rotation.eulerAngles.y.ToString());
+                        Data_Manager.Instance.SetUserRotZ(ZeroDrone.GetComponent<Transform>().rotation.eulerAngles.z.ToString());
+                        
 
                     }
 
-                        
-                   // if (isMoving == true)
-                  //  {
-                        
-                        NetworkManager.Instance.CommandMove();
-                 //   }
+
+
 
                     if (isBoost == true)
                     {
-                        warpTime++;
+                        
                         warp();
                     }
                     cooldownTime++;
                     SmoothFollow();
                     JoyStick_Controls();
 
-                    SwitchThusters();
+                   
 
                 }
             }
@@ -96,31 +105,13 @@ public class MoveShip : MonoBehaviour
     private void warp()
     {
 
-        if (warpTime > 1000)
-        {
-            //Debug.Log ("OK WARPTIME IS OVER: = " + warpTime);
-            isBoost = false;
+        liftup = +SpeedForce * 10;
+        Thrust();
+        Thusterlight1.SetActive(true);
+        Thusterlight2.SetActive(true);
+          
 
-            foreach (thuster t in Thusters)
-            {
-                t.Activate(false);
-            }
-
-            warpTime = 0;
-        }
-        else if (warpTime < 1000)
-        {
-            if (isBoost == true)
-            {
-                liftup = +SpeedForce * 10;
-                Thrust();
-                foreach (thuster t in Thusters)
-                {
-                    t.Activate(true);
-                }
-            }
-
-        }
+       
     }
     private void Thrust()
     {
@@ -138,13 +129,14 @@ public class MoveShip : MonoBehaviour
             ourdrone.isKinematic = false;
             if (AuidoManager.Instance != null)
             {
-                AuidoManager.Instance.SpeedEffect(true,false);
+                AuidoManager.Instance.SpeedEffect(true, false);
             }
         }
         isMoving = true;
 
 
-        
+       
+
         transform.position += transform.forward * movementSpeed * liftup;
         // Debug.Log("DID WE MAKE IT IN FOR MOVMENT?");
 
@@ -152,24 +144,8 @@ public class MoveShip : MonoBehaviour
 
 
     }
-    bool isMoving = false;
-    private void SwitchThusters()
-    {
-        if (isMoving == true && isBoost == true)
-        {
-            foreach (thuster t in Thusters)
-            {
-                t.Activate(true);
-            }
-        }
-        else if (isMoving == false)
-        {
-            foreach (thuster t in Thusters)
-            {
-                t.Activate(false);
-            }
-        }
-    }
+   
+  
 
 
 
@@ -202,10 +178,10 @@ public class MoveShip : MonoBehaviour
 
                 isMoving = false;
                 ourdrone.isKinematic = false;
-               
+
                 if (AuidoManager.Instance != null)
                 {
-                    AuidoManager.Instance.SpeedEffect(false,false);
+                    AuidoManager.Instance.SpeedEffect(false, false);
                 }
 
             }
@@ -331,7 +307,9 @@ public class MoveShip : MonoBehaviour
         {
 
             isBoost = true;
-          
+            Thusterlight1.SetActive(true);
+            Thusterlight2.SetActive(true);
+
 
 
         }
@@ -339,6 +317,8 @@ public class MoveShip : MonoBehaviour
         {
             isBoost = false;
             ourdrone.isKinematic = false;
+            Thusterlight1.SetActive(false);
+            Thusterlight2.SetActive(false);
         }
 
 

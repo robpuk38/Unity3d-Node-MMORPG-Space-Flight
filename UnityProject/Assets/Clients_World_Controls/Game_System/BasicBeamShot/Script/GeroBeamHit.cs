@@ -2,7 +2,7 @@
 using System.Collections;
 
 public class GeroBeamHit : MonoBehaviour {
-	private GameObject ParticleA;
+	/*private GameObject ParticleA;
 	private GameObject ParticleB;
 	private GameObject HitFlash;
 	
@@ -15,7 +15,7 @@ public class GeroBeamHit : MonoBehaviour {
 	public void SetViewPat(bool b)
 	{
 		if(b){
-			PatA.emissionRate = PatA_rate;
+			PatA.emission.rateOverTime PatA_rate;
 			PatB.emissionRate = PatB_rate;
 			HitFlash.GetComponent<Renderer>().enabled = true;
 		}else{
@@ -46,5 +46,5 @@ public class GeroBeamHit : MonoBehaviour {
         PatA.startColor = col;
         PatB.startColor = col;
         HitFlash.GetComponent<Renderer>().material.SetColor("_Color", col*1.5f);
-    }
+    }*/
 }
