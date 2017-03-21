@@ -125,12 +125,9 @@
     <Compile Include="Assets\Clients_World_Controls\Game_System\BasicBeamShot\Script\GeroBeam.cs" />
     <Compile Include="Assets\Clients_World_Controls\Game_System\BasicBeamShot\Script\GeroBeamHit.cs" />
     <Compile Include="Assets\Clients_World_Controls\Game_System\BasicBeamShot\Script\GetColor_BeamLine.cs" />
-    <Compile Include="Assets\Clients_World_Controls\Game_System\BasicBeamShot\Script\JumpScene.cs" />
-    <Compile Include="Assets\Clients_World_Controls\Game_System\BasicBeamShot\Script\MouseTgt.cs" />
     <Compile Include="Assets\Clients_World_Controls\Game_System\BasicBeamShot\Script\MultiShooter.cs" />
     <Compile Include="Assets\Clients_World_Controls\Game_System\BasicBeamShot\Script\RandomRotate.cs" />
     <Compile Include="Assets\Clients_World_Controls\Game_System\BasicBeamShot\Script\ScaleWiggle.cs" />
-    <Compile Include="Assets\Clients_World_Controls\Game_System\BasicBeamShot\Script\SceneMaster.cs" />
     <Compile Include="Assets\Clients_World_Controls\Game_System\BasicBeamShot\Script\ShooterRotate.cs" />
     <Compile Include="Assets\Clients_World_Controls\Game_System\BasicBeamShot\Script\ShotBase.cs" />
     <Compile Include="Assets\Clients_World_Controls\Game_System\BasicBeamShot\Script\ShotParticleEmitter.cs" />
@@ -138,6 +135,10 @@
     <Compile Include="Assets\Clients_World_Controls\Scripts\Astroid_Objects\astriods.cs" />
     <Compile Include="Assets\Clients_World_Controls\Scripts\Astroid_Objects\astroid_Manager.cs" />
     <Compile Include="Assets\Clients_World_Controls\Scripts\Joysticks_Movments\MoveShip.cs" />
+    <Compile Include="Assets\Clients_World_Controls\Scripts\Joysticks_Movments\VirtualButtonPressA.cs" />
+    <Compile Include="Assets\Clients_World_Controls\Scripts\Joysticks_Movments\VirtualButtonPressB.cs" />
+    <Compile Include="Assets\Clients_World_Controls\Scripts\Joysticks_Movments\VirtualButtonPressX.cs" />
+    <Compile Include="Assets\Clients_World_Controls\Scripts\Joysticks_Movments\VirtualButtonPressY.cs" />
     <Compile Include="Assets\Clients_World_Controls\Scripts\Joysticks_Movments\VirturalJoyStick.cs" />
     <Compile Include="Assets\Clients_World_Controls\Scripts\MoveEmeny.cs" />
     <Compile Include="Assets\Clients_World_Controls\Scripts\Player_Data.cs" />

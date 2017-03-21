@@ -18,6 +18,7 @@ About();
 
 server.listen(3000);
 var DISCONNECT_TIME = 3000;
+var enableDebug = 1;
 var enemies =[];
 var playerSpawnPoints=[];
 var clients = [];
@@ -53,6 +54,9 @@ currentPlayer.UserAdcolonyApi='null';
 currentPlayer.UserAdcolonyZone='null';
 currentPlayer.IdleTime=0;
 currentPlayer.Action=0;
+currentPlayer.UserRotX='null';
+currentPlayer.UserRotY='null';
+currentPlayer.UserRotZ='null';
 
 
 
@@ -168,6 +172,12 @@ debug('Data: IdleTime= '+currentPlayer.IdleTime);
 
 currentPlayer.Action=0;
 debug('Data: Action= '+currentPlayer.Action);
+currentPlayer.UserRotX=data.UserRotX;
+debug('Data: UserRotX= '+data.UserRotX);
+currentPlayer.UserRotY=data.UserRotY;
+debug('Data: UserRotY= '+data.UserRotY);
+currentPlayer.UserRotZ=data.UserRotZ;
+debug('Data: UserRotZ= '+data.UserRotZ);
 
  
 
@@ -198,7 +208,10 @@ playerSpawnPoints =[];
 	    position:currentPlayer.position,
 	    rotation:currentPlayer.rotation,
 	    IdleTime:currentPlayer.IdleTime=0,
-	    Action:currentPlayer.Action=0
+	    Action:currentPlayer.Action=0,
+	    UserRotX:currentPlayer.UserRotX,
+		UserRotY:currentPlayer.UserRotY,
+		UserRotZ:currentPlayer.UserRotZ
        };
 
 
@@ -217,7 +230,7 @@ var isConnected = false;
  for(var i =0; i<clients.length; i++)
 {
 
-if(clients[i].UserId === playerConnected.UserId )
+if(clients[i].UserId === playerConnected.UserId  || clients[i].UserId === currentPlayer.UserId )
 {
 	//we are already connected
 	debug("we are already connected");
@@ -266,7 +279,10 @@ for (var i = 0; i<clients.length; i++)
 	    position:clients[i].position,
 	    rotation:clients[i].rotation,
 	    IdleTime:clients[i].IdleTime=0,
-	    Action:clients[i].Action=0
+	    Action:clients[i].Action=0,
+	    UserRotX:clients[i].UserRotX,
+		UserRotY:clients[i].UserRotY,
+		UserRotZ:clients[i].UserRotZ
 	    
 	};
 
@@ -295,75 +311,7 @@ for (var i = 0; i<clients.length; i++)
 
 
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//START PLAY
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/*
-socket.on('OnPlay',function(data)
-{
-command(currentPlayer.UserId+' recv: play: '+JSON.stringify(data));
-//if this is the first person to join the game init the enemies 
 
-if(clients.length === 0)
-{
-
-          /* numberOfEnemies = data.enemySpawnPoints.length;
-           enemies = [];
-           data.enemySpawnPoints.forEach(function(_enemySpawnPoint)
-           {
-
-             var enemy = {
-	             name:guid(),
-	             position:_enemySpawnPoint.position,
-	             rotation:_enemySpawnPoint.rotation,
-	             health:100
-
-                         };
-            enemies.push(enemy);
-           });*/
-/*
-var enemiesResponse = {
-	enemies: enemies
-};*/
-//socket.emit('OnEnemies',enemiesResponse);
-//we will always send the enemies when the player joins
-//clear(currentPlayer.UserId+' emit: enemies: '+JSON.stringify(enemiesResponse));
-
-/*playerSpawnPoints =[];
-data.playerSpawnPoints.forEach(function(_playerSpawnPoint)
-{
-
-var playerSpawnPoint = {
-position:_playerSpawnPoint.position,
-rotation:_playerSpawnPoint.rotation
-};
-playerSpawnPoints.push(playerSpawnPoint);
-
-});
-}
-
-
-
-
-var randomSpawnPoint = playerSpawnPoints[Math.floor(Math.random() * playerSpawnPoints.length)];
-currentPlayer = {
-	name: data.name,
-	position:randomSpawnPoint.position,
-	rotation:randomSpawnPoint.rotation,
-	health: 100
-
-};
-clients.push(currentPlayer);
-//in current game tell you that you have joined
-clear(currentPlayer.UserId+' emit: play: '+JSON.stringify(currentPlayer));
-socket.emit('OnPlay', currentPlayer);
-//in your current game we need to tell the other payers about you
-socket.broadcast.emit('OnPlayerConnected', currentPlayer);
-});*/
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//END PLAY
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 
@@ -384,11 +332,11 @@ for (var i = 0; i<clients.length; i++)
       	
       if(data.UserId == clients[i].UserId)
       {
-        debug("I AM AS ME");
+        
         clients[i].Action = data.isMoving;
         if(data.isMoving == true)
           {
-	//info('Broadcast : ');
+	
 	       clients[i].IdleTime =0;
           }
       }
@@ -526,33 +474,36 @@ debug('Data: New Total Online Clients= '+clients.length);
 
 
 
-
-function guid(){
-	function s4(){
-		return Math.floor((1+Math.random())*0x10000).toString(16).substring(1);
-	}
-	return s4()+s4() + '-' + s4() +'-'+s4()+'-'+s4()+'-'+s4()+s4() +s4();
-}
-
-
 function clear(m)
 {
+	if(enableDebug != 0)
+	{
 	console.log(m.Green);
+    }
 }
 
 function command(m)
 {
+	if(enableDebug != 0)
+	{
 	console.log(m.Blue);
+    }
 }
 
 function debug(m)
 {
+	if(enableDebug != 0)
+	{
 	console.log(m.Red);
+    }
 }
 
 function info(m)
 {
+	if(enableDebug != 0)
+	{
 	console.log(m.Yellow);
+    }
 }
 
 function About()
@@ -564,40 +515,20 @@ info("Copyrights @ What Copyrights 2017");
 info("Trademark @ What Trademark 2017");
 }
 
-//Todo how Can I get the current player information and submit to the server when they move to keep them connected
-//else if the user is still login to the server and they have been inactive for xamount of time disconnect them..
-//I havent solved it 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//START CHECK IDLE STATUS
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 function CheckIdleStatus(i,UserId,tick,socket,who,action)
 {
-	
 	if(tick > DISCONNECT_TIME && action == false)
 	{
-		debug("CheckIdleStatus Tick: "+tick ); 
-		 var playerDisConnected = {
-		
-		UserId:clients[i].UserId
-	};
-
-	
-	
-    // if(playerDisConnected == who)
-      // {
-		socket.emit('OnPlayerDisconnect',playerDisConnected);
+		var playerDisConnected = {UserId:clients[i].UserId};
+        socket.emit('OnPlayerDisconnect',playerDisConnected);
 		socket.broadcast.emit('OnPlayerDisconnect',playerDisConnected);
-
-		clients.splice(i,1);
-	 //  }
-	
+        clients.splice(i,1);
 	}
-
-  debug("CheckIdleStatus UserId: "+UserId); 
-  debug("IdleTime Disconnect: "+tick); 
-  debug("CheckIdleStatus who: "+who );
-  debug("CheckIdleStatus who: "+action );
-  debug("WHO IS I: "+i); 
-
- debug('Data: Total Online Clients= '+clients.length);
-	
-
+    //debug('Data: Total Online Clients= '+clients.length);
 }
-
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//END CHECK IDLE STATUS
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

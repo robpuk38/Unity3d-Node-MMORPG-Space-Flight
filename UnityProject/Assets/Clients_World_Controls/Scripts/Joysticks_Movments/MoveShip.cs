@@ -5,13 +5,18 @@ using UnityEngine;
 public class MoveShip : MonoBehaviour
 {
 
+    private static MoveShip instance;
+    public static MoveShip Instance { get { return instance; } }
 
     public VirturalJoyStick joyStick;
+
     public VirturalJoyStick camjoyStick;
-    public Rigidbody ourdrone;
-    public Transform lookAtPoint;
-    public GameObject Thusterlight1;
-    public GameObject Thusterlight2;
+   
+
+    Rigidbody ourdrone;
+    GameObject player;
+    GameObject Thusterlight1;
+    GameObject Thusterlight2;
     public Transform Camera;
     public float SmoothCamera = 0.5f;
     public float CameraOffsetX = 0.0f;
@@ -26,33 +31,39 @@ public class MoveShip : MonoBehaviour
     public float movementSpeed = 50f;
     public float turnSpeed = 50f;
     public Vector3 Camoffset;
-    bool isMoving = false;
+    public bool isMoving = false;
     public float DistanceDamp = 0.1f;
     public float rotationalDamp = 0.1f;
   
     private float cooldownTime = 0.0f;
-
+    public bool isBoost = false;
 
 
     private void Start()
     {
-        ourdrone = GetComponent<Rigidbody>();
-
+        instance = this;
+       player = GameObject.Find("ZeroDrone_" + Data_Manager.Instance.GetUserId()) as GameObject;
 
     }
+    int autoNetworkUpdateTime = 0;
     private void Update()
     {
-        if (NetworkManager.Instance != null)
+        autoNetworkUpdateTime++;
+
+        
+
+        if (player != null)
         {
-            NetworkManager.Instance.CommandMove(isMoving, isBoost);
+            ourdrone = player.GetComponent<Rigidbody>();
+
+            Thusterlight2 = player.transform.GetChild(0).GetChild(0).gameObject;
+
+            Thusterlight1 = player.transform.GetChild(1).GetChild(0).gameObject;
+            //Thusterlight1.SetActive(true);
+
+           // Debug.Log("HOW TO FIND ITMES FROM PARENT? "+ this.name);
+
         }
-
-       
-       
-    }
-
-    private void LateUpdate()
-    {
         if (Data_Manager.Instance != null)
         {
             if (NetworkManager.Instance != null)
@@ -60,39 +71,79 @@ public class MoveShip : MonoBehaviour
                 if (Data_Manager.Instance.GetUserId() == NetworkManager.Instance.GetUserId())
                 {
 
+                    Debug.Log(" WHAT IS MY "+ Data_Manager.Instance.GetUserId() + " BOOST STATUS AND MOVMENT STATUS " + isBoost );
 
-
-                    GameObject p = GameObject.Find(Data_Manager.Instance.GetUserId()) as GameObject;
-
-                    if (p != null)
+                    if (isBoost == true || isMoving == true )
                     {
-
-                        Transform ZeroDrone = p.transform.Find("ZeroDrone");
-                        Data_Manager.Instance.SetUserPosX(ZeroDrone.GetComponent<Transform>().position.x.ToString());
-                        Data_Manager.Instance.SetUserPosY(ZeroDrone.GetComponent<Transform>().position.y.ToString());
-                        Data_Manager.Instance.SetUserPosZ(ZeroDrone.GetComponent<Transform>().position.z.ToString());
-
-                        Data_Manager.Instance.SetUserRotX(ZeroDrone.GetComponent<Transform>().rotation.eulerAngles.x.ToString());
-                        Data_Manager.Instance.SetUserRotY(ZeroDrone.GetComponent<Transform>().rotation.eulerAngles.y.ToString());
-                        Data_Manager.Instance.SetUserRotZ(ZeroDrone.GetComponent<Transform>().rotation.eulerAngles.z.ToString());
-                        
+                        NetworkManager.Instance.CommandMove(isMoving, isBoost);
+                       
+                    }
+                    else
+                    {
+                        //flooding server helper every 50 send auto if players doing nothing 
+                        if (autoNetworkUpdateTime > 50)
+                        {
+                            NetworkManager.Instance.CommandMove(isMoving, isBoost);
+                            autoNetworkUpdateTime = 0;
+                        }
 
                     }
+                    
+                }
+            }
+        }
+        
 
+       
+    }
 
-
-
-                    if (isBoost == true)
+    private void LateUpdate()
+    {
+        if (player != null)
+        {
+            if (Data_Manager.Instance != null)
+            {
+                if (NetworkManager.Instance != null)
+                {
+                    if (Data_Manager.Instance.GetUserId() == NetworkManager.Instance.GetUserId())
                     {
-                        
-                        warp();
+
+
+
+                        GameObject ZeroDrone = GameObject.Find("ZeroDrone_" + Data_Manager.Instance.GetUserId()) as GameObject;
+
+                        if (ZeroDrone != null)
+                        {
+                            //Debug.Log("WE ARE NO LONGER NULL BUT WE WAS WHEN IT CALLED FIRST");
+
+
+                            Data_Manager.Instance.SetUserPosX(ZeroDrone.GetComponent<Transform>().position.x.ToString());
+                            Data_Manager.Instance.SetUserPosY(ZeroDrone.GetComponent<Transform>().position.y.ToString());
+                            Data_Manager.Instance.SetUserPosZ(ZeroDrone.GetComponent<Transform>().position.z.ToString());
+
+                            Data_Manager.Instance.SetUserRotX(ZeroDrone.GetComponent<Transform>().rotation.eulerAngles.x.ToString());
+                            Data_Manager.Instance.SetUserRotY(ZeroDrone.GetComponent<Transform>().rotation.eulerAngles.y.ToString());
+                            Data_Manager.Instance.SetUserRotZ(ZeroDrone.GetComponent<Transform>().rotation.eulerAngles.z.ToString());
+
+
+
+                        }
+
+
+
+
+                        if (isBoost == true)
+                        {
+
+                            warp();
+                        }
+                        cooldownTime++;
+                        SmoothFollow();
+                        JoyStick_Controls();
+
+
+
                     }
-                    cooldownTime++;
-                    SmoothFollow();
-                    JoyStick_Controls();
-
-                   
-
                 }
             }
         }
@@ -137,7 +188,7 @@ public class MoveShip : MonoBehaviour
 
        
 
-        transform.position += transform.forward * movementSpeed * liftup;
+       player.transform.position += player.transform.forward * movementSpeed * liftup;
         // Debug.Log("DID WE MAKE IT IN FOR MOVMENT?");
 
 
@@ -153,23 +204,26 @@ public class MoveShip : MonoBehaviour
 
     private void SmoothFollow()
     {
+        if (Camera != null && player.transform != null)
+        {
 
-        Vector3 toPos = transform.position + (transform.rotation * Camoffset);
-        Vector3 curPos = Vector3.Lerp(Camera.transform.position, toPos, DistanceDamp);
-        Camera.transform.position = curPos;
-        Quaternion toRot = Quaternion.LookRotation(transform.position - Camera.transform.position, transform.up);
-        Quaternion curRot = Quaternion.Slerp(Camera.transform.rotation, toRot, rotationalDamp);
-        Camera.transform.rotation = curRot;
+            Vector3 toPos = player.transform.position + (player.transform.rotation * Camoffset);
+            Vector3 curPos = Vector3.Lerp(Camera.transform.position, toPos, DistanceDamp);
+            Camera.transform.position = curPos;
+            Quaternion toRot = Quaternion.LookRotation(player.transform.position - Camera.transform.position, player.transform.up);
+            Quaternion curRot = Quaternion.Slerp(Camera.transform.rotation, toRot, rotationalDamp);
+            Camera.transform.rotation = curRot;
+        }
     }
 
 
     float liftup = 0;
     float pullleft = 0;
+   
     private void JoyStick_Controls()
     {
-
-
-
+        
+        
         if (joyStick != null && joyStick.InputDicection == Vector3.zero && camjoyStick != null && camjoyStick.InputDicection == Vector3.zero)
         {
 
@@ -177,7 +231,10 @@ public class MoveShip : MonoBehaviour
             {
 
                 isMoving = false;
-                ourdrone.isKinematic = false;
+                if (ourdrone != null)
+                {
+                    ourdrone.isKinematic = false;
+                }
 
                 if (AuidoManager.Instance != null)
                 {
@@ -216,7 +273,7 @@ public class MoveShip : MonoBehaviour
             {
 
                 pullleft = RollSpeed;
-                transform.Rotate(0, pullleft, -pullleft);
+                player.transform.Rotate(0, pullleft, -pullleft);
 
 
 
@@ -226,7 +283,7 @@ public class MoveShip : MonoBehaviour
             {
 
                 pullleft = -RollSpeed;
-                transform.Rotate(0, pullleft, -pullleft);
+                player.transform.Rotate(0, pullleft, -pullleft);
 
             }
 
@@ -235,7 +292,7 @@ public class MoveShip : MonoBehaviour
 
 
 
-                transform.Rotate(-TiltSpeed, 0, 0);
+                player.transform.Rotate(-TiltSpeed, 0, 0);
 
             }
 
@@ -262,7 +319,7 @@ public class MoveShip : MonoBehaviour
                 //Debug.Log ("OK GOT IT NEW TOP");
 
 
-                transform.Rotate(TiltSpeed, 0, 0);
+                player.transform.Rotate(TiltSpeed, 0, 0);
 
 
             }
@@ -271,7 +328,7 @@ public class MoveShip : MonoBehaviour
             {
                 //Debug.Log ("OK GOT IT NEW RIGHT");
                 pullleft = RollSpeed;
-                transform.Rotate(0, 0, -pullleft);
+                player.transform.Rotate(0, 0, -pullleft);
 
 
             }
@@ -282,7 +339,7 @@ public class MoveShip : MonoBehaviour
 
                 //transform.Rotate(0,-PitchSpeed,0);
                 pullleft = -RollSpeed;
-                transform.Rotate(0, 0, -pullleft);
+                player.transform.Rotate(0, 0, -pullleft);
 
             }
 
@@ -290,7 +347,7 @@ public class MoveShip : MonoBehaviour
             {
                 //Debug.Log ("OK GOT IT NEW BOTTOM");
 
-                transform.Rotate(-TiltSpeed, 0, 0);
+                player.transform.Rotate(-TiltSpeed, 0, 0);
 
             }
 
@@ -299,41 +356,73 @@ public class MoveShip : MonoBehaviour
 
     }
 
-    public bool isBoost = false;
-    public void Throttle_Boost()
+
+
+   
+    public void ButtonA()
     {
-        InMovement();
-        if (isBoost == false)
-        {
+       
 
-            isBoost = true;
-            Thusterlight1.SetActive(true);
-            Thusterlight2.SetActive(true);
-
-
-
-        }
-        else
-        {
-            isBoost = false;
-            ourdrone.isKinematic = false;
-            Thusterlight1.SetActive(false);
-            Thusterlight2.SetActive(false);
-        }
-
-
-
-
-
-
-    }
-
-    private void InMovement()
-    {
         if (AuidoManager.Instance != null)
         {
             AuidoManager.Instance.ButtonClicked();
         }
+
+        if (isBoost == false)
+        {
+            Debug.Log("GOING IN WARP");
+            isBoost = true;
+            
+            if (ourdrone != null)
+            {
+                ourdrone.isKinematic = true;
+            }
+            if (Thusterlight2 != null & Thusterlight1 != null)
+            {
+                Thusterlight1.SetActive(true);
+                Thusterlight2.SetActive(true);
+            }
+
+        }
+        else
+        {
+            Debug.Log("STOPING WARP");
+            isBoost = false;
+
+            if (ourdrone != null)
+            {
+                ourdrone.isKinematic = false;
+            }
+            if (Thusterlight2 != null & Thusterlight1 != null)
+            {
+                Thusterlight1.SetActive(false);
+                Thusterlight2.SetActive(false);
+            }
+        }
+       
+        
     }
+
+    public void ButtonB()
+    {
+       
+        Debug.Log("B CLICKED");
+    }
+    public void ButtonX()
+    {
+       
+        Debug.Log("X CLICKED");
+        
+            playerinput.Instance.FireLazors();
+        
+    }
+
+    public void ButtonY()
+    {
+        
+        Debug.Log("Y CLICKED");
+    }
+
+   
 
 }

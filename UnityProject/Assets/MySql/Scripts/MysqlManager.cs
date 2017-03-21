@@ -161,6 +161,24 @@ public class MysqlManager : MonoBehaviour
                     Data_Manager.Instance.SetUserAdcolonyZone(aData[i + 1]);
                 }
 
+                if (aData[i] == "UserRotX")
+                {
+                    Debug.Log ("UserRotX: " + aData [i + 1]);
+                    Data_Manager.Instance.SetUserRotX(aData[i + 1]);
+                }
+
+                if (aData[i] == "UserRotY")
+                {
+                    Debug.Log ("UserRotY: " + aData [i + 1]);
+                    Data_Manager.Instance.SetUserRotY(aData[i + 1]);
+                }
+
+                if (aData[i] == "UserRotZ")
+                {
+                    Debug.Log ("UserRotZ: " + aData [i + 1]);
+                    Data_Manager.Instance.SetUserRotZ(aData[i + 1]);
+                }
+
                 if (aData[i] == "Error")
                 {
                     //Debug.Log ("Error: " + aData [i + 1]);
@@ -188,12 +206,12 @@ public class MysqlManager : MonoBehaviour
 
     public void PostUsersData(string UserId, string UserName, string UserToken, float UserPosX, float UserPosY, float UserPosZ)
     {
-        Debug.Log("Posting Users Data: " + UserId);
-        Debug.Log("Posting Users Data: " + UserName);
-        Debug.Log("Posting Users Data: " + UserToken);
-        Debug.Log("Posting Users Data: " + UserPosX);
-        Debug.Log("Posting Users Data: " + UserPosY);
-        Debug.Log("Posting Users Data: " + UserPosZ);
+       // Debug.Log("Posting Users Data: " + UserId);
+       // Debug.Log("Posting Users Data: " + UserName);
+       // Debug.Log("Posting Users Data: " + UserToken);
+      //  Debug.Log("Posting Users Data: " + UserPosX);
+      //  Debug.Log("Posting Users Data: " + UserPosY);
+       // Debug.Log("Posting Users Data: " + UserPosZ);
         postthedata = PostUserData(UserId, UserName, UserToken, UserPosX, UserPosY, UserPosZ);
         StartCoroutine(postthedata);
     }

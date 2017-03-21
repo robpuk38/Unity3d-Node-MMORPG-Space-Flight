@@ -52,7 +52,7 @@ public class NetworkManager : MonoBehaviour
         //socket.On("OnPlay",_OnPlay);
         socket.On("OnPlayerMove", _OnPlayerMove);
 
-        socket.On("OnPlayerShoot",_OnPlayerShoot);
+        socket.On("OnPlayerShoot", _OnPlayerShoot);
         //socket.On("OnHealth",_OnHealth);
         socket.On("OnPlayerDisconnect", _OnPlayerDisconnect);
         Load_Once = true;
@@ -67,7 +67,7 @@ public class NetworkManager : MonoBehaviour
         try
         {
             tcpClient.Connect(GetIPAddress, GetPort);
-            Debug.Log("Port open");
+            //Debug.Log("Port open");
             if (hasbeenDC == true && hasjoined == false && userIsConnected == false)
             {
                 JoinGame();
@@ -76,7 +76,7 @@ public class NetworkManager : MonoBehaviour
         }
         catch (Exception)
         {
-            Debug.Log("Port closed");
+            // Debug.Log("Port closed");
             if (hasjoined == true)
             {
                 hasbeenDC = true;
@@ -86,7 +86,7 @@ public class NetworkManager : MonoBehaviour
             userIsConnected = false;
 
         }
-        Debug.Log("Check Server: " + check);
+        //Debug.Log("Check Server: " + check);
 
     }
 
@@ -106,9 +106,9 @@ public class NetworkManager : MonoBehaviour
     {
         check++;
 
-        Debug.Log("hasbeenDC ?: " + hasbeenDC);
-        Debug.Log("hasjoined ?: " + hasjoined);
-        Debug.Log("userIsConnected ?: " + userIsConnected);
+        // Debug.Log("hasbeenDC ?: " + hasbeenDC);
+        //Debug.Log("hasjoined ?: " + hasjoined);
+        // Debug.Log("userIsConnected ?: " + userIsConnected);
 
 
         if (check > 500)
@@ -139,7 +139,7 @@ public class NetworkManager : MonoBehaviour
     {
         if (Data_Manager.Instance != null && Data_Manager.Instance.UserId.text != "UserId" && hasjoined == true)
         {
-            Debug.Log("Lets Save The Players Details");
+            // Debug.Log("Lets Save The Players Details");
             if (MysqlManager.Instance != null)
             {
                 MysqlManager.Instance.SaveUsersData();
@@ -204,6 +204,9 @@ public class NetworkManager : MonoBehaviour
             Data_Manager.Instance.GetUserVungleApi(),
             Data_Manager.Instance.GetUserAdcolonyApi(),
             Data_Manager.Instance.GetUserAdcolonyZone(),
+            Data_Manager.Instance.GetUserRotX(),
+            Data_Manager.Instance.GetUserRotY(),
+            Data_Manager.Instance.GetUserRotZ(),
             playSpawnPoints,
             enemySpawnPoints);
         string data = JsonUtility.ToJson(playerJSON);
@@ -212,27 +215,9 @@ public class NetworkManager : MonoBehaviour
     }
 
 
-    private bool SendToServerOnce_CommandMove = false;
+
 
     public void CommandMove(bool isMoving, bool isBoost)
-    {
-       /* if (isMoving == false)
-        {
-            Debug.Log("ARE WE MOVING ");
-            if (SendToServerOnce_CommandMove == false)
-            {
-                Debug.Log("DID WE MAKE IT IN ");
-                SendCommandMove(isMoving, isBoost);
-                SendToServerOnce_CommandMove = true;
-            }
-            return;
-        }
-        SendToServerOnce_CommandMove = false;*/
-        SendCommandMove(isMoving, isBoost);
-
-    }
-
-    private void SendCommandMove(bool isMoving, bool isBoost)
     {
 
         if (Data_Manager.Instance != null)
@@ -261,10 +246,15 @@ public class NetworkManager : MonoBehaviour
                 }
             }
         }
+
     }
 
 
-    public void CommandShoot(bool isShooting)
+
+
+
+
+    public void CommandShoot(bool isShooting, Vector3 TargetPos, Transform target = null)
     {
 
         if (isShooting == false)
@@ -277,7 +267,7 @@ public class NetworkManager : MonoBehaviour
             {
                 if (Data_Manager.Instance.GetUserId() == NetworkManager.Instance.GetUserId())
                 {
-                    ShootPlayerJSON shootplayerJSON = new ShootPlayerJSON(Data_Manager.Instance.GetUserId());
+                    ShootPlayerJSON shootplayerJSON = new ShootPlayerJSON(Data_Manager.Instance.GetUserId(), TargetPos, target);
                     string data = JsonUtility.ToJson(shootplayerJSON);
                     socket.Emit("OnPlayerShoot", new JSONObject(data));
                 }
@@ -289,13 +279,19 @@ public class NetworkManager : MonoBehaviour
     public void ClientDissconnect()
     {
 
-        hasjoined = false;
-        userIsConnected = false;
-        hasbeenDC = false;
-        DCPlayerJSON dcplayerJSON = new DCPlayerJSON(
-            Data_Manager.Instance.GetUserId());
-        string data = JsonUtility.ToJson(dcplayerJSON);
-        socket.Emit("OnPlayerDisconnect", new JSONObject(data));
+        if (Data_Manager.Instance != null)
+        {
+            if (NetworkManager.Instance != null)
+            {
+                if (Data_Manager.Instance.GetUserId() == NetworkManager.Instance.GetUserId())
+                {
+                    DCPlayerJSON dcplayerJSON = new DCPlayerJSON(
+                    Data_Manager.Instance.GetUserId());
+                    string data = JsonUtility.ToJson(dcplayerJSON);
+                    socket.Emit("OnPlayerDisconnect", new JSONObject(data));
+                }
+            }
+        }
 
         //  print("ClientDissconnect " + data);
 
@@ -339,14 +335,75 @@ public class NetworkManager : MonoBehaviour
             Debug.Log("Debug: _OnPlayerConnected Player Is Already Online:" + o.name);
             return;
         }
-        float x;
-        float y;
-        float z;
-        float.TryParse(userJSON.UserPosX.ToString(), out x);
-        float.TryParse(userJSON.UserPosY.ToString(), out y);
-        float.TryParse(userJSON.UserPosZ.ToString(), out z);
-        GameObject p = Instantiate(player, new Vector3(x, y, z), Quaternion.Euler(Vector3.zero)) as GameObject;
+        float gpsx;
+        float gpsy;
+        float gpsz;
+        float.TryParse(userJSON.UserGpsX.ToString(), out gpsx);
+        float.TryParse(userJSON.UserGpsY.ToString(), out gpsy);
+        float.TryParse(userJSON.UserGpsZ.ToString(), out gpsz);
+
+        //ok so lets think about this a bit more..
+        // we need to instantiate the players ID as the containor 
+        //once we instanitate the containor we need to then instantiate the players ship ZeroDrone_ID
+        // once we have the drone differnet from all the other drones we can then know what drone is what.
+        //same for the players untiverse_ID that way each untivers will be different 
+
+        //This is where we spawn the postion p0int for all players at 000 center point so all controllers are in position 
+        GameObject p = Instantiate(player, new Vector3(0, 0, 0), Quaternion.Euler(Vector3.zero)) as GameObject;
         p.name = userJSON.UserId;
+
+
+
+
+
+
+
+
+        //search all the contents of the prefab to rename and copy as new players details
+        Transform[] allChildren = p.GetComponentsInChildren<Transform>();
+        foreach (Transform child in allChildren)
+        {
+            // Debug.Log("WHAT IS THE NAME OF THE CHILDREN?: " + child.name);
+
+            if (child.name == "ZeroDrone")
+            {
+                // Debug.Log("YES THIS IS ZREO DRONE?: " + child.name);
+                float shipposx;
+                float shipposy;
+                float shipposz;
+                float.TryParse(userJSON.UserPosX.ToString(), out shipposx);
+                float.TryParse(userJSON.UserPosY.ToString(), out shipposy);
+                float.TryParse(userJSON.UserPosZ.ToString(), out shipposz);
+
+
+               
+                 float shiprotx;
+                 float shiproty;
+                 float shiprotz;
+                 float.TryParse(userJSON.UserRotY.ToString(), out shiprotx);
+                 float.TryParse(userJSON.UserRotY.ToString(), out shiproty);
+                 float.TryParse(userJSON.UserRotZ.ToString(), out shiprotz);
+
+                GameObject MyZreoDrone = Instantiate(child.gameObject, new Vector3(shipposx, shipposy, shipposz), Quaternion.Euler(shiprotx, shiproty, shiprotz)) as GameObject;
+                MyZreoDrone.name = "ZeroDrone_" + userJSON.UserId;
+                MyZreoDrone.SetActive(true);
+                Destroy(child.gameObject);
+                MyZreoDrone.transform.parent = p.transform;
+                // child.name = "ZeroDrone_" + Data_Manager.Instance.GetUserId();
+            }
+
+            if (child.name == "My_untivers")
+            {
+                //Debug.Log("YES THIS IS MY UNTIVERS?: " + child.name);
+
+                GameObject MyUntiverse = Instantiate(child.gameObject, new Vector3(gpsx, gpsy, gpsz), Quaternion.Euler(gpsx, gpsy, gpsz)) as GameObject;
+                MyUntiverse.name = "My_untivers_" + userJSON.UserId;
+                MyUntiverse.SetActive(true);
+                Destroy(child.gameObject);
+                MyUntiverse.transform.parent = p.transform;
+            }
+            // child.name = Data_Manager.Instance.GetUserId()+"_"+ ;
+        }
 
 
         if (Data_Manager.Instance != null)
@@ -367,16 +424,16 @@ public class NetworkManager : MonoBehaviour
                 FacebookManager.Instance.Facebook_Canvas.SetActive(true);
                 FacebookManager.Instance.Collected_Data_Canvas.SetActive(true);
                 FacebookManager.Instance.Join_Game_Canvas.SetActive(false);
-
+               
             }
             // Debug.Log("WHO AM I" + Data_Manager.Instance.GetUserId());
         }
 
-
-
-
-
         Get_Data_Container_Info(p, userJSON);
+
+
+
+
 
 
 
@@ -402,30 +459,34 @@ public class NetworkManager : MonoBehaviour
         //Debug.Log("Data: RotY: " + posuserJSON.roty);
         //Debug.Log("Data: RotZ: " + posuserJSON.rotz);
 
+        if (posuserJSON.UserId == Data_Manager.Instance.GetUserId())
+        {
+            Debug.Log("WHAT USER ID AM I MYSELF I DONT WANT TO SEE MYSELF JUST SOMEONE ELSE " + posuserJSON.UserId);
+            return;
+        }
 
 
 
         Vector3 position = new Vector3(posuserJSON.posx, posuserJSON.posy, posuserJSON.posz);
         Quaternion rotation = Quaternion.Euler(posuserJSON.rotx, posuserJSON.roty, posuserJSON.rotz);
 
-        GameObject p = GameObject.Find(posuserJSON.UserId) as GameObject;
 
-        if (p != null)
+        GameObject ZeroDrone = GameObject.Find("ZeroDrone_" + posuserJSON.UserId) as GameObject;
+
+        if (ZeroDrone != null)
         {
-           // Debug.Log("WE ARE SEEING SOMEONE ELSE DO SOMETHING: " + posuserJSON.UserId.ToString());
+            // Debug.Log("WE ARE SEEING SOMEONE ELSE DO SOMETHING: " + posuserJSON.UserId.ToString());
 
-            Transform ZeroDrone = p.transform.Find("ZeroDrone");
-            //Debug.Log("WHAT " + ZeroDrone.name);
+
+
+
             ZeroDrone.GetComponent<Transform>().position = position;
             ZeroDrone.GetComponent<Transform>().rotation = rotation;
+            GameObject ThrustLight2 = ZeroDrone.transform.GetChild(0).GetChild(0).gameObject;
+            GameObject ThrustLight1 = ZeroDrone.transform.GetChild(1).GetChild(0).gameObject;
 
-            Transform WarpEngien2 = ZeroDrone.Find("WarpEngien2");
-            Transform WarpEngien1 = ZeroDrone.Find("WarpEngien1");
-            Transform ThrustLight1 = WarpEngien1.Find("ThrustLight1");
-            Transform ThrustLight2 = WarpEngien2.Find("ThrustLight2");
-
-            Debug.Log("WHAT ThrustLight2 " + ThrustLight2.name);
-            Debug.Log("WHAT posuserJSON.isBoost " + posuserJSON.isBoost);
+            // Debug.Log("WHAT ThrustLight2 " + ThrustLight2.name);
+            Debug.Log("WHAT USER ID " + posuserJSON.UserId + " WHAT BOOST " + posuserJSON.isBoost);
             if (posuserJSON.isBoost == true)
             {
                 ThrustLight1.gameObject.SetActive(true);
@@ -437,21 +498,47 @@ public class NetworkManager : MonoBehaviour
                 ThrustLight2.gameObject.SetActive(false);
             }
 
+
         }
+
     }
-    
-	
 
-	void _OnPlayerShoot(SocketIOEvent socketIOEvent)
-	{
-        Debug.Log ("Method: _OnPlayerShoot");
-        Debug.Log ("Client Recieved:");
+
+    /*void SpawnExplosion(Vector3 hitTargetPos, Transform target)
+    {
+        explosions temp = target.GetComponent<explosions>();
+        if (temp != null)
+        {
+            temp.IceBeenHit(hitTargetPos);
+            temp.Addforce(hitTargetPos, transform);
+        }
+
+    }*/
+
+    void _OnPlayerShoot(SocketIOEvent socketIOEvent)
+    {
+        // Debug.Log("Method: _OnPlayerShoot");
+        // Debug.Log("Client Recieved:");
         string data = socketIOEvent.data.ToString();
-        Debug.Log ("Data_Manager:"+ data);
-        ShootUserJSON posuserJSON = ShootUserJSON.CreateFromJSON(data);
+        //  Debug.Log("Data_Manager:" + data);
+        ShootUserJSON shootuserJSON = ShootUserJSON.CreateFromJSON(data);
 
+        if (shootuserJSON.target != null)
+        {
+            GameObject p = GameObject.Find(shootuserJSON.target.name);
+            //  Debug.Log("WE HIT SOMETHINGTHING:" + shootuserJSON.target.name);
+            explosions temp = p.GetComponent<explosions>();
+            if (temp != null)
+            {
+                temp.IceBeenHit(shootuserJSON.TargetPos);
+                temp.Addforce(shootuserJSON.TargetPos, p.transform);
+            }
 
-        //GameObject p = GameObject.Find (userJSON.UserId);
+        }
+        else
+        {
+            // Debug.Log("WE MISSED DID NOT HIT ANYTHING");
+        }
         //PlayerController pc = p.GetComponent<PlayerController>();
         //pc.CmdFire ();
     }
@@ -477,8 +564,6 @@ public class NetworkManager : MonoBehaviour
         Debug.Log("OnPlayerDisconnect " + data);
         DCUserJSON dcuserJSON = DCUserJSON.CreateFromJSON(data);
 
-
-
         GameObject p = GameObject.Find(dcuserJSON.UserId) as GameObject;
         if (p != null)
         {
@@ -487,6 +572,9 @@ public class NetworkManager : MonoBehaviour
             {
                 if (Data_Manager.Instance.GetUserId() == dcuserJSON.UserId.ToString())
                 {
+                    this.hasjoined = false;
+                    this.userIsConnected = false;
+                    this.hasbeenDC = false;
                     this.Joincanvas.gameObject.SetActive(true);
                     this.FBcanvas.gameObject.SetActive(false);
                     this.cam.SetActive(true);
@@ -499,92 +587,92 @@ public class NetworkManager : MonoBehaviour
 
     private void Get_Data_Container_Info(GameObject p, UserJSON userJSON)
     {
-        Transform ZeroDrone = p.transform.Find("ZeroDrone");
+        Transform ZeroDrone = p.transform.Find("ZeroDrone_" + userJSON.UserId);
         Transform _Data_Container_Canvas = ZeroDrone.Find("Data_Container_Canvas");
-        Debug.Log("Data: Data_Container_Canvas: " + _Data_Container_Canvas.name);
+        // Debug.Log("Data: Data_Container_Canvas: " + _Data_Container_Canvas.name);
 
         Transform _Id = _Data_Container_Canvas.transform.Find("Id");
-        Debug.Log("Data: Data_Container_Canvas: Id: " + _Id.name);
+        // Debug.Log("Data: Data_Container_Canvas: Id: " + _Id.name);
         Text Id = _Id.GetComponent<Text>();
         Id.text = "Id: " + userJSON.Id;
 
         Transform _UserId = _Data_Container_Canvas.transform.Find("UserId");
-        Debug.Log("Data: Data_Container_Canvas: UserId: " + _UserId.name);
+        // Debug.Log("Data: Data_Container_Canvas: UserId: " + _UserId.name);
         Text UserId = _UserId.GetComponent<Text>();
         UserId.text = "UserId: " + userJSON.UserId;
 
         Transform _UserName = _Data_Container_Canvas.transform.Find("UserName");
-        Debug.Log("Data: Data_Container_Canvas: UserName: " + _UserName.name);
+        // Debug.Log("Data: Data_Container_Canvas: UserName: " + _UserName.name);
         Text UserName = _UserName.GetComponent<Text>();
         UserName.text = "UserName: " + userJSON.UserName;
 
         Transform _UserHealth = _Data_Container_Canvas.transform.Find("UserHealth");
-        Debug.Log("Data: Data_Container_Canvas: UserHealth: " + _UserHealth.name);
+        // Debug.Log("Data: Data_Container_Canvas: UserHealth: " + _UserHealth.name);
         Text UserHealth = _UserHealth.GetComponent<Text>();
         UserHealth.text = "UserHealth: " + userJSON.UserHealth;
 
         Transform _UserPower = _Data_Container_Canvas.transform.Find("UserPower");
-        Debug.Log("Data: Data_Container_Canvas: UserPower: " + _UserPower.name);
+        // Debug.Log("Data: Data_Container_Canvas: UserPower: " + _UserPower.name);
         Text UserPower = _UserPower.GetComponent<Text>();
         UserPower.text = "UserPower: " + userJSON.UserPower;
 
         Transform _UserExpierance = _Data_Container_Canvas.transform.Find("UserExpierance");
-        Debug.Log("Data: Data_Container_Canvas: UserExpierance: " + _UserExpierance.name);
+        // Debug.Log("Data: Data_Container_Canvas: UserExpierance: " + _UserExpierance.name);
         Text UserExpierance = _UserExpierance.GetComponent<Text>();
         UserExpierance.text = "UserExpierance: " + userJSON.UserExpierance;
 
         Transform _UserCurrency = _Data_Container_Canvas.transform.Find("UserCurrency");
-        Debug.Log("Data: Data_Container_Canvas: UserCurrency: " + _UserCurrency.name);
+        // Debug.Log("Data: Data_Container_Canvas: UserCurrency: " + _UserCurrency.name);
         Text UserCurrency = _UserCurrency.GetComponent<Text>();
         UserCurrency.text = "UserCurrency: " + userJSON.UserCurrency;
 
         Transform _UserLevel = _Data_Container_Canvas.transform.Find("UserLevel");
-        Debug.Log("Data: Data_Container_Canvas: UserLevel: " + _UserLevel.name);
+        // Debug.Log("Data: Data_Container_Canvas: UserLevel: " + _UserLevel.name);
         Text UserLevel = _UserLevel.GetComponent<Text>();
         UserLevel.text = "UserLevel: " + userJSON.UserLevel;
 
         Transform _UserPosX = _Data_Container_Canvas.transform.Find("UserPosX");
-        Debug.Log("Data: Data_Container_Canvas: UserPosX: " + _UserPosX.name);
+        // Debug.Log("Data: Data_Container_Canvas: UserPosX: " + _UserPosX.name);
         Text UserPosX = _UserPosX.GetComponent<Text>();
         UserPosX.text = "UserPosX: " + userJSON.UserPosX;
 
         Transform _UserPosY = _Data_Container_Canvas.transform.Find("UserPosY");
-        Debug.Log("Data: Data_Container_Canvas: UserPosY: " + _UserPosY.name);
+        // Debug.Log("Data: Data_Container_Canvas: UserPosY: " + _UserPosY.name);
         Text UserPosY = _UserPosY.GetComponent<Text>();
         UserPosY.text = "UserPosY: " + userJSON.UserPosY;
 
         Transform _UserPosZ = _Data_Container_Canvas.transform.Find("UserPosZ");
-        Debug.Log("Data: Data_Container_Canvas: UserPosZ: " + _UserPosZ.name);
+        // Debug.Log("Data: Data_Container_Canvas: UserPosZ: " + _UserPosZ.name);
         Text UserPosZ = _UserPosZ.GetComponent<Text>();
         UserPosZ.text = "UserPosZ: " + userJSON.UserPosZ;
 
         Transform _UserGpsX = _Data_Container_Canvas.transform.Find("UserGpsX");
-        Debug.Log("Data: Data_Container_Canvas: UserGpsX: " + _UserGpsX.name);
+        // Debug.Log("Data: Data_Container_Canvas: UserGpsX: " + _UserGpsX.name);
         Text UserGpsX = _UserGpsX.GetComponent<Text>();
         UserGpsX.text = "UserGpsX: " + userJSON.UserGpsX;
 
         Transform _UserGpsY = _Data_Container_Canvas.transform.Find("UserGpsY");
-        Debug.Log("Data: Data_Container_Canvas: UserGpsY: " + _UserGpsY.name);
+        //  Debug.Log("Data: Data_Container_Canvas: UserGpsY: " + _UserGpsY.name);
         Text UserGpsY = _UserGpsY.GetComponent<Text>();
         UserGpsY.text = "UserGpsY: " + userJSON.UserGpsY;
 
         Transform _UserGpsZ = _Data_Container_Canvas.transform.Find("UserGpsZ");
-        Debug.Log("Data: Data_Container_Canvas: UserGpsZ: " + _UserGpsZ.name);
+        // Debug.Log("Data: Data_Container_Canvas: UserGpsZ: " + _UserGpsZ.name);
         Text UserGpsZ = _UserGpsZ.GetComponent<Text>();
         UserGpsZ.text = "UserGpsZ: " + userJSON.UserGpsZ;
 
         Transform _UserVungleApi = _Data_Container_Canvas.transform.Find("UserVungleApi");
-        Debug.Log("Data: Data_Container_Canvas: UserVungleApi: " + _UserVungleApi.name);
+        // Debug.Log("Data: Data_Container_Canvas: UserVungleApi: " + _UserVungleApi.name);
         Text UserVungleApi = _UserVungleApi.GetComponent<Text>();
         UserVungleApi.text = "UserVungleApi: " + userJSON.UserVungleApi;
 
         Transform _UserAdcolonyApi = _Data_Container_Canvas.transform.Find("UserAdcolonyApi");
-        Debug.Log("Data: Data_Container_Canvas: UserAdcolonyApi: " + _UserAdcolonyApi.name);
+        // Debug.Log("Data: Data_Container_Canvas: UserAdcolonyApi: " + _UserAdcolonyApi.name);
         Text UserAdcolonyApi = _UserAdcolonyApi.GetComponent<Text>();
         UserAdcolonyApi.text = "UserAdcolonyApi: " + userJSON.UserAdcolonyApi;
 
         Transform _UserAdcolonyZone = _Data_Container_Canvas.transform.Find("UserAdcolonyZone");
-        Debug.Log("Data: Data_Container_Canvas: UserAdcolonyZone: " + _UserAdcolonyZone.name);
+        //  Debug.Log("Data: Data_Container_Canvas: UserAdcolonyZone: " + _UserAdcolonyZone.name);
         Text UserAdcolonyZone = _UserAdcolonyZone.GetComponent<Text>();
         UserAdcolonyZone.text = "UserAdcolonyZone: " + userJSON.UserAdcolonyZone;
 
@@ -620,11 +708,16 @@ public class NetworkManager : MonoBehaviour
     public class ShootPlayerJSON
     {
         public string UserId;
-     
-        public ShootPlayerJSON(string _UserId)
+        public Vector3 TargetPos;
+        public Transform target;
+
+        public ShootPlayerJSON(string _UserId, Vector3 _TargetPos, Transform _target)
         {
             UserId = _UserId;
-            
+            TargetPos = _TargetPos;
+            target = _target;
+
+
         }
     }
 
@@ -632,7 +725,9 @@ public class NetworkManager : MonoBehaviour
     public class ShootUserJSON
     {
         public string UserId;
-        
+        public Vector3 TargetPos;
+        public Transform target;
+
         public static ShootUserJSON CreateFromJSON(string data)
         {
             return JsonUtility.FromJson<ShootUserJSON>(data);
@@ -711,6 +806,9 @@ public class NetworkManager : MonoBehaviour
         public string UserVungleApi;
         public string UserAdcolonyApi;
         public string UserAdcolonyZone;
+        public string UserRotX;
+        public string UserRotY;
+        public string UserRotZ;
 
 
         public List<PointJSON> playerSpawnPoints;
@@ -736,6 +834,9 @@ public class NetworkManager : MonoBehaviour
             string _UserVungleApi,
             string _UserAdcolonyApi,
             string _UserAdcolonyZone,
+            string _UserRotX,
+            string _UserRotY,
+            string _UserRotZ,
             List<SpawnPoints> _playerSpawnPoints,
             List<SpawnPoints> _enemySpawnPoints)
         {
@@ -761,6 +862,9 @@ public class NetworkManager : MonoBehaviour
             UserVungleApi = _UserVungleApi;
             UserAdcolonyApi = _UserAdcolonyApi;
             UserAdcolonyZone = _UserAdcolonyZone;
+            UserRotX = _UserRotX;
+            UserRotY = _UserRotY;
+            UserRotZ = _UserRotZ;
 
             foreach (SpawnPoints playerSpawnPoint in _playerSpawnPoints)
             {
@@ -842,6 +946,9 @@ public class NetworkManager : MonoBehaviour
         public string UserAdcolonyZone;
         public float[] position;
         public float[] rotation;
+        public string UserRotX;
+        public string UserRotY;
+        public string UserRotZ;
         //public int health;
         public static UserJSON CreateFromJSON(string data)
         {

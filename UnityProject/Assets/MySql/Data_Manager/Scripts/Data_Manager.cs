@@ -30,6 +30,8 @@ public class Data_Manager : MonoBehaviour
     public Text UserRotY;
     public Text UserRotZ;
 
+  
+
 
     private void Awake()
     {
@@ -37,6 +39,8 @@ public class Data_Manager : MonoBehaviour
     }
 
    
+
+
     public void SetId(string set)
     {
         PlayerPrefs.SetString("Id", set);

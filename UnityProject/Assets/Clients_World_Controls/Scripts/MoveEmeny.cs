@@ -4,17 +4,25 @@ using UnityEngine;
 
 public class MoveEmeny : MonoBehaviour {
 
-	public Transform player;
+    GameObject player;
 	public float rotationalTime = 0.5f;
 	public float MoveSpeed = 10f;
 	public float detectionDistance = 20f;
 	public float RaycastOffset = 2.5f;
 
-	private void Update()
-	{   
-		//turn ();
-		Move ();
-		Pathfinding();
+
+    private void Start()
+    {
+        player = GameObject.Find("ZeroDrone_" + Data_Manager.Instance.GetUserId()) as GameObject;
+        
+    }
+    private void Update()
+	{
+        if (player != null)
+        {
+            Move();
+            Pathfinding();
+        }
 	}
 
 	void Move()
@@ -25,7 +33,7 @@ public class MoveEmeny : MonoBehaviour {
 
 	void Turn()
 	{
-		Vector3 pos = player.position - transform.position;
+		Vector3 pos = player.transform.position - transform.position;
 		Quaternion rotation = Quaternion.LookRotation(pos,Vector3.up);
 			transform.rotation = Quaternion.Slerp(transform.rotation,rotation,rotationalTime  * Time.deltaTime);
 

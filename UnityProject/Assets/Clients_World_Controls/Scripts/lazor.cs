@@ -12,9 +12,8 @@ public class lazor : MonoBehaviour {
     public GameObject Shot1;
     public GameObject Wave;
 
-
+    private bool hasHit = false;
     public float MaxDistance = 300f;
-	bool canFire = false;
 	public float lazorOffTime = 0.5f;
 	public float fireDelay = 2.0f;
 
@@ -27,38 +26,35 @@ public class lazor : MonoBehaviour {
 	void Start () {
 		lr.enabled = false;
 		lasorLight.enabled = false;
-		canFire = true;
+		
 	}
 	
 	Vector3 castRay()
 	{
 		RaycastHit hit;
 		Vector3 fwd = transform.TransformDirection (Vector3.forward) * MaxDistance;
-		if (Physics.Raycast (transform.position, fwd, out hit)) {
+		if (Physics.Raycast (transform.position, fwd, out hit))
+        {
 			Debug.Log ("We Hit " + hit.transform.name);
+            hasHit = true;
+            //SpawnExplosion(hit.point, hit.transform);
 
-			//SpawnExplosion(hit.point, hit.transform);
-			return hit.point;
-		} 
+            NetworkManager.Instance.CommandShoot(true, hit.point, hit.transform);
 
-			Debug.Log ("We Missed ");
+            return hit.point;
+		}
+        hasHit = false;
+
+            Debug.Log ("We Missed ");
 		return transform.position + (transform.forward *  MaxDistance);
 
 	}
-    /*
-	void SpawnExplosion(Vector3 hitTargetPos, Transform target)
-	{
-		explosions temp = target.GetComponent<explosions> ();
-		if(temp != null)
-		{
-			temp.IceBeenHit (hitTargetPos);
-			temp.Addforce(hitTargetPos,transform);
-		}
-
-	}*/
 
 
-	public void FireLazor()
+    
+
+
+    public void FireLazor()
 	{
 		Vector3 pos = castRay ();
 		FireLazor (pos);
@@ -83,11 +79,17 @@ public class lazor : MonoBehaviour {
                     if (p != null)
                     {
 
-                        Transform ZeroDrone = p.transform.Find("ZeroDrone");
-
                        
-
-                        NetworkManager.Instance.CommandShoot(true);
+                            lr.SetPosition(0, transform.position);
+                            lr.SetPosition(1, castRay());
+                            lr.enabled = true;
+                            lasorLight.enabled = true;
+                            Invoke("TurnoffLazor", lazorOffTime);
+                          
+                        if(hasHit == false)
+                        { 
+                         NetworkManager.Instance.CommandShoot(true, TargetPos, target);
+                        }
                     }
 
                 }
@@ -95,16 +97,12 @@ public class lazor : MonoBehaviour {
         }
 
 
-         /*               if (canFire) {
+         /*               
 			if (target != null) 
 			{
-				SpawnExplosion (TargetPos, target);
+				
 			}
-			lr.SetPosition (0, transform.position);
-			lr.SetPosition (1, castRay());
-			lr.enabled = true;
-			canFire = false;
-			lasorLight.enabled = true;
+			
             if (NetworkManager.Instance != null)
             {
                 NetworkManager.Instance.CommandShoot(true);
@@ -121,8 +119,7 @@ public class lazor : MonoBehaviour {
         wav.transform.Rotate(Vector3.left, 90.0f);
         wav.GetComponent<BeamWave>().col = this.GetComponent<BeamParam>().BeamColor;
 
-        Invoke ("TurnoffLazor", lazorOffTime);
-        Invoke ("CamFire", fireDelay);
+       
         }
 */
       
@@ -140,9 +137,6 @@ public class lazor : MonoBehaviour {
 		get{return MaxDistance; }
 	}
 
-	void CamFire()
-	{
-		canFire = true;
-	}
+	
 
 }

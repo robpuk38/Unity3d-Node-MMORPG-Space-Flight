@@ -55,8 +55,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   FBcanvas: {fileID: 0}
   Joincanvas: {fileID: 0}
+  ServerStatuscanvas: {fileID: 0}
+  DataCollectioncanvas: {fileID: 0}
   socket: {fileID: 0}
-  player: {fileID: 1128837334696300, guid: b1f4175e44c591040bb3adc4f252a1d2, type: 2}
+  player: {fileID: 1005782218640028, guid: b1f4175e44c591040bb3adc4f252a1d2, type: 2}
+  GetIPAddress: 73.146.71.203
+  GetPort: 3000
   cam: {fileID: 0}
   _UserId: 
 --- !u!114 &114202960467064162
@@ -86,5 +90,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerSpawnPoints:
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 114304895221909424, guid: 99af688751a51154fb1683bac35ebd43, type: 2}
+  - {fileID: 114304895221909424, guid: 99af688751a51154fb1683bac35ebd43, type: 2}

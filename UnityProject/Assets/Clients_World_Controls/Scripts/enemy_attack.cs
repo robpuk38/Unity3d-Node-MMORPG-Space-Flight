@@ -4,43 +4,45 @@ using UnityEngine;
 
 public class enemy_attack : MonoBehaviour {
 
-	public Transform target;
+	GameObject target;
 	public lazor Lazor;
 	Vector3 HitPos;
-	void Update()
-	{
-		InFront ();
-		HasLineofSight ();
-
-	}
+	
 	void Awake()
 	{
-		if (!target) 
-		{
-			Debug.Log ("The Player Ship Is Not Attached To The Enemys Attack Script.");
-			return;
-		}
+        target = GameObject.Find("ZeroDrone_" + Data_Manager.Instance.GetUserId()) as GameObject;
+       
 	}
 
-	bool InFront()
+    void Update()
+    {
+        if (target != null)
+        {
+            InFront();
+            HasLineofSight();
+        }
+
+    }
+
+    bool InFront()
 	{
-		Vector3 directionToTarget = transform.position - target.position;
+		Vector3 directionToTarget = transform.position - target.transform.position;
         float angle = Vector3.Angle (transform.forward, directionToTarget);
         if (Mathf.Abs (angle) > 90 && Mathf.Abs (angle) < 270) {
-			Debug.DrawLine (transform.position, target.position, Color.green);
+			Debug.DrawLine (transform.position, target.transform.position, Color.green);
 			Debug.Log ("Ship Is inFront");
 
 			return true;
 		} 
 		Debug.Log ("Ship Is Not in Front");
-        Debug.DrawLine(transform.position, target.position, Color.yellow);
+        Debug.DrawLine(transform.position, target.transform.position, Color.yellow);
 		return false;
 	}
 
 	bool HasLineofSight()
 	{
 		RaycastHit hit;
-		Vector3 direction = target.position-transform.position;
+		Vector3 direction = target.transform.position-transform.position;
 
 
 		if (Physics.Raycast (Lazor.transform.position, direction, out hit, Lazor.Distance)) 
@@ -69,6 +71,6 @@ public class enemy_attack : MonoBehaviour {
 	}
 	void Firelazors(Vector3 hit)
 	{
-		Lazor.FireLazor (hit,target);
+		Lazor.FireLazor (hit,target.transform);
 	}
 }

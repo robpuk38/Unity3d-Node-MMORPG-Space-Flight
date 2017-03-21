@@ -4,10 +4,17 @@ using UnityEngine;
 
 public class playerinput : MonoBehaviour {
 
-	public lazor[] Lazor; 
-	bool Fire = false;
+    private static playerinput instance;
+    public static playerinput Instance { get { return instance; } }
 
-	private void Update()
+    public lazor[] Lazor; 
+	bool Fire = false;
+    private void Awake()
+    {
+        instance = this;
+    }
+
+    private void Update()
 	{
 		if (Fire == true) {
 			foreach (lazor l in Lazor) {

@@ -33,6 +33,9 @@ if(isset($_GET['UserId']))
    $UserVungleApi = $row['UserVungleApi'];
    $UserAdcolonyApi = $row['UserAdcolonyApi'];
    $UserAdcolonyZone = $row['UserAdcolonyZone'];
+   $UserRotX = $row['UserRotX'];
+   $UserRotY = $row['UserRotY'];
+   $UserRotZ = $row['UserRotZ'];
   
    
    echo "|Id|".$Id.
@@ -53,7 +56,10 @@ if(isset($_GET['UserId']))
    "|UserGpsZ|".$UserGpsZ.
    "|UserVungleApi|".$UserVungleApi.
    "|UserAdcolonyApi|".$UserAdcolonyApi.
-   "|UserAdcolonyZone|".$UserAdcolonyZone;
+   "|UserAdcolonyZone|".$UserAdcolonyZone.
+   "|UserRotX|".$UserRotX.
+   "|UserRotY|".$UserRotY.
+   "|UserRotZ|".$UserRotZ;
    
   }
   else

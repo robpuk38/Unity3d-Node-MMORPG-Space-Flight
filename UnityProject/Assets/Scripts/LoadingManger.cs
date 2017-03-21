@@ -38,7 +38,7 @@ public class LoadingManger : MonoBehaviour
 
     }
 
-    
+
 
 
 
@@ -47,7 +47,7 @@ public class LoadingManger : MonoBehaviour
         LoadBarFront.fillAmount = 0;
 
         fade.alpha = 1;
-        if(Time.time < minTime)
+        if (Time.time < minTime)
         {
             loadTime = minTime;
         }
@@ -66,13 +66,13 @@ public class LoadingManger : MonoBehaviour
             && PlayerPrefs.GetString("AdcolonyApi") != null
             && PlayerPrefs.GetString("AdcolonyZone") != null)
         {
-            Debug.Log("TRUE THE ID IS: " + PlayerPrefs.GetString("Id"));
-            Debug.Log("TRUE THE USERID IS: " + PlayerPrefs.GetString("UserId"));
-            Debug.Log("TRUE THE USERNAME IS: " + PlayerPrefs.GetString("UserName"));
-            Debug.Log("TRUE THE USERPIC IS: " + PlayerPrefs.GetString("UserPic"));
-            Debug.Log("TRUE THE VUNGLEAPI IS: " + PlayerPrefs.GetString("VungleApi"));
-            Debug.Log("TRUE THE ADCOLONYAPI IS: " + PlayerPrefs.GetString("AdcolonyApi"));
-            Debug.Log("TRUE THE ADCOLONYZONE IS: " + PlayerPrefs.GetString("AdcolonyZone"));
+          //  Debug.Log("TRUE THE ID IS: " + PlayerPrefs.GetString("Id"));
+          //  Debug.Log("TRUE THE USERID IS: " + PlayerPrefs.GetString("UserId"));
+          //  Debug.Log("TRUE THE USERNAME IS: " + PlayerPrefs.GetString("UserName"));
+          //  Debug.Log("TRUE THE USERPIC IS: " + PlayerPrefs.GetString("UserPic"));
+          //  Debug.Log("TRUE THE VUNGLEAPI IS: " + PlayerPrefs.GetString("VungleApi"));
+           // Debug.Log("TRUE THE ADCOLONYAPI IS: " + PlayerPrefs.GetString("AdcolonyApi"));
+           // Debug.Log("TRUE THE ADCOLONYZONE IS: " + PlayerPrefs.GetString("AdcolonyZone"));
             UserName = PlayerPrefs.GetString("UserName");
 
         }
@@ -82,14 +82,14 @@ public class LoadingManger : MonoBehaviour
             UserName = "Guest";
         }
 
-       
+
 
 
     }
 
     private void Update()
     {
-        
+
 
         Fadein();
 
@@ -112,19 +112,19 @@ public class LoadingManger : MonoBehaviour
         {
             tcpClient.Connect(GetIPAddress, GetPort);
             ServerStatus = "Online";
-            
-            Debug.Log("Port open");
-           
+
+           // Debug.Log("Port open");
+
         }
         catch (Exception)
         {
             ServerStatus = "Offline";
-            Debug.Log("Port closed");
+          //  Debug.Log("Port closed");
             NetworkManager.SetActive(false);
 
 
         }
-        
+
 
     }
 
@@ -136,13 +136,13 @@ public class LoadingManger : MonoBehaviour
         }
 
         float percent = LoadBarFront.fillAmount * 100;
-        Percentage.text = (percent).ToString("f0")+"%";
+        Percentage.text = (percent).ToString("f0") + "%";
 
-        if((percent).ToString("f0") == "0")
+        if ((percent).ToString("f0") == "0")
         {
 
-            Loading.text = "Welcome " + UserName ;
-            if(serverCheck == false)
+            Loading.text = "Welcome " + UserName;
+            if (serverCheck == false)
             {
                 CheckServerStatus();
                 serverCheck = true;
@@ -175,10 +175,10 @@ public class LoadingManger : MonoBehaviour
         {
 
             Loading.text = "Gathering Server Status " + ServerStatus;
-            
+
         }
 
-        if ((percent).ToString("f0") == "20" && ServerStatus =="Offline")
+        if ((percent).ToString("f0") == "20" && ServerStatus == "Offline")
         {
 
             Loading.text = "Activating Local Play";
@@ -192,20 +192,20 @@ public class LoadingManger : MonoBehaviour
 
         }
 
-        
+
 
     }
 
     private void PreloadFadeOut()
     {
-        
+
         if (LoadBarFront.fillAmount >= 1)
         {
             if (fadein == false)
             {
                 fadeout = true;
             }
-            
+
         }
     }
 
@@ -213,12 +213,12 @@ public class LoadingManger : MonoBehaviour
 
     private void Fadein()
     {
-        
+
         if (fadein == true)
         {
-            Debug.Log("fadein ??:" + fadein);
+           // Debug.Log("fadein ??:" + fadein);
 
-            if(fade.alpha >= 0)
+            if (fade.alpha >= 0)
             {
                 fade.alpha = 1 - Time.time;
                 if (fade.alpha == 0)
@@ -226,11 +226,11 @@ public class LoadingManger : MonoBehaviour
                     this.gameObject.SetActive(false);
                 }
             }
-            
+
         }
         else
         {
-            Debug.Log("fadein ?:" + fadein);
+           // Debug.Log("fadein ?:" + fadein);
             if (Time.time < minTime)
             {
                 fade.alpha = 1 - Time.time;
@@ -242,16 +242,16 @@ public class LoadingManger : MonoBehaviour
     private void FadeOut()
     {
 
-        
+
 
 
         if (Time.time > minTime & loadTime != 0 && fadeout == true)
         {
-            Debug.Log("fadeout :" + fadeout);
+           // Debug.Log("fadeout :" + fadeout);
             fade.alpha = Time.time - minTime;
             if (fade.alpha >= 1)
             {
-                Debug.Log("ok change");
+               // Debug.Log("ok change");
                 fadein = true;
                 fadeout = false;
                 if (ServerStatus == "Online")
@@ -269,14 +269,14 @@ public class LoadingManger : MonoBehaviour
                     FacebookMaster.SetActive(true);
                     JoinGameCanvas.gameObject.SetActive(false);
                     MysqlManager.Instance.GetUsersData(PlayerPrefs.GetString("UserId"));
-                   
+
                 }
                 else
                 {
                     FacebookMaster.SetActive(true);
                     JoinGameCanvas.gameObject.SetActive(true);
                 }
-                
+
 
             }
         }

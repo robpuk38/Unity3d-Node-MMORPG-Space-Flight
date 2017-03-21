@@ -3870,7 +3870,7 @@ Rigidbody:
   m_Drag: 0.1
   m_AngularDrag: 0.1
   m_UseGravity: 0
-  m_IsKinematic: 1
+  m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
@@ -5190,12 +5190,10 @@ MonoBehaviour:
   joyStick: {fileID: 114775481475745340, guid: 0a200ee0adf1965439404cd7332294b9, type: 2}
   camjoyStick: {fileID: 114994780426637642, guid: d550c1b140e29274cb4a64d209f91392,
     type: 2}
-  ourdrone: {fileID: 54942404104350808}
-  lookAtPoint: {fileID: 4437163475305716}
-  Thusterlight1: {fileID: 1168672796714684, guid: 1200efa6b2c61f6418045be3d896e573,
-    type: 2}
-  Thusterlight2: {fileID: 1354985947416872, guid: 0f3f9911c3b39ae4eb0a5edef7c82001,
-    type: 2}
+  ABtn: {fileID: 114991327314533884, guid: 70dd64996090d1f4fad272b981bea3e9, type: 2}
+  BBtn: {fileID: 114720856107568606, guid: 55b17d6fa61ff1940b61f4bacea1a8e1, type: 2}
+  XBtn: {fileID: 114378554506637538, guid: a2e34e7d0f5165c4d94d6a3a6d6dacfe, type: 2}
+  YBtn: {fileID: 114809807499729064, guid: f3e01c8ed44fcf94e8ca30cb02810cd5, type: 2}
   Camera: {fileID: 4535720735689842, guid: b739c048050c0944699987a9d28b6afc, type: 2}
   SmoothCamera: 5
   CameraOffsetX: 0
@@ -5209,6 +5207,7 @@ MonoBehaviour:
   movementSpeed: 2
   turnSpeed: 1
   Camoffset: {x: 0, y: 2, z: -8}
+  isMoving: 0
   DistanceDamp: 0.3
   rotationalDamp: 0.2
   isBoost: 0
