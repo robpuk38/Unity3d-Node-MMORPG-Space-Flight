@@ -6,9 +6,7 @@ public class astriods : MonoBehaviour {
 
 	Transform myT;
 	Vector3 randomeRotation;
-	public float ScaleOffsetX =1.5f;
-	public float ScaleOffsetY =1.5f;
-	public float ScaleOffsetZ =1.5f;
+	public float Scale=0.5f;
     public float RotationOffset =5f;
 	public float movementSpeed= 50.0f;
 	public float GameArea = 500000;
@@ -20,12 +18,11 @@ public class astriods : MonoBehaviour {
 	}
 
 	void Start () {
-		//Vector3 scale = Vector3.one;
+        //Vector3 scale = Vector3.one;
 
-		ScaleOffsetX = Random.Range (-ScaleOffsetX,ScaleOffsetX);
-		ScaleOffsetY = Random.Range (-ScaleOffsetY, ScaleOffsetY);
-		ScaleOffsetZ = Random.Range (-ScaleOffsetZ, ScaleOffsetZ);
-		myT.localScale = scale(ScaleOffsetX,ScaleOffsetY,ScaleOffsetZ);
+        Scale = Random.Range (-Scale, Scale);
+		
+		myT.localScale = scale(Scale, Scale, Scale);
 
 		randomeRotation.x = Random.Range (-RotationOffset,  RotationOffset);
 		randomeRotation.y = Random.Range (-RotationOffset,  RotationOffset);

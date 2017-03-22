@@ -9,24 +9,37 @@ public class VirtualButtonPressY : MonoBehaviour, IPointerUpHandler, IPointerDow
 
     private Image bgImg;
     private Image joystickImg;
+    GameObject player;
 
     public Vector3 InputDicection { set; get; }
 
 
     private void Start()
     {
-        bgImg = GetComponent<Image>();
-        joystickImg = transform.GetChild(0).GetComponent<Image>();
+        player = GameObject.Find(Data_Manager.Instance.GetUserId()) as GameObject;
+
         InputDicection = Vector3.zero;
     }
 
+    private void Update()
+    {
+        if (player != null)
+        {
+            
 
-  
+            bgImg = player.transform.GetChild(1).GetChild(0).GetChild(6).gameObject.GetComponent<Image>();
+            joystickImg = player.transform.GetChild(1).GetChild(0).GetChild(6).GetChild(0).gameObject.GetComponent<Image>();
+           // Debug.Log("WHAT IS THIS " + Thusterlight2.name + "WHAT WE NEED? " + joystickImg.name);
+        }
+    }
+
+
+
 
     public virtual void OnPointerDown(PointerEventData ped)
     {
-        Debug.Log("Lets Give The Buttons Some Movment As If They Are Being Pressed");
-        Debug.Log("WE HAVE PRESSSED THE Y BUTTON");
+       // Debug.Log("Lets Give The Buttons Some Movment As If They Are Being Pressed");
+       // Debug.Log("WE HAVE PRESSSED THE Y BUTTON");
 
         Vector2 pos = Vector2.zero;
         if (RectTransformUtility.ScreenPointToLocalPointInRectangle

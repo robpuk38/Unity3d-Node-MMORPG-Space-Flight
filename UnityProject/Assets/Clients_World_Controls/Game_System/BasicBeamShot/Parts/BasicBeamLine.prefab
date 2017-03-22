@@ -43,8 +43,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MaxLength: 500
   StartSize: 1
-  AnimationSpd: 0.1
-  BeamColor: {r: 1, g: 1, b: 1, a: 1}
+  AnimationSpd: 50
+  BeamColor: {r: 0.2249135, g: 0.80464727, b: 0.9558824, a: 1}
 --- !u!120 &12000000
 LineRenderer:
   m_ObjectHideFlags: 1
@@ -78,8 +78,8 @@ LineRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Positions:
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 1}
+  - {x: -0.0000011777878, y: 0, z: 9.88}
+  - {x: -0.0000011777878, y: 0, z: 309.88}
   m_Parameters:
     serializedVersion: 2
     widthMultiplier: 1
@@ -88,7 +88,7 @@ LineRenderer:
       m_Curve:
       - serializedVersion: 2
         time: 0
-        value: 1
+        value: 0.39999998
         inSlope: 0
         outSlope: 0
         tangentMode: 0

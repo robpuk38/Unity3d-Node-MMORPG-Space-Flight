@@ -5,7 +5,7 @@ using UnityEngine;
 public class enemy_attack : MonoBehaviour {
 
 	GameObject target;
-	public lazor Lazor;
+	//public lazor Lazor;
 	Vector3 HitPos;
 	
 	void Awake()
@@ -41,11 +41,11 @@ public class enemy_attack : MonoBehaviour {
 
 	bool HasLineofSight()
 	{
-		RaycastHit hit;
+		/*RaycastHit hit;
 		Vector3 direction = target.transform.position-transform.position;
 
 
-		if (Physics.Raycast (Lazor.transform.position, direction, out hit, Lazor.Distance)) 
+		f (Physics.Raycast (Lazor.transform.position, direction, out hit, Lazor.Distance)) 
 		{
 			//Debug.DrawRay (Lazor.transform.position, hit.point,Color.cyan);
 			Debug.Log (hit.transform.name);
@@ -66,11 +66,11 @@ public class enemy_attack : MonoBehaviour {
 				//}
 
 			}
-		}
+		}*/
 		return  false;
 	}
 	void Firelazors(Vector3 hit)
 	{
-		Lazor.FireLazor (hit,target.transform);
+		//Lazor.FireLazor (hit,target.transform);
 	}
 }

@@ -23,7 +23,7 @@ public class Main_Cam : MonoBehaviour {
 		//check if we support both services
 		if (!SystemInfo.supportsGyroscope)
 		{
-			Debug.Log ("This Devices Dose Not Support Gyro");
+			//Debug.Log ("This Devices Dose Not Support Gyro");
 			return;
 		}
 

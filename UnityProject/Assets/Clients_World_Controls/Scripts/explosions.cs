@@ -19,9 +19,41 @@ public class explosions : MonoBehaviour {
 			return;
 		}
 	}
+    int UpdateTime = 0;
+    private void Update()
+    {
+        if (NetworkManager.Instance != null)
+        {
+            if (Data_Manager.Instance != null)
+            {
+                if (this.transform.name == "ZeroDrone_"+Data_Manager.Instance.GetUserId())
+                {
+                    Debug.Log("WE ARE SENDING OR SELF TO THE SERVER AGAIN");
+                    return;
+                }
+            }
+
+            Debug.Log("WE ARE "+ this.transform.ToString());
+            UpdateTime++;
+
+            if(UpdateTime > 50)
+            {
+                NetworkManager.Instance.CommandMoveObject(this.transform.name,
+                 this.transform.position.x,
+                 this.transform.position.y,
+                 this.transform.position.z,
+                 this.transform.rotation.eulerAngles.x,
+                 this.transform.rotation.eulerAngles.y,
+                 this.transform.rotation.eulerAngles.z);
+                UpdateTime = 0;
+            }
+             
+        }
+    }
 
 
-	public void IceBeenHit(Vector3 pos)
+
+    public void IceBeenHit(Vector3 pos)
 	{
         GameObject go = Instantiate (explosion, pos, Quaternion.identity, transform) as GameObject;
 		Destroy (go,6f);
@@ -29,7 +61,12 @@ public class explosions : MonoBehaviour {
 
 	void OnCollisionEnter(Collision col)
 	{
-		foreach (ContactPoint contact in col.contacts) {
+
+        Debug.Log("I HAVE BEEN HIT WHAT AMD I? "+ this.transform.name);
+
+        
+
+        foreach (ContactPoint contact in col.contacts) {
 			IceBeenHit (contact.point);
 		}
 	}

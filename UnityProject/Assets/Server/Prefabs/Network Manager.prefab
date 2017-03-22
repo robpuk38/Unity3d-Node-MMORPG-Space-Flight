@@ -20,7 +20,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4023112444659982}
   - component: {fileID: 114072389680584886}
-  - component: {fileID: 114202960467064162}
   - component: {fileID: 114239870357251062}
   m_Layer: 0
   m_Name: Network Manager
@@ -63,21 +62,8 @@ MonoBehaviour:
   GetPort: 3000
   cam: {fileID: 0}
   _UserId: 
---- !u!114 &114202960467064162
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1056002895047730}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3c066e034503a21429533c0ddf3d1716, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  enemy: {fileID: 1760396848043846, guid: 07ee24d5bb9aac6468c496d5745e4b54, type: 2}
-  spawnPoint: {fileID: 1261627555963796, guid: 99af688751a51154fb1683bac35ebd43, type: 2}
-  numberOfEnemies: 4
-  enemySpawnPoionts: []
+  Bullet: {fileID: 0}
+  Bullet_Forward_Force: 0
 --- !u!114 &114239870357251062
 MonoBehaviour:
   m_ObjectHideFlags: 1

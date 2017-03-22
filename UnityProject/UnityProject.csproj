@@ -146,8 +146,6 @@
     <Compile Include="Assets\Clients_World_Controls\Scripts\World_Manager.cs" />
     <Compile Include="Assets\Clients_World_Controls\Scripts\enemy_attack.cs" />
     <Compile Include="Assets\Clients_World_Controls\Scripts\explosions.cs" />
-    <Compile Include="Assets\Clients_World_Controls\Scripts\lazor.cs" />
-    <Compile Include="Assets\Clients_World_Controls\Scripts\playerinput.cs" />
     <Compile Include="Assets\Clients_World_Controls\Scripts\rotate_around.cs" />
     <Compile Include="Assets\Clients_World_Controls\Scripts\waypoints.cs" />
     <Compile Include="Assets\Gps\Scripts\GPS.cs" />
@@ -160,6 +158,7 @@
     <Compile Include="Assets\Scripts\Ads_System\PlayVungleAds.cs" />
     <Compile Include="Assets\Scripts\AuidoManager.cs" />
     <Compile Include="Assets\Scripts\EnemySpawnPoint.cs" />
+    <Compile Include="Assets\Scripts\HomePoint.cs" />
     <Compile Include="Assets\Scripts\LoadingManger.cs" />
     <Compile Include="Assets\Scripts\Main_Camera\Main_Cam.cs" />
     <Compile Include="Assets\Scripts\NetworkManager.cs" />

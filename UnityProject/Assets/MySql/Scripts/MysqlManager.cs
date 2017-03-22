@@ -163,19 +163,19 @@ public class MysqlManager : MonoBehaviour
 
                 if (aData[i] == "UserRotX")
                 {
-                    Debug.Log ("UserRotX: " + aData [i + 1]);
+                   // Debug.Log ("UserRotX: " + aData [i + 1]);
                     Data_Manager.Instance.SetUserRotX(aData[i + 1]);
                 }
 
                 if (aData[i] == "UserRotY")
                 {
-                    Debug.Log ("UserRotY: " + aData [i + 1]);
+                  //  Debug.Log ("UserRotY: " + aData [i + 1]);
                     Data_Manager.Instance.SetUserRotY(aData[i + 1]);
                 }
 
                 if (aData[i] == "UserRotZ")
                 {
-                    Debug.Log ("UserRotZ: " + aData [i + 1]);
+                   // Debug.Log ("UserRotZ: " + aData [i + 1]);
                     Data_Manager.Instance.SetUserRotZ(aData[i + 1]);
                 }
 
@@ -237,7 +237,7 @@ public class MysqlManager : MonoBehaviour
 
         if (connection.isDone)
         {
-            Debug.Log("Insertation Has Finished");
+           // Debug.Log("Insertation Has Finished");
             GetUsersData(UserId);
 
 

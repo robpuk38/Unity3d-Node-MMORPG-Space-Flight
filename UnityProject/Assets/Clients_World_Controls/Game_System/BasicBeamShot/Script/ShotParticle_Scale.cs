@@ -11,32 +11,39 @@ public class ShotParticle_Scale : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		LR = transform.GetComponent<LineRenderer>();
-		width = 1.0f;
-		length = 0.0f;
-		time = 0.0f;
-		forwad = transform.forward;
+        if (this.transform != null && this.transform.parent != null)
+        {
+            LR = transform.GetComponent<LineRenderer>();
+            width = 1.0f;
+            length = 0.0f;
+            time = 0.0f;
+            forwad = transform.forward;
 
-		Quaternion ParentQua = transform.parent.rotation;
-		Vector3 V = ParentQua * forwad;
+            Quaternion ParentQua = transform.parent.rotation;
+            Vector3 V = ParentQua * forwad;
 
-		LR.SetPosition(0,transform.parent.position);
-		LR.SetPosition(1,transform.parent.position+V*transform.parent.localScale.z * length);
-		LR.startWidth = transform.parent.localScale.x * width;
+            LR.SetPosition(0, transform.parent.position);
+            LR.SetPosition(1, transform.parent.position + V * transform.parent.localScale.z * length);
+            LR.startWidth = transform.parent.localScale.x * width;
+        }
 	}
 	
 	// Update is called once per frame
-	void Update () {
-		Quaternion ParentQua = transform.parent.rotation;
-		Vector3 V = ParentQua * forwad;
-		
-		LR.SetPosition(0,transform.parent.position);
-		LR.SetPosition(1,transform.parent.position+V*transform.parent.localScale.z * length);
-		LR.startWidth = transform.parent.localScale.x * width;
+	void Update ()
+    {
+        if (this.transform != null && this.transform.parent != null)
+        {
+            Quaternion ParentQua = transform.parent.rotation;
+            Vector3 V = ParentQua * forwad;
 
-		width = Mathf.Lerp(width,0,time*time);
-		length += 0.075f*1.5f;
+            LR.SetPosition(0, transform.parent.position);
+            LR.SetPosition(1, transform.parent.position + V * transform.parent.localScale.z * length);
+            LR.startWidth = transform.parent.localScale.x * width;
 
-		time += 0.05f;
+            width = Mathf.Lerp(width, 0, time * time);
+            length += 0.075f * 1.5f;
+
+            time += 0.05f;
+        }
 	}
 }

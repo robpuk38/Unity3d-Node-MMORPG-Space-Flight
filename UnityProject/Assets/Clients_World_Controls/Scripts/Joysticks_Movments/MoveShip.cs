@@ -11,7 +11,8 @@ public class MoveShip : MonoBehaviour
     public VirturalJoyStick joyStick;
 
     public VirturalJoyStick camjoyStick;
-   
+
+    
 
     Rigidbody ourdrone;
     GameObject player;
@@ -34,7 +35,7 @@ public class MoveShip : MonoBehaviour
     public bool isMoving = false;
     public float DistanceDamp = 0.1f;
     public float rotationalDamp = 0.1f;
-  
+    public bool Fire = false;
     private float cooldownTime = 0.0f;
     public bool isBoost = false;
 
@@ -59,9 +60,12 @@ public class MoveShip : MonoBehaviour
             Thusterlight2 = player.transform.GetChild(0).GetChild(0).gameObject;
 
             Thusterlight1 = player.transform.GetChild(1).GetChild(0).gameObject;
+
+
+           
             //Thusterlight1.SetActive(true);
 
-           // Debug.Log("HOW TO FIND ITMES FROM PARENT? "+ this.name);
+            // Debug.Log("HOW TO FIND ITMES FROM PARENT? "+ this.name);
 
         }
         if (Data_Manager.Instance != null)
@@ -71,7 +75,7 @@ public class MoveShip : MonoBehaviour
                 if (Data_Manager.Instance.GetUserId() == NetworkManager.Instance.GetUserId())
                 {
 
-                    Debug.Log(" WHAT IS MY "+ Data_Manager.Instance.GetUserId() + " BOOST STATUS AND MOVMENT STATUS " + isBoost );
+                   // Debug.Log(" WHAT IS MY "+ Data_Manager.Instance.GetUserId() + " BOOST STATUS AND MOVMENT STATUS " + isBoost );
 
                     if (isBoost == true || isMoving == true )
                     {
@@ -370,7 +374,7 @@ public class MoveShip : MonoBehaviour
 
         if (isBoost == false)
         {
-            Debug.Log("GOING IN WARP");
+           // Debug.Log("GOING IN WARP");
             isBoost = true;
             
             if (ourdrone != null)
@@ -386,7 +390,7 @@ public class MoveShip : MonoBehaviour
         }
         else
         {
-            Debug.Log("STOPING WARP");
+           // Debug.Log("STOPING WARP");
             isBoost = false;
 
             if (ourdrone != null)
@@ -406,21 +410,29 @@ public class MoveShip : MonoBehaviour
     public void ButtonB()
     {
        
-        Debug.Log("B CLICKED");
+        //Debug.Log("B CLICKED");
     }
     public void ButtonX()
     {
-       
-        Debug.Log("X CLICKED");
-        
-            playerinput.Instance.FireLazors();
-        
+
+        // Debug.Log("X CLICKED");
+        Fire = true;
+        if (AuidoManager.Instance != null)
+        {
+            AuidoManager.Instance.FireButton();
+        }
+
+      // lazor.Instance.FireLazor();
+        NetworkManager.Instance.CommandShoot();
+
+
+
     }
 
     public void ButtonY()
     {
         
-        Debug.Log("Y CLICKED");
+       // Debug.Log("Y CLICKED");
     }
 
    

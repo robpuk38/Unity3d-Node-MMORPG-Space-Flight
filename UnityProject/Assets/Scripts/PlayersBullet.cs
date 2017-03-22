@@ -10,7 +10,7 @@ public class PlayersBullet : MonoBehaviour {
 		
 		var hit = collision.gameObject;
 
-		Debug.Log ("Hello"+ hit.name);
+		Debug.Log ("Hello I WAS HIT "+ hit.name);
 		var health = hit.GetComponent<PlayersHealth> ();
 		if(health != null)
 		{

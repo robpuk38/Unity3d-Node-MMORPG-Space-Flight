@@ -22,12 +22,12 @@ public class GPS : MonoBehaviour {
 		if(!Input.location.isEnabledByUser)
 		{
 			//Debug.Log ("User Did NoT Allow GPS Service Create Fake Cords");
-			float fake_cordsx = Random.Range (0, 99999);
-			float fake_cordsy = Random.Range (0, 99999);
-			float fake_cordsz = Random.Range (0, 99999);
+			float fake_cordsx = Random.Range (0, 9999);
+			float fake_cordsy = Random.Range (0, 9999);
+			float fake_cordsz = Random.Range (0, 9999);
 
-			latitude = fake_cordsx * fake_cordsz / fake_cordsy;
-			longitude =fake_cordsy - fake_cordsz + fake_cordsx;
+			latitude = fake_cordsx + fake_cordsz + fake_cordsy;
+			longitude =fake_cordsy - fake_cordsz - fake_cordsx;
 			yield break;
 
 
@@ -68,7 +68,7 @@ public class GPS : MonoBehaviour {
 
 	public float GetGpsY()
 	{
-		return latitude * longitude + longitude * latitude / 2;
+		return latitude + longitude;
 	}
 
 	public float GetGpsZ()

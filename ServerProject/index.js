@@ -2,6 +2,7 @@ var app = require('express')();
 var server = require('http').Server(app);
 var io = require('socket.io')(server);
 var colors = require('colors');
+
 colors.setTheme({
   Green: 'green',
   Yellow: 'yellow',
@@ -17,7 +18,7 @@ About();
 
 
 server.listen(3000);
-var DISCONNECT_TIME = 3000;
+var DISCONNECT_TIME = 300000;
 var enableDebug = 1;
 var enemies =[];
 var playerSpawnPoints=[];
@@ -28,9 +29,33 @@ var tickLengthMs = 1000 / 20;
 var previousTick = Date.now();
 var actualTicks = 0;
 var playeractualTicks = 0;
+var isConnected = false;
 
-
-
+var playerConnected={};
+playerConnected.Id='null';
+playerConnected.UserId='null';
+playerConnected.UserName='null';
+playerConnected.UserPic='null';
+playerConnected.UserToken='null';
+playerConnected.UserPosX='null';
+playerConnected.UserPosY='null';
+playerConnected.UserPosZ='null';
+playerConnected.UserLevel='null';
+playerConnected.UserCurrency='null';
+playerConnected.UserExpierance='null';
+playerConnected.UserHealth='null';
+playerConnected.UserPower='null';
+playerConnected.UserGpsX='null';
+playerConnected.UserGpsY='null';
+playerConnected.UserGpsZ='null';
+playerConnected.UserVungleApi='null';
+playerConnected.UserAdcolonyApi='null';
+playerConnected.UserAdcolonyZone='null';
+playerConnected.IdleTime=0;
+playerConnected.Action=0;
+playerConnected.UserRotX='null';
+playerConnected.UserRotY='null';
+playerConnected.UserRotZ='null';
 
 var currentPlayer = {};
 currentPlayer.Id='null';
@@ -98,12 +123,14 @@ var Update = function(delta)
 {
   
 
-  for (var i = 0; i<clients.length; i++) 
-      {
-      	
-      
-      	CheckIdleStatus(i,clients[i].UserId ,clients[i].IdleTime++,socket,clients[i].UserId,clients[i].Action);
-      }
+
+for(var i =0; i<clients.length; i++)
+{
+CheckIdleStatus(i,clients[i].UserId ,clients[i].IdleTime++,socket,clients[i].UserId,clients[i].Action);
+}
+
+
+ 
 }
   
 
@@ -185,7 +212,7 @@ playerSpawnPoints =[];
 
  
     
-    var playerConnected = {
+     playerConnected = {
 		Id:currentPlayer.Id,
 		UserId:currentPlayer.UserId,
 		UserName:currentPlayer.UserName,
@@ -226,7 +253,7 @@ playerSpawnPoints.push(playerSpawnPoint);
 
 });
  
-var isConnected = false;
+
  for(var i =0; i<clients.length; i++)
 {
 
@@ -244,11 +271,9 @@ else
 	debug("we are now connected");
 }
 }
-if(isConnected == false)
-{
-    clients.push(playerConnected);
-}
 	
+
+    clients.push(playerConnected);
 
 
 	
@@ -256,7 +281,7 @@ if(isConnected == false)
 
 for (var i = 0; i<clients.length; i++) 
 {
-	var playerConnected = {
+	 playerConnected = {
 		Id:clients[i].Id,
 		UserId:clients[i].UserId,
 		UserName:clients[i].UserName,
@@ -311,6 +336,23 @@ for (var i = 0; i<clients.length; i++)
 
 
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//START PLAYER MOVE
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+ socket.on('OnObjectMove', function(data)
+ {
+
+//info('Method Get: OnPlayerMove:');
+//info('Server Recieved From Client: ');
+command('Data_Manager: '+JSON.stringify(data));
+socket.emit('OnPlayerMove',data);
+socket.broadcast.emit('OnObjectMove',data);
+});
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//END PLAYER MOVE
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 
@@ -324,7 +366,7 @@ for (var i = 0; i<clients.length; i++)
 
 //info('Method Get: OnPlayerMove:');
 //info('Server Recieved From Client: ');
-command('Data_Manager: '+JSON.stringify(data));
+//command('Data_Manager: '+JSON.stringify(data));
 
 
 for (var i = 0; i<clients.length; i++) 
@@ -363,9 +405,9 @@ socket.broadcast.emit('OnPlayerMove',data);
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 socket.on('OnPlayerShoot', function(data){
-info('Method Get: OnPlayerShoot:');
-info('Server Recieved From Client: ');
-command('Data_Manager: '+JSON.stringify(data));
+//info('Method Get: OnPlayerShoot:');
+//info('Server Recieved From Client: ');
+//command('Data_Manager: '+JSON.stringify(data));
 
 
 socket.emit('OnPlayerShoot',data);
@@ -520,6 +562,7 @@ info("Trademark @ What Trademark 2017");
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 function CheckIdleStatus(i,UserId,tick,socket,who,action)
 {
+
 	if(tick > DISCONNECT_TIME && action == false)
 	{
 		var playerDisConnected = {UserId:clients[i].UserId};
@@ -527,8 +570,22 @@ function CheckIdleStatus(i,UserId,tick,socket,who,action)
 		socket.broadcast.emit('OnPlayerDisconnect',playerDisConnected);
         clients.splice(i,1);
 	}
-    //debug('Data: Total Online Clients= '+clients.length);
+	
+	if(clients[i].UserId === playerConnected.UserId  || clients[i].UserId === currentPlayer.UserId )
+      {
+	//we are already connected Once so if the client is already connected clear the list of connections we do not need to store 
+	//any users on the server they just need to be able to get in the server to send calls to it.
+	  
+	    isConnected = true;
+	   return;
+      }
+      else
+      {
+      	clients.splice(i,1);
+      }
+    
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //END CHECK IDLE STATUS
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
