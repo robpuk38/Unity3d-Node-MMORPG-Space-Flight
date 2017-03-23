@@ -3274,13 +3274,13 @@ MonoBehaviour:
   ServerStatuscanvas: {fileID: 223109754957568750}
   DataCollectioncanvas: {fileID: 223078636227701402}
   socket: {fileID: 114305759968321614}
-  player: {fileID: 1151841730531002, guid: b1f4175e44c591040bb3adc4f252a1d2, type: 2}
+  player: {fileID: 1703245768406076, guid: b1f4175e44c591040bb3adc4f252a1d2, type: 2}
   GetIPAddress: 73.146.71.203
   GetPort: 3000
   cam: {fileID: 1563285343479402}
   _UserId: 
   Bullet: {fileID: 1180861385192750, guid: c1ffb03c35815d2458b85ed299ac2381, type: 2}
-  Bullet_Forward_Force: 5000
+  Bullet_Forward_Force: 50000
 --- !u!114 &114375598896054662
 MonoBehaviour:
   m_ObjectHideFlags: 1

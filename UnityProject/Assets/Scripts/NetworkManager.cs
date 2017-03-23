@@ -410,7 +410,33 @@ public class NetworkManager : MonoBehaviour
                 Destroy(child.gameObject);
                 MyUntiverse.transform.parent = p.transform;
             }
-           
+
+            if (child.name == "Planets")
+            {
+                //Debug.Log("YES THIS IS MY UNTIVERS?: " + child.name);
+
+                GameObject MyUntiverse = Instantiate(child.gameObject, child.transform.position, child.transform.rotation) as GameObject;
+                MyUntiverse.name = "Planets_" + userJSON.UserId;
+                MyUntiverse.SetActive(true);
+                Destroy(child.gameObject);
+                MyUntiverse.transform.parent = p.transform;
+
+
+                Transform[] allPlanetsChildren = MyUntiverse.GetComponentsInChildren<Transform>();
+                foreach (Transform childplanets in allPlanetsChildren)
+                {
+                    Debug.Log("WHAT IS HERE TO SEE?: " + childplanets.name);
+
+
+                    GameObject SpawnMyUntiverse = Instantiate(childplanets.gameObject, childplanets.transform.position, childplanets.transform.rotation) as GameObject;
+                    SpawnMyUntiverse.name = childplanets.name +"_"+ userJSON.UserId;
+                    SpawnMyUntiverse.SetActive(true);
+                    Destroy(childplanets.gameObject);
+                    SpawnMyUntiverse.transform.parent = MyUntiverse.transform;
+
+                }
+            }
+
         }
 
 
@@ -502,6 +528,8 @@ public class NetworkManager : MonoBehaviour
 
         if (posuserJSON.UserId == Data_Manager.Instance.GetUserId())
         {
+
+            // I have never seen this so I do not think its ever hit maybe wothless code but unsure 
             Debug.Log("WHAT USER ID AM I MYSELF I DONT WANT TO SEE MYSELF JUST SOMEONE ELSE " + posuserJSON.UserId);
             return;
         }
@@ -573,6 +601,8 @@ public class NetworkManager : MonoBehaviour
             Debug.Log("WHO FIRED AT WHAT POS? :" + FromWhatWho.transform.position);
             Debug.Log("WHO FIRED AT WHAT ROT? :" + FromWhatWho.transform.rotation);
 
+           
+
             GameObject Bullet_Emitter = FromWhatWho.transform.GetChild(5).GetChild(0).gameObject;
             Debug.Log("WHAT IS THIS 1 " + Bullet_Emitter.name);
 
@@ -588,8 +618,18 @@ public class NetworkManager : MonoBehaviour
             Rigidbody Temporary_RigidBody;
             Temporary_RigidBody = Temporary_Bullet_Handler.GetComponent<Rigidbody>();
 
-            //Tell the bullet to be "pushed" forward by an amount set by Bullet_Forward_Force.
-            Temporary_RigidBody.AddForce(FromWhatWho.transform.forward * Bullet_Forward_Force);
+
+            if (FromWhatWho.GetComponent<MoveShip>().isBoost == true)
+            {
+                Debug.Log("WHO FIRED IN WARP? :" + FromWhatWho.name);
+                //Tell the bullet to be "pushed" forward by an amount set by Bullet_Forward_Force.
+                Temporary_RigidBody.AddForce(FromWhatWho.transform.forward * Bullet_Forward_Force * 10);
+            }
+            else
+            {
+                //Tell the bullet to be "pushed" forward by an amount set by Bullet_Forward_Force.
+                Temporary_RigidBody.AddForce(FromWhatWho.transform.forward * Bullet_Forward_Force);
+            }
 
             //Basic Clean Up, set the Bullets to self destruct after 10 Seconds, I am being VERY generous here, normally 3 seconds is plenty.
             Destroy(Temporary_Bullet_Handler, 10.0f);

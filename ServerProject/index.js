@@ -571,18 +571,9 @@ function CheckIdleStatus(i,UserId,tick,socket,who,action)
         clients.splice(i,1);
 	}
 	
-	if(clients[i].UserId === playerConnected.UserId  || clients[i].UserId === currentPlayer.UserId )
-      {
-	//we are already connected Once so if the client is already connected clear the list of connections we do not need to store 
-	//any users on the server they just need to be able to get in the server to send calls to it.
-	  
-	    isConnected = true;
-	   return;
-      }
-      else
-      {
-      	clients.splice(i,1);
-      }
+	
+      	
+     
     
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -411,10 +411,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5efe3bc5e3edb3e42b0a9a45eec91b94, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  BeamColor: {r: 0.6397059, g: 0.3998162, b: 0.6231618, a: 1}
-  AnimationSpd: 0.1
-  Scale: 0.5
-  MaxLength: 30
+  BeamColor: {r: 0.07785467, g: 0.27853176, b: 0.33088237, a: 1}
+  AnimationSpd: 50
+  Scale: 0.1
+  MaxLength: 50
   bEnd: 1
   bGero: 1
 --- !u!114 &114715690687435554
@@ -455,7 +455,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MaxLength: 16
   AddLength: 0.05
-  Width: 0.1
+  Width: 10
   NowLengthGlobal: 0
 --- !u!120 &120951047508544130
 LineRenderer:
@@ -508,7 +508,7 @@ LineRenderer:
   - {x: 0, y: 0, z: 1}
   m_Parameters:
     serializedVersion: 2
-    widthMultiplier: 1
+    widthMultiplier: 0.1
     widthCurve:
       serializedVersion: 2
       m_Curve:
@@ -529,8 +529,8 @@ LineRenderer:
       m_RotationOrder: 4
     colorGradient:
       serializedVersion: 2
-      key0: {r: 0.38324633, g: 0.25400087, b: 0.39705884, a: 1}
-      key1: {r: 0.007352948, g: 0.00043252634, b: 0.0069234082, a: 1}
+      key0: {r: 0, g: 0.91663283, b: 1, a: 1}
+      key1: {r: 0.15960209, g: 0.25165853, b: 0.2647059, a: 1}
       key2: {r: 0, g: 0, b: 0, a: 0}
       key3: {r: 0, g: 0, b: 0, a: 0}
       key4: {r: 0, g: 0, b: 0, a: 0}
