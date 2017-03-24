@@ -58,15 +58,22 @@ public class LoadingManger : MonoBehaviour
 
 
 
-        if (PlayerPrefs.GetString("Id") != null
+        if (PlayerPrefs.GetString("Id") != null 
+            && PlayerPrefs.GetString("Id") != ""
             && PlayerPrefs.GetString("UserId") != null
+            && PlayerPrefs.GetString("UserId") != ""
             && PlayerPrefs.GetString("UserName") != null
+            && PlayerPrefs.GetString("UserName") != ""
             && PlayerPrefs.GetString("UserPic") != null
+            && PlayerPrefs.GetString("UserPic") != ""
             && PlayerPrefs.GetString("VungleApi") != null
+            && PlayerPrefs.GetString("VungleApi") != ""
             && PlayerPrefs.GetString("AdcolonyApi") != null
-            && PlayerPrefs.GetString("AdcolonyZone") != null)
+            && PlayerPrefs.GetString("AdcolonyApi") != ""
+            && PlayerPrefs.GetString("AdcolonyZone") != null
+            && PlayerPrefs.GetString("AdcolonyZone") != "")
         {
-          //  Debug.Log("TRUE THE ID IS: " + PlayerPrefs.GetString("Id"));
+            Debug.Log("TRUE THE ID IS: " + PlayerPrefs.GetString("Id"));
           //  Debug.Log("TRUE THE USERID IS: " + PlayerPrefs.GetString("UserId"));
           //  Debug.Log("TRUE THE USERNAME IS: " + PlayerPrefs.GetString("UserName"));
           //  Debug.Log("TRUE THE USERPIC IS: " + PlayerPrefs.GetString("UserPic"));
@@ -259,12 +266,19 @@ public class LoadingManger : MonoBehaviour
                     NetworkManager.SetActive(true);
                 }
                 if (PlayerPrefs.GetString("Id") != null
-        && PlayerPrefs.GetString("UserId") != null
-        && PlayerPrefs.GetString("UserName") != null
-        && PlayerPrefs.GetString("UserPic") != null
-        && PlayerPrefs.GetString("VungleApi") != null
-        && PlayerPrefs.GetString("AdcolonyApi") != null
-        && PlayerPrefs.GetString("AdcolonyZone") != null)
+             && PlayerPrefs.GetString("Id") != ""
+             && PlayerPrefs.GetString("UserId") != null
+             && PlayerPrefs.GetString("UserId") != ""
+             && PlayerPrefs.GetString("UserName") != null
+             && PlayerPrefs.GetString("UserName") != ""
+             && PlayerPrefs.GetString("UserPic") != null
+             && PlayerPrefs.GetString("UserPic") != ""
+             && PlayerPrefs.GetString("VungleApi") != null
+             && PlayerPrefs.GetString("VungleApi") != ""
+             && PlayerPrefs.GetString("AdcolonyApi") != null
+             && PlayerPrefs.GetString("AdcolonyApi") != ""
+             && PlayerPrefs.GetString("AdcolonyZone") != null
+             && PlayerPrefs.GetString("AdcolonyZone") != "")
                 {
                     FacebookMaster.SetActive(true);
                     JoinGameCanvas.gameObject.SetActive(false);

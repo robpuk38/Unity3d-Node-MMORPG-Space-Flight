@@ -43,31 +43,17 @@ public class MoveShip : MonoBehaviour
     private void Start()
     {
         instance = this;
-       player = GameObject.Find("ZeroDrone_" + Data_Manager.Instance.GetUserId()) as GameObject;
+      
 
     }
-    int autoNetworkUpdateTime = 0;
+  
     private void Update()
     {
-        autoNetworkUpdateTime++;
+        
 
         
 
-        if (player != null)
-        {
-            ourdrone = player.GetComponent<Rigidbody>();
-
-            Thusterlight2 = player.transform.GetChild(0).GetChild(0).gameObject;
-
-            Thusterlight1 = player.transform.GetChild(1).GetChild(0).gameObject;
-
-
-           
-            //Thusterlight1.SetActive(true);
-
-            // Debug.Log("HOW TO FIND ITMES FROM PARENT? "+ this.name);
-
-        }
+        
         if (Data_Manager.Instance != null)
         {
             if (NetworkManager.Instance != null)
@@ -75,25 +61,22 @@ public class MoveShip : MonoBehaviour
                 if (Data_Manager.Instance.GetUserId() == NetworkManager.Instance.GetUserId())
                 {
 
-                   // Debug.Log(" WHAT IS MY "+ Data_Manager.Instance.GetUserId() + " BOOST STATUS AND MOVMENT STATUS " + isBoost );
-
-                    if (isBoost == true || isMoving == true )
-                    {
-                        NetworkManager.Instance.CommandMove(isMoving, isBoost);
-                       
-                    }
-                    else
-                    {
-                        //flooding server helper every 50 send auto if players doing nothing 
-                        if (autoNetworkUpdateTime > 50)
-                        {
-                            NetworkManager.Instance.CommandMove(isMoving, isBoost);
-                            autoNetworkUpdateTime = 0;
-                        }
-
-                    }
-                    
+                    NetworkManager.Instance.CommandMove(isMoving, isBoost);
                 }
+            }
+
+            player = GameObject.Find("ZeroDrone_" + Data_Manager.Instance.GetUserId()) as GameObject;
+            if (player != null)
+            {
+                ourdrone = player.GetComponent<Rigidbody>();
+
+                Thusterlight2 = player.transform.GetChild(0).GetChild(0).gameObject;
+
+                Thusterlight1 = player.transform.GetChild(1).GetChild(0).gameObject;
+
+
+
+
             }
         }
         
@@ -136,7 +119,7 @@ public class MoveShip : MonoBehaviour
 
 
 
-                        if (isBoost == true)
+                        if (player.GetComponent<MoveShip>().isBoost == true)
                         {
 
                             warp();
@@ -170,7 +153,7 @@ public class MoveShip : MonoBehaviour
     }
     private void Thrust()
     {
-        if (isBoost == true)
+        if (player.GetComponent<MoveShip>().isBoost == true)
         {
             //we want to go through objects at warp speed
             ourdrone.isKinematic = true;
@@ -231,7 +214,7 @@ public class MoveShip : MonoBehaviour
         if (joyStick != null && joyStick.InputDicection == Vector3.zero && camjoyStick != null && camjoyStick.InputDicection == Vector3.zero)
         {
 
-            if (isBoost == false)
+            if (player.GetComponent<MoveShip>().isBoost == false)
             {
 
                 isMoving = false;
@@ -254,7 +237,7 @@ public class MoveShip : MonoBehaviour
 
 
 
-            if (isBoost == false)
+            if (player.GetComponent<MoveShip>().isBoost == false)
             {
                 liftup = +SpeedForce * 1;
                 Thrust();
@@ -310,7 +293,7 @@ public class MoveShip : MonoBehaviour
 
 
 
-            if (isBoost == false)
+            if (player.GetComponent<MoveShip>().isBoost == false)
             {
                 liftup = +SpeedForce * 1;
                 Thrust();
@@ -365,42 +348,51 @@ public class MoveShip : MonoBehaviour
    
     public void ButtonA()
     {
-       
 
-        if (AuidoManager.Instance != null)
+
+        if (Data_Manager.Instance != null)
         {
-            AuidoManager.Instance.ButtonClicked();
-        }
+            if (NetworkManager.Instance != null)
+            {
+                if (Data_Manager.Instance.GetUserId() == NetworkManager.Instance.GetUserId())
+                {
+                    if (AuidoManager.Instance != null)
+                    {
+                        AuidoManager.Instance.ButtonClicked();
+                    }
 
-        if (isBoost == false)
-        {
-           // Debug.Log("GOING IN WARP");
-            isBoost = true;
-            
-            if (ourdrone != null)
-            {
-                ourdrone.isKinematic = true;
-            }
-            if (Thusterlight2 != null & Thusterlight1 != null)
-            {
-                Thusterlight1.SetActive(true);
-                Thusterlight2.SetActive(true);
-            }
+                    if (player.GetComponent<MoveShip>().isBoost == false)
+                    {
+                        // Debug.Log("GOING IN WARP");
+                        player.GetComponent<MoveShip>().isBoost = true;
 
-        }
-        else
-        {
-           // Debug.Log("STOPING WARP");
-            isBoost = false;
+                        if (ourdrone != null)
+                        {
+                            ourdrone.isKinematic = true;
+                        }
+                        if (Thusterlight2 != null & Thusterlight1 != null)
+                        {
+                            Thusterlight1.SetActive(true);
+                            Thusterlight2.SetActive(true);
+                        }
 
-            if (ourdrone != null)
-            {
-                ourdrone.isKinematic = false;
-            }
-            if (Thusterlight2 != null & Thusterlight1 != null)
-            {
-                Thusterlight1.SetActive(false);
-                Thusterlight2.SetActive(false);
+                    }
+                    else
+                    {
+                        // Debug.Log("STOPING WARP");
+                        player.GetComponent<MoveShip>().isBoost = false;
+
+                        if (ourdrone != null)
+                        {
+                            ourdrone.isKinematic = false;
+                        }
+                        if (Thusterlight2 != null & Thusterlight1 != null)
+                        {
+                            Thusterlight1.SetActive(false);
+                            Thusterlight2.SetActive(false);
+                        }
+                    }
+                }
             }
         }
        
@@ -414,18 +406,25 @@ public class MoveShip : MonoBehaviour
     }
     public void ButtonX()
     {
-
-        // Debug.Log("X CLICKED");
-        Fire = true;
-        if (AuidoManager.Instance != null)
+        if (Data_Manager.Instance != null)
         {
-            AuidoManager.Instance.FireButton();
+            if (NetworkManager.Instance != null)
+            {
+                if (Data_Manager.Instance.GetUserId() == NetworkManager.Instance.GetUserId())
+                {
+                    // Debug.Log("X CLICKED");
+                    Fire = true;
+                    if (AuidoManager.Instance != null)
+                    {
+                        AuidoManager.Instance.FireButton();
+                    }
+
+                    // lazor.Instance.FireLazor();
+                    NetworkManager.Instance.CommandShoot();
+
+                }
+            }
         }
-
-      // lazor.Instance.FireLazor();
-        NetworkManager.Instance.CommandShoot();
-
-
 
     }
 

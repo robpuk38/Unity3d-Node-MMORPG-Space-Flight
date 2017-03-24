@@ -18,7 +18,7 @@ About();
 
 
 server.listen(3000);
-var DISCONNECT_TIME = 300000;
+var DISCONNECT_TIME = 5000;
 var enableDebug = 1;
 var enemies =[];
 var playerSpawnPoints=[];
@@ -85,13 +85,9 @@ currentPlayer.UserRotZ='null';
 
 
 
+
 io.on('connection',function(socket)
 {
-
-
-
-
-
 
 
 var gameLoop = function () 
@@ -241,7 +237,7 @@ playerSpawnPoints =[];
 		UserRotZ:currentPlayer.UserRotZ
        };
 
-
+/*
 data.playerSpawnPoints.forEach(function(_playerSpawnPoint)
 {
 
@@ -251,7 +247,7 @@ rotation:_playerSpawnPoint.rotation
 };
 playerSpawnPoints.push(playerSpawnPoint);
 
-});
+});*/
  
 
  for(var i =0; i<clients.length; i++)
@@ -410,6 +406,19 @@ socket.on('OnPlayerShoot', function(data){
 //command('Data_Manager: '+JSON.stringify(data));
 
 
+for (var i = 0; i<clients.length; i++) 
+      {
+      	
+      if(data.UserId == clients[i].UserId)
+      {
+        
+       clients[i].IdleTime =0;
+          
+      }
+      	
+      }
+
+
 socket.emit('OnPlayerShoot',data);
 socket.broadcast.emit('OnPlayerShoot',data);
 
@@ -565,6 +574,7 @@ function CheckIdleStatus(i,UserId,tick,socket,who,action)
 
 	if(tick > DISCONNECT_TIME && action == false)
 	{
+		debug("UserId: "+clients[i].UserId+" Disconnected");
 		var playerDisConnected = {UserId:clients[i].UserId};
         socket.emit('OnPlayerDisconnect',playerDisConnected);
 		socket.broadcast.emit('OnPlayerDisconnect',playerDisConnected);

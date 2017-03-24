@@ -305,7 +305,9 @@ public class NetworkManager : MonoBehaviour
                     Data_Manager.Instance.GetUserId());
                     string data = JsonUtility.ToJson(dcplayerJSON);
                     socket.Emit("OnPlayerDisconnect", new JSONObject(data));
-                    AutoSavePlayer();
+                    AutoSavePlayer();//if you want the user to lose the player prefs when they logout so they have to login again
+                    //delete else let the device know who they are so they never have to login again they can just go directly to the game.
+                    //PlayerPrefs.DeleteAll();
                 }
             }
         }
@@ -380,7 +382,7 @@ public class NetworkManager : MonoBehaviour
         Transform[] allChildren = p.GetComponentsInChildren<Transform>();
         foreach (Transform child in allChildren)
         {
-             Debug.Log("WHAT IS THE NAME OF THE CHILDREN?: " + child.name);
+             //Debug.Log("WHAT IS THE NAME OF THE CHILDREN?: " + child.name);
 
             if (child.name == "ZeroDrone")
             {
@@ -576,16 +578,7 @@ public class NetworkManager : MonoBehaviour
         //Debug.Log("Data: RotY: " + posuserJSON.roty);
         //Debug.Log("Data: RotZ: " + posuserJSON.rotz);
 
-        if (posuserJSON.UserId == Data_Manager.Instance.GetUserId())
-        {
-
-            // I have never seen this so I do not think its ever hit maybe wothless code but unsure 
-            Debug.Log("WHAT USER ID AM I MYSELF I DONT WANT TO SEE MYSELF JUST SOMEONE ELSE " + posuserJSON.UserId);
-            return;
-        }
-
-
-
+       
         Vector3 position = new Vector3(posuserJSON.posx, posuserJSON.posy, posuserJSON.posz);
         Quaternion rotation = Quaternion.Euler(posuserJSON.rotx, posuserJSON.roty, posuserJSON.rotz);
 
@@ -647,14 +640,16 @@ public class NetworkManager : MonoBehaviour
         if (FromWhatWho != null)
         {
             //this is who shot the user we can now now where the hit came from
-            Debug.Log("WHO FIRED THE SHOT? :" + FromWhatWho.name);
-            Debug.Log("WHO FIRED AT WHAT POS? :" + FromWhatWho.transform.position);
-            Debug.Log("WHO FIRED AT WHAT ROT? :" + FromWhatWho.transform.rotation);
+            //Debug.Log("WHO FIRED THE SHOT? :" + FromWhatWho.name);
+            //Debug.Log("WHO FIRED AT WHAT POS? :" + FromWhatWho.transform.position);
+           // Debug.Log("WHO FIRED AT WHAT ROT? :" + FromWhatWho.transform.rotation);
 
 
 
             GameObject Bullet_Emitter = FromWhatWho.transform.GetChild(5).GetChild(0).gameObject;
             Debug.Log("WHAT IS THIS 1 " + Bullet_Emitter.name);
+
+            Debug.Log("WARP STATUS: " + FromWhatWho.GetComponent<MoveShip>().isBoost);
 
 
             GameObject Temporary_Bullet_Handler;
@@ -720,7 +715,7 @@ public class NetworkManager : MonoBehaviour
         GameObject p = GameObject.Find(dcuserJSON.UserId) as GameObject;
         if (p != null)
         {
-            Destroy(GameObject.Find(dcuserJSON.UserId));
+           
             if (Data_Manager.Instance != null)
             {
                 if (Data_Manager.Instance.GetUserId() == dcuserJSON.UserId.ToString())
@@ -732,6 +727,7 @@ public class NetworkManager : MonoBehaviour
                     this.FBcanvas.gameObject.SetActive(false);
                     this.cam.SetActive(true);
                     this.DataCollectioncanvas.gameObject.SetActive(false);
+                    Destroy(p);
                 }
             }
         }

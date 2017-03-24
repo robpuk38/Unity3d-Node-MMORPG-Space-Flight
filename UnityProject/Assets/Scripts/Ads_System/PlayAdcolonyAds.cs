@@ -93,6 +93,20 @@ public class PlayAdcolonyAds : MonoBehaviour {
         AdColony.Ads.OnOpened += (AdColony.InterstitialAd ad_) =>
         {
             Debugtext.text = "AdColony.Ads.OnOpened called";
+
+            if (Data_Manager.Instance != null)
+            {
+                int newcurrency;
+                int.TryParse(Data_Manager.Instance.GetUserCurrency(), out newcurrency);
+                Debug.Log(newcurrency);
+
+                newcurrency = 20 + newcurrency;
+                Data_Manager.Instance.SetUserCurrency(newcurrency.ToString());
+                Debug.Log(newcurrency);
+                Debug.Log(Data_Manager.Instance.GetUserCurrency());
+
+            }
+
             RequestAd();
         };
 

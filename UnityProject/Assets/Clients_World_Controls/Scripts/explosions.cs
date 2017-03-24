@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class explosions : MonoBehaviour {
-	public GameObject explosion;
+	/*public GameObject explosion;
 	public Rigidbody rb;
 	public float Lazorhitmodifyer = 100.0f;
 
@@ -80,5 +80,5 @@ public class explosions : MonoBehaviour {
 
 		Vector3 direction = (hitfrom.position + hitPos).normalized;
 		rb.AddForceAtPosition (direction * Lazorhitmodifyer ,hitPos,ForceMode.Impulse);
-	}
+	}*/
 }

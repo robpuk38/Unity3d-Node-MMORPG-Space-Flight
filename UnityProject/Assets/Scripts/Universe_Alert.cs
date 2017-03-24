@@ -8,6 +8,8 @@ public class Universe_Alert : MonoBehaviour {
     {
         Debug.Log("I AM " + other.name);
 
+       
+
 
         if (Data_Manager.Instance != null)
         {
