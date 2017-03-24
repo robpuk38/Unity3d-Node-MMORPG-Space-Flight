@@ -12,6 +12,7 @@ public class MysqlManager : MonoBehaviour
     public static MysqlManager Instance { get { return instance; } }
     private IEnumerator getthedata;
     private IEnumerator postthedata;
+    private IEnumerator savethedata;
     public string ServerDomainAddress = "www.projectclickthrough.com";
 
 
@@ -163,19 +164,19 @@ public class MysqlManager : MonoBehaviour
 
                 if (aData[i] == "UserRotX")
                 {
-                   // Debug.Log ("UserRotX: " + aData [i + 1]);
+                    // Debug.Log ("UserRotX: " + aData [i + 1]);
                     Data_Manager.Instance.SetUserRotX(aData[i + 1]);
                 }
 
                 if (aData[i] == "UserRotY")
                 {
-                  //  Debug.Log ("UserRotY: " + aData [i + 1]);
+                    //  Debug.Log ("UserRotY: " + aData [i + 1]);
                     Data_Manager.Instance.SetUserRotY(aData[i + 1]);
                 }
 
                 if (aData[i] == "UserRotZ")
                 {
-                   // Debug.Log ("UserRotZ: " + aData [i + 1]);
+                    // Debug.Log ("UserRotZ: " + aData [i + 1]);
                     Data_Manager.Instance.SetUserRotZ(aData[i + 1]);
                 }
 
@@ -206,12 +207,12 @@ public class MysqlManager : MonoBehaviour
 
     public void PostUsersData(string UserId, string UserName, string UserToken, float UserPosX, float UserPosY, float UserPosZ)
     {
-       // Debug.Log("Posting Users Data: " + UserId);
-       // Debug.Log("Posting Users Data: " + UserName);
-       // Debug.Log("Posting Users Data: " + UserToken);
-      //  Debug.Log("Posting Users Data: " + UserPosX);
-      //  Debug.Log("Posting Users Data: " + UserPosY);
-       // Debug.Log("Posting Users Data: " + UserPosZ);
+        // Debug.Log("Posting Users Data: " + UserId);
+        // Debug.Log("Posting Users Data: " + UserName);
+        // Debug.Log("Posting Users Data: " + UserToken);
+        //  Debug.Log("Posting Users Data: " + UserPosX);
+        //  Debug.Log("Posting Users Data: " + UserPosY);
+        // Debug.Log("Posting Users Data: " + UserPosZ);
         postthedata = PostUserData(UserId, UserName, UserToken, UserPosX, UserPosY, UserPosZ);
         StartCoroutine(postthedata);
     }
@@ -237,7 +238,7 @@ public class MysqlManager : MonoBehaviour
 
         if (connection.isDone)
         {
-           // Debug.Log("Insertation Has Finished");
+            // Debug.Log("Insertation Has Finished");
             GetUsersData(UserId);
 
 
@@ -250,10 +251,109 @@ public class MysqlManager : MonoBehaviour
 
 
 
-    public void SaveUsersData()
+    public void SaveUsersData(string UserId,
+        string UserName,
+        string UserToken,
+        string UserPosX,
+        string UserPosY,
+        string UserPosZ,
+        string UserLevel,
+        string UserCurrency,
+        string UserExpierance,
+        string UserHealth,
+        string UserPower,
+        string UserGpsX,
+        string UserGpsY,
+        string UserGpsZ,
+        string UserRotX,
+        string UserRotY,
+        string UserRotZ)
     {
         Debug.Log("SAVEING PLAYERS DETALS TO THE DATABASE NOW");
+
+        savethedata = SaveUserData(UserId,
+        UserName,
+         UserToken,
+       UserPosX,
+         UserPosY,
+         UserPosZ,
+        UserLevel,
+         UserCurrency,
+         UserExpierance,
+         UserHealth,
+         UserPower,
+         UserGpsX,
+         UserGpsY,
+         UserGpsZ,
+         UserRotX,
+         UserRotY,
+         UserRotZ);
+        StartCoroutine(savethedata);
+
     }
 
+
+
+    private IEnumerator SaveUserData(string UserId,
+        string UserName,
+        string UserToken,
+        string UserPosX,
+        string UserPosY,
+        string UserPosZ,
+        string UserLevel,
+        string UserCurrency,
+        string UserExpierance,
+        string UserHealth,
+        string UserPower,
+        string UserGpsX,
+        string UserGpsY,
+        string UserGpsZ,
+        string UserRotX,
+        string UserRotY,
+        string UserRotZ
+        )
+    {
+
+        WWWForm postdata = new WWWForm();
+        string MatchedAppKey = "jZuHiJtYS";
+        postdata.AddField("AppKey", MatchedAppKey);
+        postdata.AddField("UserId", UserId);
+        postdata.AddField("UserName", UserName);
+        postdata.AddField("UserToken", UserToken);
+        postdata.AddField("UserPosX", UserPosX.ToString());
+        postdata.AddField("UserPosY", UserPosY.ToString());
+        postdata.AddField("UserPosZ", UserPosZ.ToString());
+        postdata.AddField("UserLevel", UserLevel.ToString());
+        postdata.AddField("UserCurrency", UserCurrency.ToString());
+        postdata.AddField("UserExpierance", UserExpierance.ToString());
+        postdata.AddField("UserHealth", UserHealth.ToString());
+        postdata.AddField("UserPower", UserPower.ToString());
+        postdata.AddField("UserGpsX", UserGpsX.ToString());
+        postdata.AddField("UserGpsY", UserGpsY.ToString());
+        postdata.AddField("UserGpsZ", UserGpsZ.ToString());
+        postdata.AddField("UserRotX", UserRotX.ToString());
+        postdata.AddField("UserRotY", UserRotY.ToString());
+        postdata.AddField("UserRotZ", UserRotZ.ToString());
+
+
+        WWW connection = new WWW("http://" + ServerDomainAddress + "/server/save.php", postdata);
+        yield return connection;
+
+
+        if (connection.isDone)
+        {
+            // Debug.Log("Insertation Has Finished");
+
+            // I do not want to get any data returned i do not think so but may have to for other playrs to see 
+            //but there is no other players and never will be so its all just point less any ways.
+            //GetUsersData(UserId);
+
+
+        }
+
+
+
+
+    }
 
 }

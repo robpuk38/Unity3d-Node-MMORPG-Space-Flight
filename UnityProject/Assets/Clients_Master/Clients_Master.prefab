@@ -3274,7 +3274,7 @@ MonoBehaviour:
   ServerStatuscanvas: {fileID: 223109754957568750}
   DataCollectioncanvas: {fileID: 223078636227701402}
   socket: {fileID: 114305759968321614}
-  player: {fileID: 1703245768406076, guid: b1f4175e44c591040bb3adc4f252a1d2, type: 2}
+  player: {fileID: 1235518786654696, guid: b1f4175e44c591040bb3adc4f252a1d2, type: 2}
   GetIPAddress: 73.146.71.203
   GetPort: 3000
   cam: {fileID: 1563285343479402}

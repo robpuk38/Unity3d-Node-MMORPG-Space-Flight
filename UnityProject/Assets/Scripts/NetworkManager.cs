@@ -136,14 +136,22 @@ public class NetworkManager : MonoBehaviour
         }
     }
 
-    private void AutoSavePlayer()
+    public void AutoSavePlayer()
     {
         if (Data_Manager.Instance != null && Data_Manager.Instance.UserId.text != "UserId" && hasjoined == true)
         {
             // Debug.Log("Lets Save The Players Details");
             if (MysqlManager.Instance != null)
             {
-                MysqlManager.Instance.SaveUsersData();
+                MysqlManager.Instance.SaveUsersData(Data_Manager.Instance.GetUserId(),
+                    Data_Manager.Instance.GetUserName(), Data_Manager.Instance.GetUserToken(),
+                    Data_Manager.Instance.GetUserPosX(), Data_Manager.Instance.GetUserPosY(),
+                    Data_Manager.Instance.GetUserPosZ(), Data_Manager.Instance.GetUserLevel(),
+                    Data_Manager.Instance.GetUserCurrency(), Data_Manager.Instance.GetUserExpierance(),
+                     Data_Manager.Instance.GetUserHealth(), Data_Manager.Instance.GetUserPower(),
+                      Data_Manager.Instance.GetUserGpsX(), Data_Manager.Instance.GetUserGpsY(),
+                      Data_Manager.Instance.GetUserGpsZ(), Data_Manager.Instance.GetUserRotX(),
+                      Data_Manager.Instance.GetUserRotY(), Data_Manager.Instance.GetUserRotZ());
             }
             else
             {
@@ -217,7 +225,7 @@ public class NetworkManager : MonoBehaviour
 
 
 
-    public void CommandMoveObject(string ObjectId,float posx, float posy, float posz, float rotx, float roty, float rotz)
+    public void CommandMoveObject(string ObjectId, float posx, float posy, float posz, float rotx, float roty, float rotz)
     {
 
         POSObjectJSON posobjectJSON = new POSObjectJSON(ObjectId, posx, posy, posz, rotx, roty, rotz);
@@ -268,7 +276,7 @@ public class NetworkManager : MonoBehaviour
     public void CommandShoot()
     {
 
-       
+
         if (Data_Manager.Instance != null)
         {
             if (NetworkManager.Instance != null)
@@ -297,6 +305,7 @@ public class NetworkManager : MonoBehaviour
                     Data_Manager.Instance.GetUserId());
                     string data = JsonUtility.ToJson(dcplayerJSON);
                     socket.Emit("OnPlayerDisconnect", new JSONObject(data));
+                    AutoSavePlayer();
                 }
             }
         }
@@ -371,7 +380,7 @@ public class NetworkManager : MonoBehaviour
         Transform[] allChildren = p.GetComponentsInChildren<Transform>();
         foreach (Transform child in allChildren)
         {
-            // Debug.Log("WHAT IS THE NAME OF THE CHILDREN?: " + child.name);
+             Debug.Log("WHAT IS THE NAME OF THE CHILDREN?: " + child.name);
 
             if (child.name == "ZeroDrone")
             {
@@ -397,6 +406,7 @@ public class NetworkManager : MonoBehaviour
                 MyZreoDrone.SetActive(true);
                 Destroy(child.gameObject);
                 MyZreoDrone.transform.parent = p.transform;
+                MyZreoDrone.transform.SetParent(p.transform, false);
                 // child.name = "ZeroDrone_" + Data_Manager.Instance.GetUserId();
             }
 
@@ -406,36 +416,76 @@ public class NetworkManager : MonoBehaviour
 
                 GameObject MyUntiverse = Instantiate(child.gameObject, new Vector3(gpsx, gpsy, gpsz), Quaternion.Euler(gpsx, gpsy, gpsz)) as GameObject;
                 MyUntiverse.name = "Universe_" + userJSON.UserId;
+                MyUntiverse.transform.localScale += new Vector3(child.transform.localScale.x, child.transform.localScale.y, child.transform.localScale.z);
                 MyUntiverse.SetActive(true);
-                Destroy(child.gameObject);
-                MyUntiverse.transform.parent = p.transform;
-            }
 
-            if (child.name == "Planets")
-            {
-                //Debug.Log("YES THIS IS MY UNTIVERS?: " + child.name);
-
-                GameObject MyUntiverse = Instantiate(child.gameObject, child.transform.position, child.transform.rotation) as GameObject;
-                MyUntiverse.name = "Planets_" + userJSON.UserId;
-                MyUntiverse.SetActive(true);
-                Destroy(child.gameObject);
-                MyUntiverse.transform.parent = p.transform;
-
-
-                Transform[] allPlanetsChildren = MyUntiverse.GetComponentsInChildren<Transform>();
-                foreach (Transform childplanets in allPlanetsChildren)
+                Transform[] allUChildren = MyUntiverse.GetComponentsInChildren<Transform>();
+                foreach (Transform Uchild in allUChildren)
                 {
-                    Debug.Log("WHAT IS HERE TO SEE?: " + childplanets.name);
+                    if(Uchild.name == "HomePoint")
+                    {
+                        GameObject HomePoint = Instantiate(Uchild.gameObject, new Vector3(Uchild.transform.position.x, Uchild.transform.position.y, Uchild.transform.position.z), Quaternion.Euler(Uchild.transform.rotation.eulerAngles.x, Uchild.transform.rotation.eulerAngles.y, Uchild.transform.rotation.eulerAngles.z)) as GameObject;
+                        HomePoint.name = "HomePoint_" + userJSON.UserId;
+                        HomePoint.transform.localScale += new Vector3(Uchild.transform.localScale.x, Uchild.transform.localScale.y, Uchild.transform.localScale.z);
+                        HomePoint.SetActive(true);
+                        Uchild.gameObject.SetActive(false);
+                        HomePoint.transform.parent = MyUntiverse.transform;
+                        HomePoint.transform.SetParent(MyUntiverse.transform, false);
+                    }
+
+                    if (Uchild.name == "Planets")
+                    {
+                        GameObject Planets = Instantiate(Uchild.gameObject, new Vector3(Uchild.transform.position.x, Uchild.transform.position.y, Uchild.transform.position.z), Quaternion.Euler(Uchild.transform.rotation.eulerAngles.x, Uchild.transform.rotation.eulerAngles.y, Uchild.transform.rotation.eulerAngles.z)) as GameObject;
+                        Planets.name = "Planets_" + userJSON.UserId;
+                        Planets.transform.localScale += new Vector3(Uchild.transform.localScale.x, Uchild.transform.localScale.y, Uchild.transform.localScale.z);
+                        Planets.SetActive(true);
+
+                        Transform[] allPChildren = Planets.GetComponentsInChildren<Transform>();
+                        foreach (Transform Pchild in allPChildren)
+                        {
+
+                            //ok so we now know every users prants they buy from the store and IDs, they can spawn there unitverse
+                            if (Pchild.name == "Sun")
+                            {
+                                GameObject Sun = Instantiate(Pchild.gameObject, new Vector3(Pchild.transform.position.x, Pchild.transform.position.y, Pchild.transform.position.z), Quaternion.Euler(Pchild.transform.rotation.eulerAngles.x, Pchild.transform.rotation.eulerAngles.y, Pchild.transform.rotation.eulerAngles.z)) as GameObject;
+                                Sun.name = "Sun_" + userJSON.UserId;
+                                Sun.transform.localScale += new Vector3(0.5f, 0.5f, 0.5f);
+                                Sun.SetActive(true);
+                                Pchild.gameObject.SetActive(false);
+                                Sun.transform.parent = Planets.transform;
+                                Sun.transform.SetParent(Planets.transform, false);
+                            }
+
+                            if (Pchild.name == "Alert_Detection")
+                            {
+                                GameObject Alert_Detection = Instantiate(Pchild.gameObject, new Vector3(Pchild.transform.position.x, Pchild.transform.position.y, Pchild.transform.position.z), Quaternion.Euler(Pchild.transform.rotation.eulerAngles.x, Pchild.transform.rotation.eulerAngles.y, Pchild.transform.rotation.eulerAngles.z)) as GameObject;
+                                Alert_Detection.name = "Alert_Detection_" + userJSON.UserId;
+                                Alert_Detection.transform.localScale += new Vector3(7, 7, 7);
+                                Alert_Detection.SetActive(true);
+                                Pchild.gameObject.SetActive(false);
+                                Alert_Detection.transform.parent = Planets.transform;
+                                Alert_Detection.transform.SetParent(Planets.transform, false);
+                            }
+
+                            
+                        }
 
 
-                    GameObject SpawnMyUntiverse = Instantiate(childplanets.gameObject, childplanets.transform.position, childplanets.transform.rotation) as GameObject;
-                    SpawnMyUntiverse.name = childplanets.name +"_"+ userJSON.UserId;
-                    SpawnMyUntiverse.SetActive(true);
-                    Destroy(childplanets.gameObject);
-                    SpawnMyUntiverse.transform.parent = MyUntiverse.transform;
 
+                           Uchild.gameObject.SetActive(false);
+                        Planets.transform.parent = MyUntiverse.transform;
+                        Planets.transform.SetParent(MyUntiverse.transform, false);
+                    }
                 }
+                    child.gameObject.SetActive(false);
+                MyUntiverse.transform.parent = p.transform;
+                MyUntiverse.transform.SetParent(p.transform, false);
             }
+
+           
+
+
+           
 
         }
 
@@ -574,7 +624,7 @@ public class NetworkManager : MonoBehaviour
 
 
 
-    
+
 
     //Drag in the Bullet Prefab from the Component Inspector.
     public GameObject Bullet;
@@ -591,9 +641,9 @@ public class NetworkManager : MonoBehaviour
         Debug.Log("Data_Manager:" + data);
         ShootUserJSON shootuserJSON = ShootUserJSON.CreateFromJSON(data);
 
-       
-            //fromme
-            GameObject FromWhatWho = GameObject.Find("ZeroDrone_" + shootuserJSON.UserId) as GameObject;
+
+        //fromme
+        GameObject FromWhatWho = GameObject.Find("ZeroDrone_" + shootuserJSON.UserId) as GameObject;
         if (FromWhatWho != null)
         {
             //this is who shot the user we can now now where the hit came from
@@ -601,7 +651,7 @@ public class NetworkManager : MonoBehaviour
             Debug.Log("WHO FIRED AT WHAT POS? :" + FromWhatWho.transform.position);
             Debug.Log("WHO FIRED AT WHAT ROT? :" + FromWhatWho.transform.rotation);
 
-           
+
 
             GameObject Bullet_Emitter = FromWhatWho.transform.GetChild(5).GetChild(0).gameObject;
             Debug.Log("WHAT IS THIS 1 " + Bullet_Emitter.name);
@@ -638,12 +688,12 @@ public class NetworkManager : MonoBehaviour
         Debug.Log("WE FIRED: " + shootuserJSON.UserId);
 
 
-           
 
 
-            
 
-       
+
+
+
     }
     /*
 	void _OnHealth(SocketIOEvent socketIOEvent)
@@ -819,7 +869,7 @@ public class NetworkManager : MonoBehaviour
     public class ShootPlayerJSON
     {
         public string UserId;
-       
+
 
         public ShootPlayerJSON(string _UserId)
         {
@@ -848,7 +898,7 @@ public class NetworkManager : MonoBehaviour
         public float rotx;
         public float roty;
         public float rotz;
-       
+
         public POSObjectJSON(string _ObjectsId, float _posx, float _posy, float _posz, float _rotx, float _roty, float _rotz)
         {
             ObjectsId = _ObjectsId;
@@ -858,7 +908,7 @@ public class NetworkManager : MonoBehaviour
             rotx = _rotx;
             roty = _roty;
             rotz = _rotz;
-           
+
         }
     }
 
@@ -872,7 +922,7 @@ public class NetworkManager : MonoBehaviour
         public float rotx;
         public float roty;
         public float rotz;
-        
+
         //public int health;
         public static POSMoveObjectJSON CreateFromJSON(string data)
         {
