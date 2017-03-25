@@ -456,6 +456,22 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!1 &1245241738517030
+GameObject:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4253670885958616}
+  - component: {fileID: 114296030919433384}
+  m_Layer: 0
+  m_Name: HomeWayPoints
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!1 &1262478620213716
 GameObject:
   m_ObjectHideFlags: 1
@@ -1126,6 +1142,22 @@ GameObject:
   - component: {fileID: 114559347134705416}
   m_Layer: 0
   m_Name: UserCurrency
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!1 &1569140349890300
+GameObject:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4709646522012320}
+  - component: {fileID: 114802235647622428}
+  m_Layer: 0
+  m_Name: AstoridWayPoints
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2360,7 +2392,7 @@ Transform:
   m_GameObject: {fileID: 1185127330917732}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 20, y: 20, z: 20}
+  m_LocalScale: {x: 40, y: 40, z: 40}
   m_Children:
   - {fileID: 4723068015732330}
   - {fileID: 4293415539113746}
@@ -2428,6 +2460,19 @@ Transform:
   - {fileID: 4692668941443510}
   - {fileID: 224007076879285298}
   m_Father: {fileID: 4891710291387372}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &4253670885958616
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1245241738517030}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4922539888731520}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4255226701121226
@@ -2999,6 +3044,19 @@ Transform:
   m_Father: {fileID: 4009216738684674}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: -208.81601, y: 5.4649963, z: 92.64}
+--- !u!4 &4709646522012320
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1569140349890300}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4922539888731520}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4720007259979364
 Transform:
   m_ObjectHideFlags: 1
@@ -3085,7 +3143,7 @@ Transform:
   m_GameObject: {fileID: 1944458513369360}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 20, y: 20, z: 20}
+  m_LocalScale: {x: 40, y: 40, z: 40}
   m_Children:
   - {fileID: 4260456186213400}
   - {fileID: 4405208671615930}
@@ -3296,6 +3354,8 @@ Transform:
   m_Children:
   - {fileID: 4437924966689016}
   - {fileID: 4658644214785462}
+  - {fileID: 4253670885958616}
+  - {fileID: 4709646522012320}
   m_Father: {fileID: 4891710291387372}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -5860,6 +5920,20 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
+--- !u!114 &114296030919433384
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1245241738517030}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de0e744b13334f74ca46a5e50e0db682, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  WayPoints: {fileID: 1965504877579426}
+  TotalWaypoints: 10
+  GridSpacing: 1000000
 --- !u!114 &114299931313993354
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -6412,7 +6486,7 @@ MonoBehaviour:
   BeamColor: {r: 0.029736154, g: 0.08818309, b: 0.18382353, a: 1}
   AnimationSpd: 0.1
   Scale: 1
-  MaxLength: 300
+  MaxLength: 600
   bEnd: 0
   bGero: 1
 --- !u!114 &114607025344456342
@@ -6854,6 +6928,20 @@ MonoBehaviour:
   AddLength: 0.05
   Width: 0.1
   NowLengthGlobal: 0
+--- !u!114 &114802235647622428
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1569140349890300}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de0e744b13334f74ca46a5e50e0db682, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  WayPoints: {fileID: 1816138897988880, guid: eba64cd6f834ba547a0909de84ef2fba, type: 2}
+  TotalWaypoints: 3
+  GridSpacing: 100000
 --- !u!114 &114827739756680124
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -7059,7 +7147,7 @@ MonoBehaviour:
   BeamColor: {r: 0.029736154, g: 0.08818309, b: 0.18382353, a: 1}
   AnimationSpd: 0.1
   Scale: 1
-  MaxLength: 300
+  MaxLength: 600
   bEnd: 0
   bGero: 1
 --- !u!114 &114911369793129986

@@ -43,9 +43,11 @@ public class WayPoint_Manager : MonoBehaviour {
 			transform);
 
 		Ourname.name = "WayPoint_" + x + "_" + y + "_" + z;
+        Ourname.SetActive(true);
 
 
-	}
+
+    }
 
 	float Offest()
 	{

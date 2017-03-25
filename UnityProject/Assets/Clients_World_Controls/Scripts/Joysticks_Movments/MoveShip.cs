@@ -143,7 +143,7 @@ public class MoveShip : MonoBehaviour
     private void warp()
     {
 
-        liftup = +SpeedForce * 10;
+        liftup = +SpeedForce * 20;
         Thrust();
         Thusterlight1.SetActive(true);
         Thusterlight2.SetActive(true);

@@ -478,6 +478,29 @@ public class NetworkManager : MonoBehaviour
                         Planets.transform.parent = MyUntiverse.transform;
                         Planets.transform.SetParent(MyUntiverse.transform, false);
                     }
+
+
+                    if (Uchild.name == "HomeWayPoints")
+                    {
+                        GameObject HomeWayPoints = Instantiate(Uchild.gameObject, new Vector3(Uchild.transform.position.x, Uchild.transform.position.y, Uchild.transform.position.z), Quaternion.Euler(Uchild.transform.rotation.eulerAngles.x, Uchild.transform.rotation.eulerAngles.y, Uchild.transform.rotation.eulerAngles.z)) as GameObject;
+                        HomeWayPoints.name = "HomeWayPoints_" + userJSON.UserId;
+                        HomeWayPoints.transform.localScale += new Vector3(Uchild.transform.localScale.x, Uchild.transform.localScale.y, Uchild.transform.localScale.z);
+                        HomeWayPoints.SetActive(true);
+                        Uchild.gameObject.SetActive(false);
+                        HomeWayPoints.transform.parent = MyUntiverse.transform;
+                        HomeWayPoints.transform.SetParent(MyUntiverse.transform, false);
+                    }
+
+                    if (Uchild.name == "AstoridWayPoints")
+                    {
+                        GameObject AstoridWayPoints = Instantiate(Uchild.gameObject, new Vector3(Uchild.transform.position.x, Uchild.transform.position.y, Uchild.transform.position.z), Quaternion.Euler(Uchild.transform.rotation.eulerAngles.x, Uchild.transform.rotation.eulerAngles.y, Uchild.transform.rotation.eulerAngles.z)) as GameObject;
+                        AstoridWayPoints.name = "AstoridWayPoints_" + userJSON.UserId;
+                        AstoridWayPoints.transform.localScale += new Vector3(Uchild.transform.localScale.x, Uchild.transform.localScale.y, Uchild.transform.localScale.z);
+                        AstoridWayPoints.SetActive(true);
+                        Uchild.gameObject.SetActive(false);
+                        AstoridWayPoints.transform.parent = MyUntiverse.transform;
+                        AstoridWayPoints.transform.SetParent(MyUntiverse.transform, false);
+                    }
                 }
                     child.gameObject.SetActive(false);
                 MyUntiverse.transform.parent = p.transform;
