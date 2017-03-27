@@ -6,6 +6,10 @@ using UnityEngine.UI;
 
 public class FacebookManager : MonoBehaviour
 {
+
+    private static FacebookManager instance;
+    public static FacebookManager Instance { get { return instance; } }
+
     public GameObject FacebookLoginCanvas;
     public GameObject FacebookLogoutCanvas;
     public GameObject VungleCanvas;
@@ -31,6 +35,7 @@ public class FacebookManager : MonoBehaviour
 
     private void Awake()
     {
+        instance = this;
         FacebookLoginCanvas.SetActive(true);
         FacebookLogoutCanvas.SetActive(false);
         VungleCanvas.SetActive(false);
@@ -42,11 +47,13 @@ public class FacebookManager : MonoBehaviour
         }
 
         ErrorMessage.text = "";
+
+        
     }
 
     public void FacebookLogin()
     {
-        //PlayerPrefs.DeleteAll();
+       //PlayerPrefs.DeleteAll();
 
         LoadingManager.Instance.Fadein(false);
         loadingtime = 0;
@@ -59,19 +66,19 @@ public class FacebookManager : MonoBehaviour
 
 
 
-        if (PlayerPrefs.GetString("UserId") != null
-        && PlayerPrefs.GetString("UserId") != ""
-        && PlayerPrefs.GetString("UserPic") != null
-        && PlayerPrefs.GetString("UserPic") != ""
-        && PlayerPrefs.GetString("FirstName") != null
-        && PlayerPrefs.GetString("FirstName") != ""
-        && PlayerPrefs.GetString("LastName") != null
-        && PlayerPrefs.GetString("LastName") != "")
+        if (DataManager.Instance.GetUserId() != null
+        && DataManager.Instance.GetUserId() != ""
+        && DataManager.Instance.GetUserId() != "USERID"
+        && DataManager.Instance.GetUserAccessToken() != null
+        && DataManager.Instance.GetUserAccessToken() != ""
+        && DataManager.Instance.GetUserAccessToken() != "USERACCESSTOKEN"
+       )
         {
             // if we have already login before lets never do it again. 
             Debug.Log("We have already login before");
+            MysqlManager.Instance.GetUsersData(DataManager.Instance.GetUserId(), DataManager.Instance.GetUserAccessToken());
            
-            MemoryData();
+            //MemoryData();
 
             return;
         }
@@ -121,13 +128,42 @@ public class FacebookManager : MonoBehaviour
         }
     }
 
-    private void MemoryData()
+    public void MemoryData()
     {
-        UserId.text = PlayerPrefs.GetString("UserId");
-        UserName.text = PlayerPrefs.GetString("FirstName") + " " + PlayerPrefs.GetString("LastName");
 
-        new2dpicture(UserPics, PlayerPrefs.GetString("UserPic"));
 
+        UserId.text = DataManager.Instance.GetUserId();
+
+        UserName.text = DataManager.Instance.GetUserName();
+            
+
+        new2dpicture(UserPics, DataManager.Instance.GetUserPic());
+
+        DataManager.Instance.SetUserState("1");
+
+    }
+
+    public void NoUserFound()
+    {
+        if (DataManager.Instance.GetUserPic() != null && DataManager.Instance.GetUserPic() != "" && DataManager.Instance.GetUserPic() != "USERPIC")
+        {
+
+
+            MysqlManager.Instance.PostUsersData(DataManager.Instance.GetUserId(),
+               DataManager.Instance.GetUserPic(),
+               DataManager.Instance.GetUserAccessToken(),
+               DataManager.Instance.GetUserName(),
+               DataManager.Instance.GetUserFirstName(),
+               DataManager.Instance.GetUserLastName(),
+               DataManager.Instance.GetUserState());
+            Debug.Log("No User Was Found Inserting Now");
+            return;
+        }
+        else
+        {
+            Debug.Log("No User Was Found Else Error");
+            return;
+        }
     }
 
     IEnumerator loadUsersPic(GameObject go, string url)
@@ -141,6 +177,7 @@ public class FacebookManager : MonoBehaviour
         Transform themb = go.transform;
         themb.GetComponent<Image>().sprite = sprite;
         isloaded = true;
+        
     }
 
 
@@ -159,6 +196,10 @@ public class FacebookManager : MonoBehaviour
             //this is a success
             AccessToken token = AccessToken.CurrentAccessToken;
 
+            
+            
+            DataManager.Instance.SetUserAccessToken(token.TokenString);
+            DataManager.Instance.SetUserState("1");
             GetUsersData(token);
             ErrorMessage.text = "";
 
@@ -188,10 +229,13 @@ public class FacebookManager : MonoBehaviour
             // Successfull Picture grab
             UserPic.sprite = Sprite.Create(results.Texture, new Rect(0, 0, 200, 200), new Vector2());
             UserName.text = fisrtname + " " + lastname;
+            DataManager.Instance.SetUserName(UserName.text);
             ErrorMessage.text = "";
             string userPicture = "https://graph.facebook.com/" + UserId.text + "/picture?width=200";
-            PlayerPrefs.SetString("UserPic", userPicture);
+          
+            DataManager.Instance.SetUserPic(userPicture);
             isloaded = true;
+            NoUserFound();
         }
         else
         {
@@ -207,7 +251,8 @@ public class FacebookManager : MonoBehaviour
             //ever thing is ok 
             fisrtname = results.ResultDictionary["first_name"].ToString();
             ErrorMessage.text = "";
-            PlayerPrefs.SetString("FirstName", fisrtname);
+            DataManager.Instance.SetUserFirstName(fisrtname);
+            
         }
         else
         {
@@ -224,7 +269,8 @@ public class FacebookManager : MonoBehaviour
             //ever thing is ok 
             lastname = results.ResultDictionary["last_name"].ToString();
             ErrorMessage.text = "";
-            PlayerPrefs.SetString("LastName", lastname);
+            
+            DataManager.Instance.SetUserLastName(lastname);
         }
         else
         {
@@ -241,7 +287,8 @@ public class FacebookManager : MonoBehaviour
             //ever thing is ok 
             UserId.text = results.ResultDictionary["id"].ToString();
             ErrorMessage.text = "";
-            PlayerPrefs.SetString("UserId", UserId.text);
+            DataManager.Instance.SetUserId(UserId.text);
+            
         }
         else
         {
@@ -259,6 +306,7 @@ public class FacebookManager : MonoBehaviour
         hasLogout = true;
         deloadingtime = 0;
         LoadingManager.Instance.Fadein(false);
+        DataManager.Instance.SetUserState("0");
     }
 
 

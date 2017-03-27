@@ -108,8 +108,10 @@
     <Compile Include="Assets\AdColony\Scripts\Common\AdColonyUserMetadata.cs" />
     <Compile Include="Assets\AdColony\Scripts\Common\AdColonyUtils.cs" />
     <Compile Include="Assets\AdColony\Scripts\Common\AdColonyZone.cs" />
+    <Compile Include="Assets\Scripts\DataManager.cs" />
     <Compile Include="Assets\Scripts\FacebookManager.cs" />
     <Compile Include="Assets\Scripts\LoadingManager.cs" />
+    <Compile Include="Assets\Scripts\MysqlManager.cs" />
     <Compile Include="Assets\Scripts\PlayAdcolonyAds.cs" />
     <Compile Include="Assets\Scripts\PlayVungleAds.cs" />
   </ItemGroup>
