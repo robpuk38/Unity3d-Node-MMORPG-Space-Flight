@@ -17,6 +17,11 @@ public class DataManager : MonoBehaviour {
     public Text UserAccessToken;
     public Text UserState;
     public Text UserAccess;
+    public Text UserCredits;
+    public Text UserLevel;
+    public Text UserMana;
+    public Text UserHealth;
+    public Text UserExp;
 
 
     private void Awake()
@@ -121,6 +126,70 @@ public class DataManager : MonoBehaviour {
     public string GetUserAccess()
     {
         return UserAccess.text;
+    }
+
+    public void SetUserCredits(string set)
+    {
+
+        UserCredits.text = set;
+        
+    }
+
+    public string GetUserCredits()
+    {
+        return UserCredits.text;
+    }
+
+    public void SetUserLevel(string set)
+    {
+
+        UserLevel.text = set;
+       
+    }
+
+    public string GetUserLevel()
+    {
+        return UserLevel.text;
+    }
+
+    public void SetUserMana(string set)
+    {
+
+        UserMana.text = set;
+       
+    }
+
+    public string GetUserMana()
+    {
+        return UserMana.text;
+    }
+
+    public void SetUserHealth(string set)
+    {
+
+        UserHealth.text = set;
+       
+    }
+
+    public string GetUserHealth()
+    {
+        return UserHealth.text;
+    }
+
+    public void SetUserExp(string set)
+    {
+
+        UserExp.text = set;
+    }
+
+    public string GetUserExp()
+    {
+        return UserExp.text;
+    }
+
+    public void SaveUsersData()
+    {
+        MysqlManager.Instance.SaveUsersData(this.GetUserId(), this.GetUserAccessToken(), this.GetUserCredits(), this.GetUserLevel(), this.GetUserMana(), this.GetUserHealth(), this.GetUserExp());
     }
 
 

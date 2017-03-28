@@ -61,8 +61,7 @@ public class FacebookManager : MonoBehaviour
         if (FB.IsLoggedIn)
         {
             Debug.Log("We are alreay login");
-            return;
-        }
+         
 
 
 
@@ -83,7 +82,8 @@ public class FacebookManager : MonoBehaviour
             return;
         }
 
-        
+            return;
+        }
 
 
         if (!FB.IsLoggedIn)
@@ -125,6 +125,7 @@ public class FacebookManager : MonoBehaviour
             VungleCanvas.SetActive(false);
             AdcolonyCanvas.SetActive(false);
             deloadingtime = 0;
+            hasLogout = false;
         }
     }
 

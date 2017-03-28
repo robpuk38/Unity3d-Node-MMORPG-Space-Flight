@@ -8,6 +8,7 @@ public class PlayAdcolonyAds : MonoBehaviour {
     public Text DebugText;
     public string AppId = "app45c8b1591bd14f93a2";
     public string ZoneId = "vz83776cea456c492b95";
+   
     AdColony.InterstitialAd Ad = null;
     private void Awake()
     {
@@ -58,16 +59,18 @@ public class PlayAdcolonyAds : MonoBehaviour {
         AdColony.Ads.OnRequestInterstitialFailed += () =>
         {
             DebugText.text = "Ads Request Has Failed";
-            ConfigureAds();
+            
         };
 
         AdColony.Ads.OnOpened += (AdColony.InterstitialAd ad_) => {
             DebugText.text = "Ad Has Been Open "+ ad_.ToString();
-            RequestAd();
+            
         };
 
         AdColony.Ads.OnClosed += (AdColony.InterstitialAd ad_) => {
-            DebugText.text = "Ad Has Been Closed " + ad_.ToString();
+           // DebugText.text = "Ad Has Been Closed " + ad_.ToString();
+
+            
         };
 
         AdColony.Ads.OnExpiring += (AdColony.InterstitialAd ad_) => {
@@ -82,6 +85,13 @@ public class PlayAdcolonyAds : MonoBehaviour {
         AdColony.Ads.OnRewardGranted += (string zoneId, bool success, string name, int amount) =>
         {
             DebugText.text = string.Format("AdColony.Ads.OnRewardGranted ", zoneId, success, name, amount);
+            int newcredits = 0;
+            int.TryParse(DataManager.Instance.GetUserCredits(), out newcredits);
+            int pushcredits = newcredits + 200;
+           
+            DataManager.Instance.SetUserCredits(pushcredits.ToString());
+            DataManager.Instance.SaveUsersData();
+          
         };
 
         AdColony.Ads.OnCustomMessageReceived += (string type, string message) =>
@@ -93,16 +103,16 @@ public class PlayAdcolonyAds : MonoBehaviour {
 
     public void PlayAd()
     {
-        if(Ad != null)
+        RequestAd();
+        if (Ad != null)
         {
             //if your button was disabled or enabled to allow button click
             DebugText.text = "Ad Is Playable";
             AdColony.Ads.ShowAd(Ad);
         }
-        else
-        {
-            DebugText.text = "Ad Is Not Playable Requesting";
-            RequestAd();
-        }
+        
+           
+            
+        
     }
 }

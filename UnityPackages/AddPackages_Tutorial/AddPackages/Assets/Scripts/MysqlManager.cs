@@ -9,7 +9,7 @@ public class MysqlManager : MonoBehaviour {
 
     private IEnumerator getthedata;
     private IEnumerator postthedata;
-
+    private IEnumerator savethedata;
     private void Awake()
     {
         instance = this;
@@ -36,6 +36,7 @@ public class MysqlManager : MonoBehaviour {
                 if(aData[i] == "Id")
                 {
                     DataManager.Instance.SetId(aData[i+1]);
+                    Debug.Log("Id: " + aData[i + 1]);
                 }
                 if (aData[i] == "UserId")
                 {
@@ -64,6 +65,27 @@ public class MysqlManager : MonoBehaviour {
                 if (aData[i] == "UserAccess")
                 {
                     DataManager.Instance.SetUserAccess(aData[i + 1]);
+                }
+
+                if (aData[i] == "UserCredits")
+                {
+                    DataManager.Instance.SetUserCredits(aData[i + 1]);
+                }
+                if (aData[i] == "UserLevel")
+                {
+                    DataManager.Instance.SetUserLevel(aData[i + 1]);
+                }
+                if (aData[i] == "UserMana")
+                {
+                    DataManager.Instance.SetUserMana(aData[i + 1]);
+                }
+                if (aData[i] == "UserHealth")
+                {
+                    DataManager.Instance.SetUserHealth(aData[i + 1]);
+                }
+                if (aData[i] == "UserExp")
+                {
+                    DataManager.Instance.SetUserExp(aData[i + 1]);
                 }
 
                 if (aData[i] == "Error")
@@ -114,4 +136,37 @@ public class MysqlManager : MonoBehaviour {
     }
 
 
+
+    public void SaveUsersData(string UserId, string UserAccessToken, string UserCredits, string UserLevel , string UserMana, string UserHealth, string UserExp)
+    {
+        savethedata = SaveUserData(UserId, UserAccessToken, UserCredits,  UserLevel,  UserMana,  UserHealth, UserExp);
+        StartCoroutine(savethedata);
+    }
+
+    private IEnumerator SaveUserData(string UserId, string UserAccessToken, string UserCredits, string UserLevel, string UserMana, string UserHealth, string UserExp)
+    {
+       
+        WWWForm postData = new WWWForm();
+        postData.AddField("UserId", UserId);
+        postData.AddField("UserAccessToken", UserAccessToken);
+        postData.AddField("UserCredits", UserCredits);
+        postData.AddField("UserLevel", UserLevel);
+        postData.AddField("UserMana", UserMana);
+        postData.AddField("UserHealth", UserHealth);
+        postData.AddField("UserExp", UserExp);
+
+        WWW connection = new WWW("http://www.projectclickthrough.com/server/saveusersdata.php", postData);
+        yield return connection;
+
+        if (connection.isDone)
+        {
+
+            Debug.Log("WE HAVE SAVED THE DATA");
+            GetUsersData(UserId, UserAccessToken);
+
+        }
+
+        yield return null;
+
+    }
 }
