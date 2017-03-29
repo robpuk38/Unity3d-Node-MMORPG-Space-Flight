@@ -20,7 +20,9 @@ public class FacebookManager : MonoBehaviour
     public Image UserPic;
     public GameObject UserPics;
     public Text ErrorMessage;
-   
+    public Text UserCredits;
+    public Text UserLevel;
+
 
     private IEnumerator getuserspic;
 
@@ -29,7 +31,7 @@ public class FacebookManager : MonoBehaviour
     string lastname;
     private bool isloaded = false;
     private bool hasloaded = false;
-    private bool hasLogout = false;
+    public bool hasLogout = false;
 
 
 
@@ -48,12 +50,12 @@ public class FacebookManager : MonoBehaviour
 
         ErrorMessage.text = "";
 
-        
+
     }
 
     public void FacebookLogin()
     {
-       //PlayerPrefs.DeleteAll();
+        //PlayerPrefs.DeleteAll();
 
         LoadingManager.Instance.Fadein(false);
         loadingtime = 0;
@@ -61,10 +63,20 @@ public class FacebookManager : MonoBehaviour
         if (FB.IsLoggedIn)
         {
             Debug.Log("We are alreay login");
-         
+            LoginStatusMemory();
+            return;
+        }
+        else
+        {
+            LoginStatusMemory();
+            return;
+        }
 
+        
+    }
 
-
+    private void LoginStatusMemory()
+    {
         if (DataManager.Instance.GetUserId() != null
         && DataManager.Instance.GetUserId() != ""
         && DataManager.Instance.GetUserId() != "USERID"
@@ -76,21 +88,19 @@ public class FacebookManager : MonoBehaviour
             // if we have already login before lets never do it again. 
             Debug.Log("We have already login before");
             MysqlManager.Instance.GetUsersData(DataManager.Instance.GetUserId(), DataManager.Instance.GetUserAccessToken());
-           
-            //MemoryData();
+
+
 
             return;
         }
-
-            return;
-        }
-
-
-        if (!FB.IsLoggedIn)
+        else
         {
-            List<string> perm = new List<string>();
-            perm.Add("public_profile");
-            FB.LogInWithReadPermissions(permissions: perm, callback: OnLogin);
+            if (!FB.IsLoggedIn)
+            {
+                List<string> perm = new List<string>();
+                perm.Add("public_profile");
+                FB.LogInWithReadPermissions(permissions: perm, callback: OnLogin);
+            }
         }
     }
 
@@ -117,7 +127,7 @@ public class FacebookManager : MonoBehaviour
             loadingtime = 0;
         }
 
-        if(deloadingtime > 200 && isloaded == false && hasloaded == false && hasLogout == true)
+        if (deloadingtime > 200 && isloaded == false && hasloaded == false && hasLogout == true)
         {
             LoadingManager.Instance.FadeOut();
             FacebookLoginCanvas.SetActive(true);
@@ -136,11 +146,13 @@ public class FacebookManager : MonoBehaviour
         UserId.text = DataManager.Instance.GetUserId();
 
         UserName.text = DataManager.Instance.GetUserName();
-            
+        UserCredits.text = DataManager.Instance.GetUserCredits();
+        UserLevel.text = DataManager.Instance.GetUserLevel();
 
         new2dpicture(UserPics, DataManager.Instance.GetUserPic());
 
         DataManager.Instance.SetUserState("1");
+        DataManager.Instance.SaveUsersData();
 
     }
 
@@ -169,16 +181,22 @@ public class FacebookManager : MonoBehaviour
 
     IEnumerator loadUsersPic(GameObject go, string url)
     {
-        Texture2D temp = new Texture2D(0, 0);
-        WWW www = new WWW(url);
-        yield return www;
+       
 
-        temp = www.texture;
-        Sprite sprite = Sprite.Create(temp, new Rect(0, 0, temp.width, temp.height), new Vector2(0.5f, 0.5f));
-        Transform themb = go.transform;
-        themb.GetComponent<Image>().sprite = sprite;
-        isloaded = true;
-        
+        if (url.ToString() != null && url.ToString() != "" && url.ToString() != "USERPIC")
+        {
+            Texture2D temp = new Texture2D(0, 0);
+            WWW www = new WWW(url);
+            yield return www;
+
+            temp = www.texture;
+            Sprite sprite = Sprite.Create(temp, new Rect(0, 0, temp.width, temp.height), new Vector2(0.5f, 0.5f));
+            Transform themb = go.transform;
+            themb.GetComponent<Image>().sprite = sprite;
+            isloaded = true;
+
+        }
+
     }
 
 
@@ -197,8 +215,8 @@ public class FacebookManager : MonoBehaviour
             //this is a success
             AccessToken token = AccessToken.CurrentAccessToken;
 
-            
-            
+
+
             DataManager.Instance.SetUserAccessToken(token.TokenString);
             DataManager.Instance.SetUserState("1");
             GetUsersData(token);
@@ -233,7 +251,7 @@ public class FacebookManager : MonoBehaviour
             DataManager.Instance.SetUserName(UserName.text);
             ErrorMessage.text = "";
             string userPicture = "https://graph.facebook.com/" + UserId.text + "/picture?width=200";
-          
+
             DataManager.Instance.SetUserPic(userPicture);
             isloaded = true;
             NoUserFound();
@@ -253,7 +271,7 @@ public class FacebookManager : MonoBehaviour
             fisrtname = results.ResultDictionary["first_name"].ToString();
             ErrorMessage.text = "";
             DataManager.Instance.SetUserFirstName(fisrtname);
-            
+
         }
         else
         {
@@ -270,7 +288,7 @@ public class FacebookManager : MonoBehaviour
             //ever thing is ok 
             lastname = results.ResultDictionary["last_name"].ToString();
             ErrorMessage.text = "";
-            
+
             DataManager.Instance.SetUserLastName(lastname);
         }
         else
@@ -289,7 +307,7 @@ public class FacebookManager : MonoBehaviour
             UserId.text = results.ResultDictionary["id"].ToString();
             ErrorMessage.text = "";
             DataManager.Instance.SetUserId(UserId.text);
-            
+
         }
         else
         {
@@ -301,13 +319,14 @@ public class FacebookManager : MonoBehaviour
 
     public void FacebookLogout()
     {
-        
+
         isloaded = false;
         hasloaded = false;
         hasLogout = true;
         deloadingtime = 0;
         LoadingManager.Instance.Fadein(false);
         DataManager.Instance.SetUserState("0");
+        DataManager.Instance.SaveUsersData();
     }
 
 

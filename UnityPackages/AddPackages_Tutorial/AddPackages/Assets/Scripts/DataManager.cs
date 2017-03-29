@@ -189,7 +189,14 @@ public class DataManager : MonoBehaviour {
 
     public void SaveUsersData()
     {
-        MysqlManager.Instance.SaveUsersData(this.GetUserId(), this.GetUserAccessToken(), this.GetUserCredits(), this.GetUserLevel(), this.GetUserMana(), this.GetUserHealth(), this.GetUserExp());
+        MysqlManager.Instance.SaveUsersData(this.GetUserId(), 
+            this.GetUserAccessToken(), 
+            this.GetUserCredits(), 
+            this.GetUserLevel(), 
+            this.GetUserMana(), 
+            this.GetUserHealth(), 
+            this.GetUserExp(),
+            this.GetUserState());
     }
 
 

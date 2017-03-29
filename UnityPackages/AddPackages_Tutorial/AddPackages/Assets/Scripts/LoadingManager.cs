@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Net;
 
 public class LoadingManager : MonoBehaviour {
 
@@ -21,8 +22,11 @@ public class LoadingManager : MonoBehaviour {
 
     private void Start()
     {
+        
         FadeOut();
     }
+
+ 
 
     private void Update()
     {

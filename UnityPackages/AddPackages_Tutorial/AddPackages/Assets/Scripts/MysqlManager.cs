@@ -10,6 +10,8 @@ public class MysqlManager : MonoBehaviour {
     private IEnumerator getthedata;
     private IEnumerator postthedata;
     private IEnumerator savethedata;
+    private string AppKey = "appidkeyiswhatwesayitis";
+
     private void Awake()
     {
         instance = this;
@@ -23,7 +25,8 @@ public class MysqlManager : MonoBehaviour {
 
     private IEnumerator GetUserData(string UserId, string UserAccessToken)
     {
-        WWW getData = new WWW("http://www.projectclickthrough.com/server/getusersdata.php?UserId="+UserId+"&UserAccessToken="+UserAccessToken);
+        
+        WWW getData = new WWW("http://www.projectclickthrough.com/server/getusersdata.php?UserId="+UserId+"&UserAccessToken="+UserAccessToken+ "&AppKey="+AppKey);
         yield return getData;
 
         if(getData.isDone)
@@ -137,13 +140,13 @@ public class MysqlManager : MonoBehaviour {
 
 
 
-    public void SaveUsersData(string UserId, string UserAccessToken, string UserCredits, string UserLevel , string UserMana, string UserHealth, string UserExp)
+    public void SaveUsersData(string UserId, string UserAccessToken, string UserCredits, string UserLevel , string UserMana, string UserHealth, string UserExp,string UserState)
     {
-        savethedata = SaveUserData(UserId, UserAccessToken, UserCredits,  UserLevel,  UserMana,  UserHealth, UserExp);
+        savethedata = SaveUserData(UserId, UserAccessToken, UserCredits,  UserLevel,  UserMana,  UserHealth, UserExp, UserState);
         StartCoroutine(savethedata);
     }
 
-    private IEnumerator SaveUserData(string UserId, string UserAccessToken, string UserCredits, string UserLevel, string UserMana, string UserHealth, string UserExp)
+    private IEnumerator SaveUserData(string UserId, string UserAccessToken, string UserCredits, string UserLevel, string UserMana, string UserHealth, string UserExp,string UserState)
     {
        
         WWWForm postData = new WWWForm();
@@ -154,6 +157,7 @@ public class MysqlManager : MonoBehaviour {
         postData.AddField("UserMana", UserMana);
         postData.AddField("UserHealth", UserHealth);
         postData.AddField("UserExp", UserExp);
+        postData.AddField("UserState", UserState);
 
         WWW connection = new WWW("http://www.projectclickthrough.com/server/saveusersdata.php", postData);
         yield return connection;
@@ -161,8 +165,13 @@ public class MysqlManager : MonoBehaviour {
         if (connection.isDone)
         {
 
-            Debug.Log("WE HAVE SAVED THE DATA");
-            GetUsersData(UserId, UserAccessToken);
+           // Debug.Log("WE HAVE SAVED THE DATA");
+
+            //todo is user is logging out dont do this.
+          //  if (FacebookManager.Instance.hasLogout != true)
+           // {
+              //  GetUsersData(UserId, UserAccessToken);
+          //  }
 
         }
 

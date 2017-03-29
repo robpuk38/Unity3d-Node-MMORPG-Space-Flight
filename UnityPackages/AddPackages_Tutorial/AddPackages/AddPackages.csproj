@@ -114,6 +114,7 @@
     <Compile Include="Assets\Scripts\MysqlManager.cs" />
     <Compile Include="Assets\Scripts\PlayAdcolonyAds.cs" />
     <Compile Include="Assets\Scripts\PlayVungleAds.cs" />
+    <Compile Include="Assets\Scripts\ServerStatusManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\FacebookSDK\link.xml" />
