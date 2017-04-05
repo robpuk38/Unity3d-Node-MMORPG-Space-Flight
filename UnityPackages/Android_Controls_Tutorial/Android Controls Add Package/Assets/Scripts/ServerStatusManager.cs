@@ -19,7 +19,7 @@ public class ServerStatusManager : MonoBehaviour {
 
     private void Awake()
     {
-       // CheckServerStatus(ServerUrl);
+       
 
         SystemUpdate();
     }
@@ -52,7 +52,7 @@ public class ServerStatusManager : MonoBehaviour {
         sw.Start();
         for (int i= 0; i<1000; i++)
         {
-            Thread.Sleep(5);
+            Thread.Sleep(10);
         }
         sw.Stop();
         Debug.Log("Tick Has Ended: "+sw.ElapsedMilliseconds/1000f);

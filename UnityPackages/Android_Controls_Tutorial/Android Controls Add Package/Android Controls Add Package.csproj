@@ -108,6 +108,7 @@
     <Compile Include="Assets\AdColony\Scripts\Common\AdColonyUserMetadata.cs" />
     <Compile Include="Assets\AdColony\Scripts\Common\AdColonyUtils.cs" />
     <Compile Include="Assets\AdColony\Scripts\Common\AdColonyZone.cs" />
+    <Compile Include="Assets\Scripts\CharacterHeadShoot.cs" />
     <Compile Include="Assets\Scripts\ClientsControlManager.cs" />
     <Compile Include="Assets\Scripts\ClientsPlayerManager.cs" />
     <Compile Include="Assets\Scripts\DataManager.cs" />
@@ -117,6 +118,8 @@
     <Compile Include="Assets\Scripts\PlayAdcolonyAds.cs" />
     <Compile Include="Assets\Scripts\PlayVungleAds.cs" />
     <Compile Include="Assets\Scripts\ServerStatusManager.cs" />
+    <Compile Include="Assets\Scripts\WeaponsPickupManager.cs" />
+    <Compile Include="Assets\Scripts\spawnWeapons.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\FacebookSDK\link.xml" />
